@@ -1,9 +1,14 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {MainPageModule} from "../pages/main-page/main-page.module";
-import {PagesModule} from "../pages/pages.module";
-import {LayoutModule} from "../layout/layout.module";
-
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {
+  ButtonModule, CheckboxModule,
+  InputTextModule,
+  MenuModule,
+  OverlayPanelModule,
+  SplitButtonModule,
+  TableModule,
+  ToolbarModule
+} from "primeng";
 
 
 
@@ -11,8 +16,28 @@ import {LayoutModule} from "../layout/layout.module";
   declarations: [],
   imports: [
     CommonModule,
-    PagesModule,
-    LayoutModule
+    ToolbarModule,
+    SplitButtonModule,
+    MenuModule,
+    InputTextModule,
+    ButtonModule,
+    TableModule,
+    OverlayPanelModule,
+    CheckboxModule,
+
+
+  ],
+  exports: [
+    ToolbarModule,
+    SplitButtonModule,
+    MenuModule,
+    InputTextModule,
+    ButtonModule,
+    TableModule,
+    OverlayPanelModule,
+    CheckboxModule
   ]
+
 })
-export class SharedModule { }
+export class SharedModule {
+}

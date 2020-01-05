@@ -1,1 +1,8 @@
-<p>navbar works!</p>
+<p-toolbar>
+  <div class="ui-toolbar-group-left">
+    <img class="ekc-toolbar-logo" src="../../../../assets/img/ekc_logo_white@2x.png" alt="">
+    <p-menu [popup]="true" [model]="menuItems" #menu></p-menu>
+    <i class="pi pi-bars ekc-toolbar-burger" (click)="menu.toggle($event)"></i>
+
+  </div>
+</p-toolbar>

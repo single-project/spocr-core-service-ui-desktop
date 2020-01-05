@@ -1,8 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {AuthPageModule} from "./auth-page/auth-page.module";
 import {MainPageModule} from "./main-page/main-page.module";
-
 
 
 @NgModule({
@@ -11,6 +10,8 @@ import {MainPageModule} from "./main-page/main-page.module";
     CommonModule,
     AuthPageModule,
     MainPageModule
-  ]
+  ],
+  exports: []
 })
-export class PagesModule { }
+export class PagesModule {
+}
