@@ -22,7 +22,7 @@ import {FormsModule} from "@angular/forms";
     AppRoutingModule,
     CoreModule,
     PagesModule,
-    LayoutModule
+    LayoutModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

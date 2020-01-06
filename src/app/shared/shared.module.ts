@@ -3,17 +3,19 @@ import {CommonModule} from '@angular/common';
 import {
   ButtonModule, CheckboxModule,
   InputTextModule,
-  MenuModule,
+  MenuModule, MultiSelectModule,
   OverlayPanelModule,
   SplitButtonModule,
   TableModule,
   ToolbarModule
 } from "primeng";
+import { ActiveTagsPipe } from './pipes/active-tags.pipe';
+
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [ActiveTagsPipe],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -24,6 +26,7 @@ import {
     TableModule,
     OverlayPanelModule,
     CheckboxModule,
+    MultiSelectModule,
 
 
   ],
@@ -35,7 +38,10 @@ import {
     ButtonModule,
     TableModule,
     OverlayPanelModule,
-    CheckboxModule
+    CheckboxModule,
+    MultiSelectModule,
+    ActiveTagsPipe,
+
   ]
 
 })
