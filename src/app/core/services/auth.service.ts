@@ -3,6 +3,8 @@ import {ConfigService} from "./config.service";
 import {CookieService} from "ngx-cookie-service";
 import {HttpClient} from "@angular/common/http";
 import {Conf} from "../../../assets/config/conf";
+import {Observable} from "rxjs";
+import {Router} from "@angular/router";
 
 
 @Injectable({
@@ -11,10 +13,14 @@ import {Conf} from "../../../assets/config/conf";
 export class AuthService {
 
   private config = new Conf();
-  constructor(@Inject(CookieService) private cookies: CookieService, @Inject(HttpClient) private http: HttpClient) {
+  constructor(
+    @Inject(CookieService) private cookies: CookieService,
+    @Inject(HttpClient) private http: HttpClient,
+    @Inject(Router) private router: Router
+  ) {
   }
 
-  authorize(user: string, pswd: string): any {
+  login(user: string, pswd: string): Observable<any> {
 
     const authUrl = this.config.BASE_URL + this.config.AUTH_URL;
 
@@ -23,6 +29,12 @@ export class AuthService {
       password: pswd
     });
   }
+  logout(){
+    this.cookies.delete('auth_token');
+    this.router.navigate(['/', 'signin']);
+
+  }
+
 
 
 }

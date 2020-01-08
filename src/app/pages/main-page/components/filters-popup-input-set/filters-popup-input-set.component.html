@@ -3,9 +3,9 @@
       <h4>Фильтры</h4>
   </div>
   <div class="ui-g-6 ui-sm-6">
-    <p-checkbox name="search-filters" [(ngModel)]="checkedNonActive" binary="true" label="Скр. неактивных" inputId="passive"></p-checkbox>
+    <p-checkbox name="search-filters" (click)="nonActiveCheck()"  binary="true" label="Скр. неактивных" inputId="non-active"></p-checkbox>
   </div>
   <div class="ui-g-6 ui-sm-6">
-    <p-checkbox name="search-filters" [(ngModel)]="checkedActive" binary="true" label="Скр. активных" inputId="active"></p-checkbox>
+    <p-checkbox name="search-filters" (click)="activeCheck()"  binary="true" label="Скр. активных" inputId="active"></p-checkbox>
   </div>
 </div>

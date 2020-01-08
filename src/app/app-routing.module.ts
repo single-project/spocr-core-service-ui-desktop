@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {MainPageComponent} from "./pages/main-page/main-page.component";
+
 
 
 const routes: Routes = [
@@ -17,6 +17,10 @@ const routes: Routes = [
     path: 'signin',
     loadChildren: () => import('./pages/auth-page/auth-page.module').then(m => m.AuthPageModule)
 
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/user-page/user-page.module').then(m => m.UserPageModule)
   }
 
 ];

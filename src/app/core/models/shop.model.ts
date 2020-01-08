@@ -5,7 +5,9 @@ export interface ShopModel {
   version: number;
   id: number;
   name: string;
-  counterparty: string;
+  counterpartyName: string;
+  counterpartyId: number;
+  counterparty: CounterpartyModel;
   shopTypes?: [];
   active: boolean;
 }

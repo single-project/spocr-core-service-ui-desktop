@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {MenuItem} from "primeng/api";
+import {AuthService} from "../../../core/services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-navbar',
@@ -8,26 +10,44 @@ import {MenuItem} from "primeng/api";
 })
 export class NavbarComponent implements OnInit {
 
-  menuItems: MenuItem[];
+  @Input() userId;
+  @Output() onShopsMenu = new EventEmitter<any>();
+  @Output() onCounterParties = new EventEmitter<any>();
+  private menuItems: MenuItem[];
 
-  constructor() {
+  constructor(@Inject(AuthService) private auth: AuthService, @Inject(Router) private router: Router) {
   }
 
   ngOnInit() {
     this.menuItems = [{
       label: 'Справочники',
       items: [
-        {label: 'Торговые точки', icon: 'pi pi-fw pi-folder-open'},
-        {label: 'Контрагенты', icon: 'pi pi-fw pi-folder-open'}
+        {label: 'Торговые точки', icon: 'pi pi-fw pi-folder-open', command: () => this.onShops()},
+        {label: 'Контрагенты', icon: 'pi pi-fw pi-folder-open', command: () => this.onCounterparties()}
       ]
     },
       {
         label: 'Персональное',
         items: [
-          {label: 'Профиль', icon: 'pi pi-fw pi-user'},
-          {label: 'Выход', icon: 'pi pi-fw pi-sign-out'}
+          {label: 'Профиль', icon: 'pi pi-fw pi-user', command: () => this.onProfile()},
+          {label: 'Выход', icon: 'pi pi-fw pi-sign-out', command: () => this.onLogout()}
         ]
       }];
   }
 
+  onLogout(): void {
+    this.auth.logout();
+  }
+
+  onProfile(): void {
+    this.router.navigate(['/', 'profile']);
+  }
+
+  onShops(): void {
+    this.onShopsMenu.emit();
+  }
+
+  onCounterparties(): void {
+    this.onCounterParties.emit();
+  }
 }

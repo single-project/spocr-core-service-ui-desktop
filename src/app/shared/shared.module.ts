@@ -10,13 +10,13 @@ import {
   ToolbarModule
 } from "primeng";
 import { ActiveTagsPipe } from './pipes/active-tags.pipe';
-import { ShopsCounterPipe } from './pipes/shops-counter.pipe';
+
 
 
 
 
 @NgModule({
-  declarations: [ActiveTagsPipe, ShopsCounterPipe],
+  declarations: [ActiveTagsPipe,],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -51,7 +51,6 @@ import { ShopsCounterPipe } from './pipes/shops-counter.pipe';
     PaginatorModule,
     MessagesModule,
     MessageModule,
-    ShopsCounterPipe,
     DialogModule,
 
   ]

@@ -26,7 +26,7 @@ export class AuthPageComponent implements OnInit {
 
   onAuthClick(): void {
     if (this.username && this.password) {
-      this.auth.authorize(this.username, this.password).subscribe((resp: AuthModel) => {
+      this.auth.login(this.username, this.password).subscribe((resp: AuthModel) => {
         this.cookies.set('auth_token', resp.token, parseInt(resp.tokenTTL));
         this.authorized = true;
         this.router.navigate(['/', 'main'])
