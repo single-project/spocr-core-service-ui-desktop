@@ -10,9 +10,9 @@
 
         <div class="ui-g-8 ui-sm-12">
           <div class="ui-inputgroup">
-            <input [(ngModel)]="searchString" id="search" size="32" type="text" placeholder="Найти..." pInputText
+            <input (keydown.enter)="onSearched()" [(ngModel)]="searchString" id="search" size="32" type="text" placeholder="Найти..." pInputText
                    (click)="opfilter.toggle($event)"/>
-            <button id="search-btn" type="button" pButton icon="pi pi-search"></button>
+            <button (click)="onSearched()" id="search-btn" type="button" pButton icon="pi pi-search"></button>
             <button *ngIf="searchString" id="clear-btn" type="button" pButton icon="pi pi-times"
                     (click)="clearSearch()"></button>
           </div>
@@ -21,7 +21,7 @@
     </p-toolbar>
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
-    <app-data-table></app-data-table>
+    <app-data-table [dataItems]="tabData"></app-data-table>
   </div>
 
   <p-overlayPanel #opfilter>

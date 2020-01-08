@@ -6,8 +6,10 @@ import {CoreModule} from "./core/core.module";
 import {PagesModule} from "./pages/pages.module";
 import {LayoutModule} from "./layout/layout.module";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
+import {CookieService} from "ngx-cookie-service";
+import {AuthInterceptorService} from "./core/services/auth-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -23,8 +25,15 @@ import {FormsModule} from "@angular/forms";
     CoreModule,
     PagesModule,
     LayoutModule,
+
   ],
-  providers: [],
+  providers: [
+    CookieService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

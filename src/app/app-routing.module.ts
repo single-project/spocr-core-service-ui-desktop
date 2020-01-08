@@ -6,12 +6,17 @@ import {MainPageComponent} from "./pages/main-page/main-page.component";
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'main',
+    redirectTo: 'signin',
     pathMatch: 'full'
   },
   {
     path: 'main',
     loadChildren: () => import('./pages/main-page/main-page.module').then(m => m.MainPageModule)
+  },
+  {
+    path: 'signin',
+    loadChildren: () => import('./pages/auth-page/auth-page.module').then(m => m.AuthPageModule)
+
   }
 
 ];
