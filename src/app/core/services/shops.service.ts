@@ -21,7 +21,6 @@ export class ShopsService {
   }
 
   editShop(updateData: {}, id: number): Observable<any> {
-
     return this.http.patch(`${this.shopUrl}/${id}`, updateData)
   }
 

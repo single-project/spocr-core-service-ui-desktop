@@ -82,7 +82,6 @@ export class DataTableComponent implements OnInit, OnChanges {
   }
 
   onCounterpartiesListSelect(){
-    console.log('2nd fired');
     this.counterpartiesListSelect.emit();
   }
 

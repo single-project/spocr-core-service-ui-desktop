@@ -11,6 +11,10 @@ import { ShopDialogComponent } from './components/shop-dialog/shop-dialog.compon
 import { ShopTypeDialogComponent } from './components/shop-type-dialog/shop-type-dialog.component';
 import { CounterpartyDialogComponent } from './components/counterparty-dialog/counterparty-dialog.component';
 import { ManufactureDialogComponent } from './components/manufacture-dialog/manufacture-dialog.component';
+import { ShopDataTableComponent } from './components/shop-data-table/shop-data-table.component';
+import { ManufactureDataTableComponent } from './components/manufacture-data-table/manufacture-data-table.component';
+import { CounterpartiesDataTableComponent } from './components/counterparties-data-table/counterparties-data-table.component';
+import { ShopTypesDataTableComponent } from './components/shop-types-data-table/shop-types-data-table.component';
 
 
 
@@ -23,7 +27,11 @@ import { ManufactureDialogComponent } from './components/manufacture-dialog/manu
     ShopDialogComponent,
     ShopTypeDialogComponent,
     CounterpartyDialogComponent,
-    ManufactureDialogComponent
+    ManufactureDialogComponent,
+    ShopDataTableComponent,
+    ManufactureDataTableComponent,
+    CounterpartiesDataTableComponent,
+    ShopTypesDataTableComponent
   ],
   imports: [
     CommonModule,

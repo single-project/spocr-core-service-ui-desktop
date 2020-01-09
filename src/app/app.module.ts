@@ -10,6 +10,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 import {CookieService} from "ngx-cookie-service";
 import {AuthInterceptorService} from "./core/services/auth-interceptor.service";
+import {MessageService} from "primeng";
 
 @NgModule({
   declarations: [
@@ -29,11 +30,13 @@ import {AuthInterceptorService} from "./core/services/auth-interceptor.service";
   ],
   providers: [
     CookieService,
+    MessageService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
       multi: true
     }],
+
   bootstrap: [AppComponent]
 })
 export class AppModule {

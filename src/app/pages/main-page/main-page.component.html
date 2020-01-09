@@ -1,4 +1,4 @@
-<app-navbar [userId]="userId" (onCounterParties)="counterpartiesToggle()" (onShopsMenu)="shopsToggle()"></app-navbar>
+<app-navbar (onCounterParties)="counterpartiesToggle()" (onShopsMenu)="shopsToggle()" [userId]="userId"></app-navbar>
 <div class="p-grid">
   <div class="ekc-content-container p-lg-12 p-sm-12">
     <p-toolbar>
@@ -10,21 +10,42 @@
 
         <div class="ui-g-8 ui-sm-12">
           <div class="ui-inputgroup">
-            <input (keydown.enter)="onSearched()" [(ngModel)]="searchString" id="search" size="32" type="text" placeholder="Найти..." pInputText
-                   (click)="opfilter.toggle($event)"/>
-            <button (click)="onSearched()" id="search-btn" type="button" pButton icon="pi pi-search"></button>
-            <button *ngIf="searchString" id="clear-btn" type="button" pButton icon="pi pi-times"
-                    (click)="clearSearch()"></button>
+            <input (click)="opfilter.toggle($event)" (keydown.enter)="onSearched()" [(ngModel)]="searchString"
+                   id="search" pInputText
+                   placeholder="Найти..." size="32"
+                   type="text"/>
+            <button (click)="onSearched()" icon="pi pi-search" id="search-btn" pButton type="button"></button>
+            <button (click)="clearSearch()" *ngIf="searchString" icon="pi pi-times" id="clear-btn" pButton
+                    type="button"></button>
           </div>
         </div>
       </div>
     </p-toolbar>
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
-    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>
+    <app-shop-data-table (counterpartiesListSelect)="loadCounterpartiesForLists()" (savedEdited)="onShopEdited($event)"
+                         (savedNew)="onShopNew($event)"
+                         *ngIf="dataType === 1"
+                         [counterpartiesList]="counterpartiesData" [dataItems]="tabData"
+                         [loading]="loading"></app-shop-data-table>
+    <app-counterparties-data-table *ngIf="dataType === 2"></app-counterparties-data-table>
+    <app-manufacture-data-table *ngIf="dataType === 3"></app-manufacture-data-table>
+    <!--    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>-->
   </div>
 
   <p-overlayPanel #opfilter>
-    <app-filters-popup-input-set (onCheckActive)="activeCheck($event)" (onCheckedNonActive)="nonActiveCheck($event)" [checkedActive]="activeChecked" [checkedNonActive]="nonActiveChecked"></app-filters-popup-input-set>
+    <app-filters-popup-input-set (onCheckActive)="activeCheck($event)" (onCheckedNonActive)="nonActiveCheck($event)"
+                                 [checkedActive]="activeChecked"
+                                 [checkedNonActive]="nonActiveChecked"></app-filters-popup-input-set>
   </p-overlayPanel>
+  <p-toast [style]="{marginTop: '80px'}" key="tc" position="top-center"></p-toast>
+  <p-toast [baseZIndex]="5000" [modal]="true" key="c" position="center">
+    <ng-template let-message pTemplate="message">
+      <div style="text-align: center">
+        <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+        <h3>{{message.summary}}</h3>
+        <p>{{message.detail}}</p>
+      </div>
+    </ng-template>
+  </p-toast>
 </div>

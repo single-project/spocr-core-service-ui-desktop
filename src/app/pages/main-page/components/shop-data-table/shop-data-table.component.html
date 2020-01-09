@@ -1,6 +1,6 @@
 <p-table [loading]="loading" [columns]="selectedCols" [value]="dataItems" [responsive]="true"
          [paginator]="true" [rows]="13"
-         selectionMode="single" [(selection)]="selectedEntity" (onRowSelect)="onRowSelect($event)">
+         selectionMode="single" [(selection)]="selectedShop" (onRowSelect)="onRowSelect($event)">
   <ng-template pTemplate="caption" let-rowData>
     <div style="text-align:left" class="p-align-center">
       <p-multiSelect [options]="cols" [(ngModel)]="selectedCols" optionLabel="header"
@@ -9,7 +9,7 @@
 
       </p-multiSelect>
 
-      <button style="margin-left: 1em; top: -10px" type="button" class="ui-button-success" pButton icon="fa fa-plus"
+      <button (click)="onShopCreate()" style="margin-left: 1em; top: -10px" type="button" class="ui-button-success" pButton icon="fa fa-plus"
               label="Добавить"></button>
 
 
@@ -49,8 +49,7 @@
 
 </p-table>
 
-<app-shop-dialog (onEditedShopSave)="onShopEditSave($event)" (onCloseDialog)="onCloseShopDialog($event)" (onCounterpartySelection)="onCounterpartiesListSelect()" (onShopTypeSelection)="onShopTypeSelect()"
-                 [shop]="entity" [display]="displayShopEditDialog" [counterpartiesList]="counterpartiesList" [shopTypesList]="shopTypesList"></app-shop-dialog>
-<app-shop-type-dialog></app-shop-type-dialog>
-<app-counterparty-dialog></app-counterparty-dialog>
-<app-manufacture-dialog></app-manufacture-dialog>
+<app-shop-dialog (onNewShopSaved)="onNewShopSave($event)" (onEditedShopSave)="onShopEditSave($event)" (onCloseDialog)="onCloseShopDialog($event)" (onCounterpartySelection)="onCounterpartiesListSelect()" (onShopTypeSelection)="onShopTypeSelect()"
+                 [isNew]="isNewShop" [shop]="shop" [display]="displayShopEditDialog" [counterpartiesList]="counterpartiesList" [shopTypesList]="shopTypesList"></app-shop-dialog>
+
+

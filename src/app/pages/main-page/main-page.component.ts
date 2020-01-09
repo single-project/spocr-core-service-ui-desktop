@@ -5,6 +5,7 @@ import {SearchService} from "../../core/services/search.service";
 import {ReferenceResponseModel} from "../../core/models/reference-response.model";
 import {CounterpartiesService} from "../../core/services/counterparties.service";
 import {CounterpartyModel} from "../../core/models/counterparty.model";
+import {MessageService} from "primeng";
 
 
 @Component({
@@ -31,6 +32,7 @@ export class MainPageComponent implements OnInit {
     @Inject(ShopsService) private shopService: ShopsService,
     @Inject(SearchService) private search: SearchService,
     @Inject(CounterpartiesService) private counterpartiesService: CounterpartiesService,
+    @Inject(MessageService) private mService: MessageService,
   ) {
   }
 
@@ -98,11 +100,12 @@ export class MainPageComponent implements OnInit {
 
   }
 
-  shopSingleDataPreloader(rawData: any): ShopModel{
-    const newData: ShopModel = {};
-    rawData.content.map(d => {
+  shopSingleDataPreloader(rawData: any): any {
 
-    })
+    let newData: ShopModel = {...rawData};
+    newData.counterpartyId = rawData.counterparty.id;
+    newData.counterpartyName = rawData.counterparty.name;
+    return newData;
   }
 
   shopsToggle() {
@@ -152,18 +155,29 @@ export class MainPageComponent implements OnInit {
   }
 
   onShopEdited(e) {
-    console.dir(e);
+    console.log('edited fired');
     if (this.dataType === 1) {
       let idx = this.tabData.findIndex((i) => i.id === e.id);
 
       this.shopService.editShop(e, e.id).subscribe((data) => {
-        this.tabData[idx] = [...this.shopTableDataPreloader(data)][0];
+        this.tabData[idx] = {...this.shopSingleDataPreloader(data)};
+        this.showSuccessSavingMessage()
+      }, error => {
+        this.showServerErrorToast();
       })
 
     }
   }
 
   onShopNew(e) {
+    console.log('new fired');
+    let idx = this.tabData.findIndex((i) => i.id === e.id);
+    this.shopService.newShop(e).subscribe((data) => {
+      this.tabData[idx] = {...this.shopSingleDataPreloader(data)};
+      this.showSuccessSavingMessage()
+    }, error => {
+      this.showServerErrorToast();
+    });
 
   }
 
@@ -183,12 +197,36 @@ export class MainPageComponent implements OnInit {
 
   }
 
-  loadCounterpartiesForLists(){
+  onManufactureEdited(e) {
+
+  }
+
+  onManufactureNew(e) {
+
+  }
+
+  loadCounterpartiesForLists() {
     console.log('3rd fired');
     this.counterpartiesService.fetchCounterPartiesData().subscribe((data: ReferenceResponseModel) => {
       this.counterpartiesData = [...data.content];
 
     });
+  }
+
+  showServerErrorToast() {
+    this.mService.clear();
+    this.mService.add({
+      key: 'c',
+      sticky: true,
+      severity: 'error',
+      summary: 'Что-то пошло не так. Попробуйте сохранить позже',
+      detail: 'Данные не сохранены'
+    });
+  }
+
+  showSuccessSavingMessage() {
+    this.mService.clear();
+    this.mService.add({key: 'tc', severity: 'success', summary: 'Данные успешно сохранены'});
   }
 
 }

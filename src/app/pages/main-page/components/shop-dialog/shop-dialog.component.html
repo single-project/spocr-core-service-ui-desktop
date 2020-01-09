@@ -1,11 +1,11 @@
-<p-dialog header="Карточка клиента" appendTo="body"  [(visible)]="display" [autoZIndex]="true"  [focusOnShow]="false"  [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '450px'}">
-  <div class="ui-g ui-fluid" *ngIf="entity">
+<p-dialog header="Карточка клиента" appendTo="body"  [(visible)]="display" [closable]="false" [focusOnShow]="false"  [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '450px'}">
+  <div class="ui-g ui-fluid" *ngIf="shop">
     <div class="ui-g-12">
       <div class="ui-g-4">
         <label for="name">ИМЯ</label>
       </div>
       <div class="ui-g-8">
-        <input pInputText id="name" [(ngModel)]="entity.name" placeholder="{{entity.name}}" autofocus />
+        <input pInputText id="name" [(ngModel)]="shop.name" placeholder="{{shop.name}}" autofocus />
       </div>
     </div>
     <div class="ui-g-12">
@@ -13,7 +13,7 @@
         <label for="counterparty">КОНТРАГЕНТ</label>
       </div>
       <div class="ui-g-8">
-        <p-dropdown (click)="shopCounterpartySelect()" placeholder="Выберите контрагента" id="counterparty"  [options]="counterpartiesForSelect" [(ngModel)]="entity.counterpartyName"></p-dropdown>
+        <p-dropdown (click)="shopCounterpartySelect()" placeholder="Выберите контрагента" id="counterparty"  [options]="counterpartiesForSelect" [(ngModel)]="shop.counterpartyId"></p-dropdown>
       </div>
     </div>
     <div class="ui-g-12">
@@ -21,7 +21,7 @@
         <label for="acive">АКТИВНЫЙ</label>
       </div>
       <div class="ui-g-8">
-        <p-checkbox id="acive" [binary]="true" [(ngModel)]="entity.active"></p-checkbox>
+        <p-checkbox id="acive" [binary]="true" [(ngModel)]="shop.active"></p-checkbox>
       </div>
     </div>
 

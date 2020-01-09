@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 
 @Component({
   selector: 'app-shop-dialog',
@@ -6,11 +7,13 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
   styleUrls: ['./shop-dialog.component.scss']
 })
 export class ShopDialogComponent implements OnInit, OnChanges {
-  @Input() entity;
+  @Input() shop;
   @Input() display;
   @Input() counterpartiesList;
   @Input() shopTypesList;
-  @Output() onShopSave = new EventEmitter<any>();
+  @Input() isNew;
+  @Output() onEditedShopSave = new EventEmitter<any>();
+  @Output() onNewShopSaved = new EventEmitter<any>();
   @Output() onCounterpartySelection = new EventEmitter<any>();
   @Output() onShopTypeSelection = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
@@ -21,19 +24,44 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   private newShopActivity: boolean;
   private counterpartiesForSelect;
 
+
   constructor() {
   }
 
   ngOnInit() {
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.counterpartiesForSelect = this.prepareCparties(this.counterpartiesList);
+    console.log(this.isNew)
+
+
   }
 
   shopSaved() {
-    this.newShop = {...this.newShop, name: this.entity.name, id: this.entity.id, active: this.entity.active, counterparty: {id: this.entity.counterpartyId}, version: this.entity.version};
-    this.onShopSave.emit(this.newShop);
+
+    if (this.isNew) {
+      this.newShop = {
+        ...this.newShop,
+        name: this.shop.name,
+        active: this.shop.active,
+        counterparty: {id: this.shop.counterpartyId}
+      };
+      this.onNewShopSaved.emit(this.newShop);
+    } else {
+      this.newShop = {
+        ...this.newShop,
+        name: this.shop.name,
+        id: this.shop.id,
+        active: this.shop.active,
+        counterparty: {id: this.shop.counterpartyId},
+        version: this.shop.version
+      };
+      this.onEditedShopSave.emit(this.newShop);
+    }
+
+    this.onCloseDialog.emit(false);
   }
 
   shopCounterpartySelect() {
@@ -45,18 +73,17 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     this.onShopTypeSelection.emit();
   }
 
-  closeDialog(){
+  closeDialog() {
+    this.shop = null;
     this.onCloseDialog.emit(false);
   }
 
   prepareCparties(cpartyList: []) {
 
     const cArr = [];
-    cpartyList.forEach(c => {
+    cpartyList.forEach((c: CounterpartyModel) => {
       let cParty = {};
-      cParty = {...cParty, label: c.name, value: {id: c.id, name: c.name}};
-      // cParty['value']['id'] = c.id;
-      // cParty['value']['name'] = c.name;
+      cParty = {...cParty, label: c.name, value: c.id};
       cArr.push(cParty);
     });
 

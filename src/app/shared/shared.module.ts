@@ -6,7 +6,7 @@ import {
   MenuModule, MessageModule, MessagesModule, MultiSelectModule,
   OverlayPanelModule, PaginatorModule,
   SplitButtonModule,
-  TableModule,
+  TableModule, ToastModule,
   ToolbarModule
 } from "primeng";
 import { ActiveTagsPipe } from './pipes/active-tags.pipe';
@@ -33,7 +33,9 @@ import { ActiveTagsPipe } from './pipes/active-tags.pipe';
     MessagesModule,
     MessageModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule,
+    ToastModule,
 
 
   ],
@@ -53,7 +55,9 @@ import { ActiveTagsPipe } from './pipes/active-tags.pipe';
     MessagesModule,
     MessageModule,
     DialogModule,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule,
+    ToastModule,
 
   ]
 
