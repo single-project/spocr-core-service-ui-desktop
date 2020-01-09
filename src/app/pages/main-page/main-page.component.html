@@ -21,7 +21,7 @@
     </p-toolbar>
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
-    <app-data-table [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>
+    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>
   </div>
 
   <p-overlayPanel #opfilter>

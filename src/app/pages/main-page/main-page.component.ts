@@ -16,13 +16,15 @@ export class MainPageComponent implements OnInit {
   private searchString: string;
   private tableTitle: string;
   private tabData: ShopModel[] | CounterpartyModel[];
+  private manufatureData: [];
+  private counterpartiesData = [];
   private dataType: number;
   private userId: number;
   private loading: boolean;
   private activeChecked: boolean;
   private nonActiveChecked: boolean;
   private clonedTabData;
-
+  private shopTypes: [];
 
 
   constructor(
@@ -96,6 +98,13 @@ export class MainPageComponent implements OnInit {
 
   }
 
+  shopSingleDataPreloader(rawData: any): ShopModel{
+    const newData: ShopModel = {};
+    rawData.content.map(d => {
+
+    })
+  }
+
   shopsToggle() {
 
     this.loadShopsData();
@@ -109,16 +118,16 @@ export class MainPageComponent implements OnInit {
 
   activeCheck(e) {
     this.activeChecked = e;
-    if(e){
+    if (e) {
       this.clonedTabData = [...this.tabData];
       [...this.tabData] = this.tabData.filter((d) => {
-        if(!d.active){
+        if (!d.active) {
           return d;
         }
       })
 
     }
-    if(!e){
+    if (!e) {
       [...this.tabData] = this.clonedTabData;
       this.clonedTabData = [];
     }
@@ -126,20 +135,60 @@ export class MainPageComponent implements OnInit {
 
   nonActiveCheck(e) {
     this.nonActiveChecked = e;
-    if(e){
+    if (e) {
       this.clonedTabData = [...this.tabData];
       [...this.tabData] = this.tabData.filter((d) => {
-        if(d.active){
+        if (d.active) {
           return d;
         }
       })
 
     }
-    if(!e){
+    if (!e) {
       [...this.tabData] = this.clonedTabData;
       this.clonedTabData = [];
     }
 
+  }
+
+  onShopEdited(e) {
+    console.dir(e);
+    if (this.dataType === 1) {
+      let idx = this.tabData.findIndex((i) => i.id === e.id);
+
+      this.shopService.editShop(e, e.id).subscribe((data) => {
+        this.tabData[idx] = [...this.shopTableDataPreloader(data)][0];
+      })
+
+    }
+  }
+
+  onShopNew(e) {
+
+  }
+
+  onShopTypeNew(e) {
+
+  }
+
+  onLoadShopTypes() {
+
+  }
+
+  onCounterpartyEdited(e) {
+
+  }
+
+  onCounterpartyNew(e) {
+
+  }
+
+  loadCounterpartiesForLists(){
+    console.log('3rd fired');
+    this.counterpartiesService.fetchCounterPartiesData().subscribe((data: ReferenceResponseModel) => {
+      this.counterpartiesData = [...data.content];
+
+    });
   }
 
 }

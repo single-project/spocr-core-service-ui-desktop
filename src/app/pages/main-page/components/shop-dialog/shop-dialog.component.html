@@ -1,0 +1,36 @@
+<p-dialog header="Карточка клиента" appendTo="body"  [(visible)]="display" [autoZIndex]="true"  [focusOnShow]="false"  [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '450px'}">
+  <div class="ui-g ui-fluid" *ngIf="entity">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="name">ИМЯ</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="name" [(ngModel)]="entity.name" placeholder="{{entity.name}}" autofocus />
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="counterparty">КОНТРАГЕНТ</label>
+      </div>
+      <div class="ui-g-8">
+        <p-dropdown (click)="shopCounterpartySelect()" placeholder="Выберите контрагента" id="counterparty"  [options]="counterpartiesForSelect" [(ngModel)]="entity.counterpartyName"></p-dropdown>
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="acive">АКТИВНЫЙ</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox id="acive" [binary]="true" [(ngModel)]="entity.active"></p-checkbox>
+      </div>
+    </div>
+
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+
+      <button type="button"  class="ui-button-success" pButton icon="fa fa-check" (click)="shopSaved()" label="Сохранить"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()" label="Отмена"></button>
+    </div>
+  </p-footer>
+</p-dialog>

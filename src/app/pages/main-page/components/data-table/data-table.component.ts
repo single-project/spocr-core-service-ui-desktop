@@ -1,6 +1,5 @@
-import {Component, Inject, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
-import {ConfigService} from "../../../../core/services/config.service";
 import {ShopModel} from "../../../../core/models/shop.model";
 
 @Component({
@@ -11,13 +10,24 @@ import {ShopModel} from "../../../../core/models/shop.model";
 export class DataTableComponent implements OnInit, OnChanges {
 
 
-  @Input() dataItems: ShopModel[];
+  @Input() dataItems: ShopModel[] | CounterpartyModel[];
   @Input() DataSetType: number;
   @Input() loading: boolean;
-  private displayEditDialog: boolean;
+  @Input() counterpartiesList: [];
+  @Input() shopTypesList: [];
+  @Output() saved = new EventEmitter<any>();
+  @Output() counterpartiesListSelect = new EventEmitter<any>();
+  @Output() shopTypeSelect = new EventEmitter<any>();
+  private displayShopEditDialog: boolean;
+  private displayCounterpartiesEditDialog: boolean;
+  private displayShopTypeEditDialog: boolean;
+  private displayManufactureEditDialog: boolean;
   private selectedEntity: ShopModel | CounterpartyModel;
   private newEntity: boolean;
   private entity: any = {};
+  private counterPartiesForSelect: [];
+  private manufactureForSelect: [];
+  private shopTypesForSelect: [];
 
 
   cols: any[];
@@ -41,7 +51,7 @@ export class DataTableComponent implements OnInit, OnChanges {
         {field: 'active', header: 'Активный'},
       ];
       this.selectedCols = this.cols;
-    } else if (this.DataSetType === 2) {
+    } else if (this.DataSetType === 2 || this.DataSetType === 3) {
       this.cols = [
         {field: 'id', header: 'ID'},
         {field: 'name', header: 'Имя'},
@@ -55,7 +65,7 @@ export class DataTableComponent implements OnInit, OnChanges {
     this.newEntity = false;
     this.entity = this.cloneEntity(event.data);
     console.log(this.entity);
-    this.displayEditDialog = true;
+    this.displayShopEditDialog = true;
   }
 
   cloneEntity(e: any) {
@@ -67,5 +77,22 @@ export class DataTableComponent implements OnInit, OnChanges {
 
 
   }
+  onShopEditSave(e) {
+    this.saved.emit(e)
+  }
+
+  onCounterpartiesListSelect(){
+    console.log('2nd fired');
+    this.counterpartiesListSelect.emit();
+  }
+
+  onShopTypeSelect(){
+    this.shopTypeSelect.emit();
+  }
+
+  onCloseShopDialog(e){
+    this.displayShopEditDialog = e;
+  }
+
 
 }

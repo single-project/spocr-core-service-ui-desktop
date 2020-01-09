@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
-  ButtonModule, CardModule, CheckboxModule, DialogModule,
+  ButtonModule, CardModule, CheckboxModule, DialogModule, DropdownModule,
   InputTextModule,
   MenuModule, MessageModule, MessagesModule, MultiSelectModule,
   OverlayPanelModule, PaginatorModule,
@@ -33,6 +33,7 @@ import { ActiveTagsPipe } from './pipes/active-tags.pipe';
     MessagesModule,
     MessageModule,
     DialogModule,
+    DropdownModule
 
 
   ],
@@ -52,6 +53,7 @@ import { ActiveTagsPipe } from './pipes/active-tags.pipe';
     MessagesModule,
     MessageModule,
     DialogModule,
+    DropdownModule
 
   ]
 
