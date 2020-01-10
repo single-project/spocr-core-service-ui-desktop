@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
+import {IdNameModel} from "../../../../core/models/id-name.model";
 
 @Component({
   selector: 'app-shop-dialog',
@@ -20,8 +21,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShop = {};
   private counterpartiesForSelect;
-  private shopTypesForLabel: any[];
-  private selectedShopTypes: any[] = [];
+  private shopTypesForLabel: IdNameModel[];
+  private selectedShopTypes: IdNameModel[] = [];
 
 
   constructor() {
@@ -48,7 +49,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
           counterparty: {id: this.shop.counterpartyId},
           shopTypes: [...this.selectedShopTypes.map(t => {
             if (t !== {}) {
-              return {id: t.value}
+              return {id: t.id}
             }
           })]
         },
@@ -74,7 +75,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   shopSavedShopType() {
     this.onShopTypeSaved.emit([
       ...this.selectedShopTypes.map(t => {
-        return {id: t.value}
+        return {id: t.id}
       })
     ])
   }
@@ -95,7 +96,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     return cArr;
   }
 
-  shopTypesTranformHelper(shopTypesList: []) {
+  /*shopTypesTranformHelper(shopTypesList: []) {
 
     const stArr = [];
     if (shopTypesList) {
@@ -106,7 +107,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     }
     return stArr;
   }
-
+*/
 
   typesChange(){
     console.dir(this.selectedShopTypes);
@@ -114,8 +115,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   afterShow() {
     this.counterpartiesForSelect = this.counterpartiesTranformHelper(this.counterpartiesList);
-    this.selectedShopTypes = this.shopTypesTranformHelper(this.shop.shopTypes);
-    this.shopTypesForLabel = this.shopTypesTranformHelper(this.shopTypesList);
+    this.selectedShopTypes = this.shop.shopTypes;
+    this.shopTypesForLabel = this.shopTypesList;
 
     console.dir(this.selectedShopTypes);
     console.dir(this.shopTypesForLabel);

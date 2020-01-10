@@ -29,7 +29,14 @@
         <label for="shop-type">ТИП ТТ</label>
       </div>
       <div class="ui-g-8">
-        <p-multiSelect (onChange)="typesChange()" appendTo="body" id="shop-type" selectedItemsLabel="{0} Типов выбрано" defaultLabel="Выбрать тип ТТ"  [options]="shopTypesForLabel" [(ngModel)]="selectedShopTypes"   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+        <p-multiSelect (onChange)="typesChange()"
+                       appendTo="body"
+                       id="shop-type"
+                       selectedItemsLabel="{0} Типов выбрано"
+                       defaultLabel="Выбрать тип ТТ"
+                       dataKey="id"
+                       optionLabel="name"
+                       [options]="shopTypesForLabel" [(ngModel)]="selectedShopTypes"   [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
       </div>
     </div>
 
