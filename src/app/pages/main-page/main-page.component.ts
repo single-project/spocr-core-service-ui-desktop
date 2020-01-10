@@ -93,6 +93,16 @@ export class MainPageComponent implements OnInit {
 
   }
 
+  loadManufactureData(): void {
+    this.tableTitle = 'Производители';
+    this.dataType = 3;
+    this.loading = true;
+    this.manufactureService.fetchManufacturesData().subscribe((data: ReferenceResponseModel) => {
+      this.tabData = [...data.content];
+      this.loading = false;
+    });
+  }
+
   shopDataTransformHelper(rawData: any): ShopModel[] {
     const newData: ShopModel[] = [];
     rawData.content.forEach((d) => {
@@ -141,6 +151,9 @@ export class MainPageComponent implements OnInit {
 
     this.loadCounterpartiesData();
 
+  }
+  manufactireToggle() {
+    this.loadManufactureData();
   }
 
   activeCheck(e) {
@@ -215,7 +228,11 @@ export class MainPageComponent implements OnInit {
     let idx = this.tabData.findIndex((i) => i.id === e.id);
     this.counterpartiesService.editCounterparty(e, e.id).subscribe(
       (data) => {
-        this.tabData[idx] = {...data}
+        this.tabData[idx] = {...data};
+        this.showSuccessSavingMessage();
+      },
+      error => {
+        this.showServerErrorToast();
       }
     )
 
@@ -225,7 +242,10 @@ export class MainPageComponent implements OnInit {
     console.dir(e);
     let idx = this.tabData.findIndex((i) => i.id === e.id);
     this.counterpartiesService.newCounterparty(e).subscribe( data => {
-      this.tabData = [...this.tabData, data]
+      this.tabData = [...this.tabData, data];
+      this.showSuccessSavingMessage();
+    }, error => {
+      this.showServerErrorToast();
     })
 
   }

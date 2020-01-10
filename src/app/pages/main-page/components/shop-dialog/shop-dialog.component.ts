@@ -48,9 +48,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
           active: this.shop.active,
           counterparty: {id: this.shop.counterpartyId},
           shopTypes: [...this.selectedShopTypes.map(t => {
-            if (t !== {}) {
+
               return {id: t.id}
-            }
+
           })]
         },
       };
@@ -96,18 +96,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     return cArr;
   }
 
-  /*shopTypesTranformHelper(shopTypesList: []) {
 
-    const stArr = [];
-    if (shopTypesList) {
-      shopTypesList.forEach((st) => {
-        let shopType = {label: st['name'], value: st['id']};
-        stArr.push(shopType);
-      });
-    }
-    return stArr;
-  }
-*/
 
   typesChange(){
     console.dir(this.selectedShopTypes);
