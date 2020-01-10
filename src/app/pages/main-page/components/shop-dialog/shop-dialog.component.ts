@@ -64,7 +64,11 @@ export class ShopDialogComponent implements OnInit, OnChanges {
           active: this.shop.active,
           counterparty: {id: this.shop.counterpartyId},
           version: this.shop.version
-        }
+        },
+        types: [...this.selectedShopTypes.map(st => {
+          return {id: st.id}
+        })]
+
       };
       this.onEditedShopSave.emit(this.newShop);
     }

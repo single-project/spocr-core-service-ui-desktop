@@ -8,6 +8,7 @@ import {CounterpartyModel} from "../../core/models/counterparty.model";
 import {MessageService} from "primeng";
 import {ShopTypesService} from "../../core/services/shop-types.service";
 import {ManufactureService} from "../../core/services/manufacture.service";
+import {FilterService} from "../../core/services/filter.service";
 
 
 @Component({
@@ -18,15 +19,14 @@ import {ManufactureService} from "../../core/services/manufacture.service";
 export class MainPageComponent implements OnInit {
   private searchString: string;
   private tableTitle: string;
-  private tabData: ShopModel[] | CounterpartyModel[];
-  private manufatureData: [];
+  private tabData: any;
+  private manufatureData = [];
   private counterpartiesData = [];
   private dataType: number;
   private userId: number;
   private loading: boolean;
   private activeChecked: boolean;
   private nonActiveChecked: boolean;
-  private clonedTabData;
   private shopTypes = [];
 
 
@@ -37,6 +37,7 @@ export class MainPageComponent implements OnInit {
     @Inject(ShopTypesService) private shopTypesService: ShopTypesService,
     @Inject(ManufactureService) private manufactureService: ManufactureService,
     @Inject(MessageService) private mService: MessageService,
+    @Inject(FilterService) private filterService: FilterService,
   ) {
   }
 
@@ -46,7 +47,7 @@ export class MainPageComponent implements OnInit {
     this.loadShopsData();
     this.activeChecked = false;
     this.nonActiveChecked = false;
-    this.clonedTabData = [];
+
 
   }
 
@@ -56,6 +57,10 @@ export class MainPageComponent implements OnInit {
       this.loadShopsData();
     } else if (this.dataType === 2) {
       this.loadCounterpartiesData();
+    } else if (this.dataType === 3) {
+      this.loadManufactureData();
+    } else if (this.dataType === 4) {
+      this.loadShopTypesData();
     }
   }
 
@@ -103,6 +108,16 @@ export class MainPageComponent implements OnInit {
     });
   }
 
+  loadShopTypesData(): void {
+    this.tableTitle = 'Типы ТТ';
+    this.dataType = 4;
+    this.loading = true;
+    this.shopTypesService.fetchShopTypesData().subscribe((data: ReferenceResponseModel) => {
+      this.tabData = [...this.shopTypesDataTransformHelper(data)];
+      this.loading = false;
+    });
+  }
+
   shopDataTransformHelper(rawData: any): ShopModel[] {
     const newData: ShopModel[] = [];
     rawData.content.forEach((d) => {
@@ -113,7 +128,6 @@ export class MainPageComponent implements OnInit {
     return newData;
 
   }
-
 
 
   shopSingleTransformHelper(rawData: any): any {
@@ -152,62 +166,81 @@ export class MainPageComponent implements OnInit {
     this.loadCounterpartiesData();
 
   }
+
   manufactireToggle() {
     this.loadManufactureData();
   }
 
+  shopTypesToggle() {
+    this.loadShopTypesData();
+  }
+
   activeCheck(e) {
     this.activeChecked = e;
-    if (e) {
-      this.clonedTabData = [...this.tabData];
-      [...this.tabData] = this.tabData.filter((d) => {
-        if (!d.active) {
-          return d;
-        }
-      })
+    this.filterService.activeFilter(this.dataType, !this.activeChecked).subscribe(
+      (data: ReferenceResponseModel) => {
+        if (this.dataType === 1) {
+          this.tabData = [...this.shopDataTransformHelper(data)];
 
-    }
-    if (!e) {
-      [...this.tabData] = this.clonedTabData;
-    }
+        }
+        if (this.dataType === 4) {
+          this.tabData = [...this.shopTypesDataTransformHelper(data)];
+
+
+        }
+        if (this.dataType === 2 || this.dataType === 3) {
+          this.tabData = [...data.content];
+
+        }
+
+      }
+    );
+
   }
 
   nonActiveCheck(e) {
     this.nonActiveChecked = e;
-    if (e) {
-      this.clonedTabData = [...this.tabData];
-      [...this.tabData] = this.tabData.filter((d) => {
-        if (d.active) {
-          return d;
+    this.filterService.activeFilter(this.dataType, !this.activeChecked).subscribe(
+      (data: ReferenceResponseModel) => {
+        if (this.dataType === 1) {
+          this.tabData = [...this.shopDataTransformHelper(data)];
         }
-      })
+        if (this.dataType === 4) {
+          this.tabData = [...this.shopTypesDataTransformHelper(data)];
 
-    }
-    if (!e) {
-      [...this.tabData] = this.clonedTabData;
-      this.clonedTabData = [];
-    }
+        }
+        if (this.dataType === 2 || this.dataType === 3) {
+          this.tabData = [...data.content];
+        }
+
+      }
+    );
 
   }
 
   onShopEdited(e) {
+    console.dir(e.types);
+    if (e.types) {
+      this.shopService.shopTypeAdd(e.types[0], e.shopData.id).subscribe();
+    }
+    let idx = this.tabData.findIndex((i) => i.id === e.shopData.id);
 
-      let idx = this.tabData.findIndex((i) => i.id === e.shopData.id);
+    this.shopService.editShop(e.shopData, e.shopData.id).subscribe((data) => {
+      this.tabData[idx] = {...this.shopSingleTransformHelper(data)};
+      this.showSuccessSavingMessage()
+    }, error => {
+      this.showServerErrorToast();
+    })
 
-      this.shopService.editShop(e.shopData, e.shopData.id).subscribe((data) => {
-        this.tabData[idx] = {...this.shopSingleTransformHelper(data)};
-        this.showSuccessSavingMessage()
-      }, error => {
-        this.showServerErrorToast();
-      })
 
   }
 
   onShopNew(e) {
 
     let idx = this.tabData.findIndex((i) => i.id === e.shopData.id);
+
     this.shopService.newShop(e.shopData).subscribe((data) => {
-      this.tabData[idx] = {...this.shopSingleTransformHelper(data)};
+      this.tabData = [...this.tabData, this.shopSingleTransformHelper(data)];
       this.showSuccessSavingMessage()
     }, error => {
       this.showServerErrorToast();
@@ -216,7 +249,26 @@ export class MainPageComponent implements OnInit {
   }
 
   onShopTypeNew(e) {
+    let idx = this.tabData.findIndex((i) => i.id === e.id);
 
+    this.shopTypesService.newShopType(e).subscribe((data) => {
+      this.tabData = [...this.tabData, this.shopTypesSingleTransformHelper(data)];
+      this.showSuccessSavingMessage()
+    }, error => {
+      this.showServerErrorToast();
+    });
+  }
+
+  onShopTypesEdit(e) {
+    console.dir
+    let idx = this.tabData.findIndex((i) => i.id === e.id);
+
+    this.shopTypesService.editShopType(e, e.id).subscribe((data) => {
+      this.tabData[idx] = {...this.shopTypesSingleTransformHelper(data)};
+      this.showSuccessSavingMessage()
+    }, error => {
+      this.showServerErrorToast();
+    })
   }
 
   onLoadShopTypes() {
@@ -241,7 +293,7 @@ export class MainPageComponent implements OnInit {
   onCounterpartyNew(e) {
     console.dir(e);
     let idx = this.tabData.findIndex((i) => i.id === e.id);
-    this.counterpartiesService.newCounterparty(e).subscribe( data => {
+    this.counterpartiesService.newCounterparty(e).subscribe(data => {
       this.tabData = [...this.tabData, data];
       this.showSuccessSavingMessage();
     }, error => {
@@ -251,11 +303,24 @@ export class MainPageComponent implements OnInit {
   }
 
   onManufactureEdited(e) {
+    let idx = this.tabData.findIndex((i) => i.id === e.id);
+    this.manufactureService.editManufacture(e, e.id).subscribe(data => {
+      this.tabData[idx] = {...data};
+      this.showSuccessSavingMessage();
+    }, error => {
+      this.showServerErrorToast();
+    })
 
   }
 
   onManufactureNew(e) {
-
+    let idx = this.tabData.findIndex((i) => i.id === e.id);
+    this.manufactureService.newManufacture(e).subscribe(data => {
+      this.tabData = [...this.tabData, data];
+      this.showSuccessSavingMessage();
+    }, error => {
+      this.showServerErrorToast();
+    })
   }
 
   loadCounterpartiesForLists() {
@@ -265,10 +330,17 @@ export class MainPageComponent implements OnInit {
     });
   }
 
-  loadShopTypesForList(){
+  loadShopTypesForList() {
     this.shopTypesService.fetchShopTypesData().subscribe((data: ReferenceResponseModel) => {
       this.shopTypes = [...this.shopTypesDataTransformHelper(data)];
     });
+  }
+
+  loadManufatureDataForList() {
+    this.manufactureService.fetchManufacturesData().subscribe((data: ReferenceResponseModel) => {
+      this.manufatureData = [...data.content];
+    })
+
   }
 
   showServerErrorToast() {

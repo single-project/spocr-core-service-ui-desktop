@@ -1,4 +1,4 @@
-<app-navbar (onCounterParties)="counterpartiesToggle()" (onShopsMenu)="shopsToggle()" (onManufactureMenu)="manufactireToggle()" [userId]="userId"></app-navbar>
+<app-navbar (onCounterParties)="counterpartiesToggle()" (onShopTypsMenu)="shopTypesToggle()" (onShopsMenu)="shopsToggle()" (onManufactureMenu)="manufactireToggle()" [userId]="userId"></app-navbar>
 <div class="p-grid">
   <div class="ekc-content-container p-lg-12 p-sm-12">
     <p-toolbar>
@@ -31,16 +31,17 @@
                          [shopTypesList]="shopTypes"
                          [counterpartiesList]="counterpartiesData" [dataItems]="tabData"
                          [loading]="loading"></app-shop-data-table>
-    <app-counterparties-data-table *ngIf="dataType === 2" [dataItems]="tabData" (savedCounterpartyNew)="onCounterpartyNew($event)" (savedCounterpartyEdited)="onCounterpartyEdited($event)"></app-counterparties-data-table>
-    <app-manufacture-data-table *ngIf="dataType === 3"></app-manufacture-data-table>
+    <app-counterparties-data-table *ngIf="dataType === 2" [loading]="loading" [dataItems]="tabData" (savedCounterpartyNew)="onCounterpartyNew($event)" (savedCounterpartyEdited)="onCounterpartyEdited($event)"></app-counterparties-data-table>
+    <app-manufacture-data-table *ngIf="dataType === 3" [loading]="loading" [dataItems]="tabData" (savedManufactureEdited)="onManufactureEdited($event)" (savedManufactureNew)="onManufactureNew($event)"></app-manufacture-data-table>
+    <app-shop-types-data-table *ngIf="dataType === 4" [loading]="loading" [dataItems]="tabData" [manufactureList]="manufatureData" (shopTypeEdited)="onShopTypesEdit($event)" (shopTypeNew)="onShopTypeNew($event)" (manufactureListLoad)="loadManufatureDataForList()"></app-shop-types-data-table>
     <!--    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>-->
   </div>
 
-  <p-overlayPanel #opfilter>
-    <app-filters-popup-input-set (onCheckActive)="activeCheck($event)" (onCheckedNonActive)="nonActiveCheck($event)"
-                                 [checkedActive]="activeChecked"
-                                 [checkedNonActive]="nonActiveChecked"></app-filters-popup-input-set>
-  </p-overlayPanel>
+<!--  <p-overlayPanel #opfilter>-->
+<!--    <app-filters-popup-input-set (onCheckActive)="activeCheck($event)" (onCheckedNonActive)="nonActiveCheck($event)"-->
+<!--                                 [checkedActive]="activeChecked"-->
+<!--                                 [checkedNonActive]="nonActiveChecked"></app-filters-popup-input-set>-->
+<!--  </p-overlayPanel>-->
   <p-toast [style]="{marginTop: '80px'}" key="tc" position="top-center"></p-toast>
   <p-toast [baseZIndex]="5000" [modal]="true" key="c" position="center">
     <ng-template let-message pTemplate="message">

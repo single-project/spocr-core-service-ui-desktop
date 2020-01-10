@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
   @Output() onShopsMenu = new EventEmitter<any>();
   @Output() onCounterParties = new EventEmitter<any>();
   @Output() onManufactureMenu = new EventEmitter<any>();
+  @Output() onShopTypsMenu = new EventEmitter<any>();
   private menuItems: MenuItem[];
 
   constructor(@Inject(AuthService) private auth: AuthService, @Inject(Router) private router: Router) {
@@ -26,6 +27,7 @@ export class NavbarComponent implements OnInit {
         {label: 'Торговые точки', icon: 'pi pi-fw pi-folder-open', command: () => this.onShops()},
         {label: 'Контрагенты', icon: 'pi pi-fw pi-folder-open', command: () => this.onCounterparties()},
         {label: 'Производители', icon: 'pi pi-fw pi-folder-open', command: () => this.onManufacture()},
+        {label: 'Типы ТТ', icon: 'pi pi-fw pi-folder-open', command: () => this.onShopTypes()},
       ]
     },
       {
@@ -55,4 +57,10 @@ export class NavbarComponent implements OnInit {
   onManufacture(): void {
     this.onManufactureMenu.emit();
   }
+
+  onShopTypes(): void {
+    this.onShopTypsMenu.emit();
+  }
+
+
 }
