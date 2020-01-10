@@ -19,4 +19,13 @@ export class SearchService {
     const searchURL = this.config.BASE_URL + this.config.COUNTERPARTIES_URL;
     return this.http.get(`${searchURL}?q=${searchString}`);
   }
+  manufactureSearch(searchString: string): Observable<any>{
+    const searchURL = this.config.BASE_URL + this.config.MANUFACTURES_URL;
+    return this.http.get(`${searchURL}?q=${searchString}`);
+  }
+  shopTypeSearch(searchString: string): Observable<any>{
+    const searchURL = this.config.BASE_URL + this.config.SHOP_TYPES_URL;
+    return this.http.get(`${searchURL}?q=${searchString}`);
+  }
+
 }

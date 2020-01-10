@@ -73,6 +73,14 @@ export class MainPageComponent implements OnInit {
       this.search.counterpartiesSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
         this.tabData = data.content;
       })
+    } else if (this.dataType === 3) {
+      this.search.manufactureSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
+        this.tabData = data.content;
+      })
+    } else if (this.dataType === 4) {
+      this.search.shopTypeSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
+        this.tabData = this.shopTypesDataTransformHelper(data);
+      })
     }
   }
 
@@ -220,9 +228,9 @@ export class MainPageComponent implements OnInit {
 
   onShopEdited(e) {
     console.dir(e.types);
-    if (e.types) {
-      this.shopService.shopTypeAdd(e.types[0], e.shopData.id).subscribe();
-    }
+    // if (e.types) {
+    //   this.shopService.shopTypeAdd(e.types[0], e.shopData.id).subscribe();
+    // }
     let idx = this.tabData.findIndex((i) => i.id === e.shopData.id);
 
     this.shopService.editShop(e.shopData, e.shopData.id).subscribe((data) => {

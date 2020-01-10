@@ -10,7 +10,8 @@
 
         <div class="ui-g-8 ui-sm-12">
           <div class="ui-inputgroup">
-            <input (click)="opfilter.toggle($event)" (keydown.enter)="onSearched()" [(ngModel)]="searchString"
+<!--            (click)="opfilter.toggle($event)"-->
+            <input  (keydown.enter)="onSearched()" [(ngModel)]="searchString"
                    id="search" pInputText
                    placeholder="Найти..." size="32"
                    type="text"/>
