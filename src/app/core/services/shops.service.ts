@@ -28,5 +28,9 @@ export class ShopsService {
     return this.http.post(this.shopUrl, shopData);
   }
 
+  shopTypeAdd(typeData: [], id: number): any {
+    return this.http.put(`${this.shopUrl}/${id}`, typeData);
+  }
+
 
 }

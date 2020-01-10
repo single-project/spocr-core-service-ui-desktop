@@ -6,6 +6,8 @@ import {ReferenceResponseModel} from "../../core/models/reference-response.model
 import {CounterpartiesService} from "../../core/services/counterparties.service";
 import {CounterpartyModel} from "../../core/models/counterparty.model";
 import {MessageService} from "primeng";
+import {ShopTypesService} from "../../core/services/shop-types.service";
+import {ManufactureService} from "../../core/services/manufacture.service";
 
 
 @Component({
@@ -25,13 +27,15 @@ export class MainPageComponent implements OnInit {
   private activeChecked: boolean;
   private nonActiveChecked: boolean;
   private clonedTabData;
-  private shopTypes: [];
+  private shopTypes = [];
 
 
   constructor(
     @Inject(ShopsService) private shopService: ShopsService,
     @Inject(SearchService) private search: SearchService,
     @Inject(CounterpartiesService) private counterpartiesService: CounterpartiesService,
+    @Inject(ShopTypesService) private shopTypesService: ShopTypesService,
+    @Inject(ManufactureService) private manufactureService: ManufactureService,
     @Inject(MessageService) private mService: MessageService,
   ) {
   }
@@ -58,7 +62,7 @@ export class MainPageComponent implements OnInit {
   onSearched(): void {
     if (this.dataType === 1) {
       this.search.shopSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
-        this.tabData = data.content;
+        this.tabData = this.shopDataTransformHelper(data);
       })
     } else if (this.dataType === 2) {
       this.search.counterpartiesSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
@@ -73,7 +77,7 @@ export class MainPageComponent implements OnInit {
     this.loading = true;
     this.shopService.fetchShopData().subscribe((data: ReferenceResponseModel) => {
 
-      this.tabData = [...this.shopTableDataPreloader(data)];
+      this.tabData = [...this.shopDataTransformHelper(data)];
       this.loading = false;
     });
   }
@@ -89,7 +93,7 @@ export class MainPageComponent implements OnInit {
 
   }
 
-  shopTableDataPreloader(rawData: any): ShopModel[] {
+  shopDataTransformHelper(rawData: any): ShopModel[] {
     const newData: ShopModel[] = [];
     rawData.content.forEach((d) => {
       d.counterpartyName = d.counterparty.name;
@@ -100,11 +104,31 @@ export class MainPageComponent implements OnInit {
 
   }
 
-  shopSingleDataPreloader(rawData: any): any {
+
+
+  shopSingleTransformHelper(rawData: any): any {
 
     let newData: ShopModel = {...rawData};
     newData.counterpartyId = rawData.counterparty.id;
     newData.counterpartyName = rawData.counterparty.name;
+    return newData;
+  }
+
+  shopTypesDataTransformHelper(rawData: any) {
+    const newData = [];
+    rawData.content.forEach((d) => {
+      d.manufactureName = d.manufacturer.name;
+      d.manufactureId = d.manufacturer.id;
+      newData.push(d)
+    });
+    return newData;
+  }
+
+  shopTypesSingleTransformHelper(rawData: any): any {
+
+    let newData = {...rawData};
+    newData.manufactureName = rawData.manufacturer.id;
+    newData.manufactureName = rawData.manufacturer.name;
     return newData;
   }
 
@@ -116,7 +140,7 @@ export class MainPageComponent implements OnInit {
   counterpartiesToggle() {
 
     this.loadCounterpartiesData();
-    console.log(this.dataType);
+
   }
 
   activeCheck(e) {
@@ -132,7 +156,6 @@ export class MainPageComponent implements OnInit {
     }
     if (!e) {
       [...this.tabData] = this.clonedTabData;
-      this.clonedTabData = [];
     }
   }
 
@@ -155,25 +178,23 @@ export class MainPageComponent implements OnInit {
   }
 
   onShopEdited(e) {
-    console.log('edited fired');
-    if (this.dataType === 1) {
-      let idx = this.tabData.findIndex((i) => i.id === e.id);
 
-      this.shopService.editShop(e, e.id).subscribe((data) => {
-        this.tabData[idx] = {...this.shopSingleDataPreloader(data)};
+      let idx = this.tabData.findIndex((i) => i.id === e.shopData.id);
+
+      this.shopService.editShop(e.shopData, e.shopData.id).subscribe((data) => {
+        this.tabData[idx] = {...this.shopSingleTransformHelper(data)};
         this.showSuccessSavingMessage()
       }, error => {
         this.showServerErrorToast();
       })
 
-    }
   }
 
   onShopNew(e) {
-    console.log('new fired');
-    let idx = this.tabData.findIndex((i) => i.id === e.id);
-    this.shopService.newShop(e).subscribe((data) => {
-      this.tabData[idx] = {...this.shopSingleDataPreloader(data)};
+
+    let idx = this.tabData.findIndex((i) => i.id === e.shopData.id);
+    this.shopService.newShop(e.shopData).subscribe((data) => {
+      this.tabData[idx] = {...this.shopSingleTransformHelper(data)};
       this.showSuccessSavingMessage()
     }, error => {
       this.showServerErrorToast();
@@ -190,10 +211,22 @@ export class MainPageComponent implements OnInit {
   }
 
   onCounterpartyEdited(e) {
+    console.dir(e);
+    let idx = this.tabData.findIndex((i) => i.id === e.id);
+    this.counterpartiesService.editCounterparty(e, e.id).subscribe(
+      (data) => {
+        this.tabData[idx] = {...data}
+      }
+    )
 
   }
 
   onCounterpartyNew(e) {
+    console.dir(e);
+    let idx = this.tabData.findIndex((i) => i.id === e.id);
+    this.counterpartiesService.newCounterparty(e).subscribe( data => {
+      this.tabData = [...this.tabData, data]
+    })
 
   }
 
@@ -206,10 +239,15 @@ export class MainPageComponent implements OnInit {
   }
 
   loadCounterpartiesForLists() {
-    console.log('3rd fired');
     this.counterpartiesService.fetchCounterPartiesData().subscribe((data: ReferenceResponseModel) => {
       this.counterpartiesData = [...data.content];
 
+    });
+  }
+
+  loadShopTypesForList(){
+    this.shopTypesService.fetchShopTypesData().subscribe((data: ReferenceResponseModel) => {
+      this.shopTypes = [...this.shopTypesDataTransformHelper(data)];
     });
   }
 

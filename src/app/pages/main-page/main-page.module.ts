@@ -15,6 +15,7 @@ import { ShopDataTableComponent } from './components/shop-data-table/shop-data-t
 import { ManufactureDataTableComponent } from './components/manufacture-data-table/manufacture-data-table.component';
 import { CounterpartiesDataTableComponent } from './components/counterparties-data-table/counterparties-data-table.component';
 import { ShopTypesDataTableComponent } from './components/shop-types-data-table/shop-types-data-table.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 
@@ -38,6 +39,7 @@ import { ShopTypesDataTableComponent } from './components/shop-types-data-table/
     MainPageRoutingModule,
     LayoutModule,
     SharedModule,
+    ReactiveFormsModule,
 
   ]
 })

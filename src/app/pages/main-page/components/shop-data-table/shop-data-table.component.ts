@@ -14,20 +14,15 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
   @Input() loading: boolean;
   @Input() counterpartiesList: [];
   @Input() shopTypesList: [];
-  @Output() savedEdited = new EventEmitter<any>();
-  @Output() savedNew = new EventEmitter<any>();
+  @Output() savedShopEdited = new EventEmitter<any>();
+  @Output() savedShopNew = new EventEmitter<any>();
   @Output() counterpartiesListSelect = new EventEmitter<any>();
   @Output() shopTypeSelect = new EventEmitter<any>();
   private displayShopEditDialog: boolean;
-  private displayCounterpartiesEditDialog: boolean;
-  private displayShopTypeEditDialog: boolean;
-  private displayManufactureEditDialog: boolean;
   private selectedShop: ShopModel;
   private isNewShop: boolean;
   private shop: any = {};
-  private counterPartiesForSelect: [];
-  private manufactureForSelect: [];
-  private shopTypesForSelect: [];
+
 
 
   cols: any[];
@@ -37,7 +32,8 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-
+    this.counterpartiesListSelect.emit();
+    this.shopTypeSelect.emit();
 
   }
 
@@ -72,23 +68,19 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
   }
 
   onShopEditSave(e) {
-    this.savedEdited.emit(e);
+    this.savedShopEdited.emit(e);
     this.displayShopEditDialog = false;
     this.shop = null;
 
   }
 
   onNewShopSave(e){
-    this.savedNew.emit(e);
+    this.savedShopNew.emit(e);
   }
 
-  onCounterpartiesListSelect() {
-    this.counterpartiesListSelect.emit();
-  }
 
-  onShopTypeSelect() {
-    this.shopTypeSelect.emit();
-  }
+
+
 
   onCloseShopDialog(e) {
     this.displayShopEditDialog = e;
@@ -101,5 +93,7 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
     this.displayShopEditDialog = true;
 
   }
-
+  columnsChange(){
+    console.dir(this.selectedCols);
+  }
 }

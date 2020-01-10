@@ -1,1 +1,57 @@
-<p>counterparties-data-table works!</p>
+<p-table [loading]="loading" [columns]="selectedCols" [value]="dataItems" [responsive]="true"
+         [paginator]="true" [rows]="13"
+         selectionMode="single" [(selection)]="selectedCounterparty" (onRowSelect)="onRowSelect($event)">
+  <ng-template pTemplate="caption" let-rowData>
+    <div style="text-align:left" class="p-align-center">
+      <p-multiSelect (onChange)="columnsChange()" [options]="cols" [(ngModel)]="selectedCols" optionLabel="header"
+                     selectedItemsLabel="{0} колонок выбрано" [style]="{minWidth: '200px'}"
+                     defaultLabel="Выбрать колонки">
+
+      </p-multiSelect>
+
+      <button (click)="onCounterpartyCreate()" style="margin-left: 1em; top: -10px" type="button" class="ui-button-success" pButton icon="fa fa-plus"
+              label="Добавить"></button>
+
+
+    </div>
+
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
+        {{col.header}}
+        <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'" [field]="col.field" ariaLabel="Activate to sort"
+                    ariaLabelDesc="Activate to sort in descending order"
+                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-dataItem let-columns="columns" let-rowData>
+    <tr [pSelectableRow]="rowData">
+      <td *ngFor="let col of columns" style="text-align: center">
+
+        <ng-container *ngIf="col.field !== 'active'">{{dataItem[col.field]}}</ng-container>
+
+        <span *ngIf="col.field === 'active'"
+              [ngClass]="dataItem[col.field] === true ? 'ekc-table-span-active': 'ekc-table-span-passive'"> {{dataItem[col.field] | activeTags }}</span>
+      </td>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary" let-rowData>
+
+
+    Всего {{dataItems?.length}} объектов
+
+
+  </ng-template>
+
+</p-table>
+
+<app-counterparty-dialog (onNewCounterpartySaved)="onNewCounterpartySave($event)"
+                         (onEditedCounterpartySave)="onCounterpartyEditSave($event)" (onCloseDialog)="onCloseCounterpartyDialog($event)"
+                         [isNew]="isNewCounterparty" [counterparty]="counterparty" [display]="displayCounterpartyEditDialog"></app-counterparty-dialog>
+
+
+

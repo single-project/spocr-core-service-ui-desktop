@@ -20,13 +20,13 @@ export class CounterpartiesService {
   }
 
 
-  editShop(updateData: {}, id: number): Observable<any> {
+  editCounterparty(updateData: {}, id: number):any {
 
     return this.http.patch(`${this.counterpartiesURL}/${id}`, updateData)
   }
 
-  newShop(shopData: {}): Observable<any> {
-    return this.http.post(this.counterpartiesURL, shopData);
+  newCounterparty(updateData: {}): Observable<any> {
+    return this.http.post(this.counterpartiesURL, updateData);
   }
 
 }

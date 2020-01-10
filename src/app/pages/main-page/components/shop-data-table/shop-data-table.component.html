@@ -3,7 +3,7 @@
          selectionMode="single" [(selection)]="selectedShop" (onRowSelect)="onRowSelect($event)">
   <ng-template pTemplate="caption" let-rowData>
     <div style="text-align:left" class="p-align-center">
-      <p-multiSelect [options]="cols" [(ngModel)]="selectedCols" optionLabel="header"
+      <p-multiSelect (onChange)="columnsChange()" [options]="cols" [(ngModel)]="selectedCols" optionLabel="header"
                      selectedItemsLabel="{0} колонок выбрано" [style]="{minWidth: '200px'}"
                      defaultLabel="Выбрать колонки">
 
@@ -49,7 +49,7 @@
 
 </p-table>
 
-<app-shop-dialog (onNewShopSaved)="onNewShopSave($event)" (onEditedShopSave)="onShopEditSave($event)" (onCloseDialog)="onCloseShopDialog($event)" (onCounterpartySelection)="onCounterpartiesListSelect()" (onShopTypeSelection)="onShopTypeSelect()"
+<app-shop-dialog (onNewShopSaved)="onNewShopSave($event)" (onEditedShopSave)="onShopEditSave($event)" (onCloseDialog)="onCloseShopDialog($event)"  (onCounterpartySelection)="onCounterpartiesListSelect()" (onShopTypeSelection)="onShopTypeSelect()"
                  [isNew]="isNewShop" [shop]="shop" [display]="displayShopEditDialog" [counterpartiesList]="counterpartiesList" [shopTypesList]="shopTypesList"></app-shop-dialog>
 
 

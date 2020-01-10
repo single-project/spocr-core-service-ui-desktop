@@ -14,15 +14,14 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() isNew;
   @Output() onEditedShopSave = new EventEmitter<any>();
   @Output() onNewShopSaved = new EventEmitter<any>();
+  @Output() onShopTypeSaved = new EventEmitter<any>();
   @Output() onCounterpartySelection = new EventEmitter<any>();
   @Output() onShopTypeSelection = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShop = {};
-  private newShopName: string;
-  private newShopCounterparty = {};
-  private newShopType = {};
-  private newShopActivity: boolean;
   private counterpartiesForSelect;
+  private shopTypesForLabel: any[];
+  private selectedShopTypes: any[] = [];
 
 
   constructor() {
@@ -33,8 +32,6 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.counterpartiesForSelect = this.prepareCparties(this.counterpartiesList);
-    console.log(this.isNew)
 
 
   }
@@ -42,21 +39,31 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   shopSaved() {
 
     if (this.isNew) {
+
       this.newShop = {
         ...this.newShop,
-        name: this.shop.name,
-        active: this.shop.active,
-        counterparty: {id: this.shop.counterpartyId}
+        shopData: {
+          name: this.shop.name,
+          active: this.shop.active,
+          counterparty: {id: this.shop.counterpartyId},
+          shopTypes: [...this.selectedShopTypes.map(t => {
+            if (t !== {}) {
+              return {id: t.value}
+            }
+          })]
+        },
       };
       this.onNewShopSaved.emit(this.newShop);
     } else {
       this.newShop = {
         ...this.newShop,
-        name: this.shop.name,
-        id: this.shop.id,
-        active: this.shop.active,
-        counterparty: {id: this.shop.counterpartyId},
-        version: this.shop.version
+        shopData: {
+          name: this.shop.name,
+          id: this.shop.id,
+          active: this.shop.active,
+          counterparty: {id: this.shop.counterpartyId},
+          version: this.shop.version
+        }
       };
       this.onEditedShopSave.emit(this.newShop);
     }
@@ -64,21 +71,19 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     this.onCloseDialog.emit(false);
   }
 
-  shopCounterpartySelect() {
-    console.log('1st fired');
-    this.onCounterpartySelection.emit();
-  }
-
-  shopTypeSelect() {
-    this.onShopTypeSelection.emit();
+  shopSavedShopType() {
+    this.onShopTypeSaved.emit([
+      ...this.selectedShopTypes.map(t => {
+        return {id: t.value}
+      })
+    ])
   }
 
   closeDialog() {
-    this.shop = null;
     this.onCloseDialog.emit(false);
   }
 
-  prepareCparties(cpartyList: []) {
+  counterpartiesTranformHelper(cpartyList: []) {
 
     const cArr = [];
     cpartyList.forEach((c: CounterpartyModel) => {
@@ -87,8 +92,33 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       cArr.push(cParty);
     });
 
-    console.log(cArr);
     return cArr;
+  }
+
+  shopTypesTranformHelper(shopTypesList: []) {
+
+    const stArr = [];
+    if (shopTypesList) {
+      shopTypesList.forEach((st) => {
+        let shopType = {label: st['name'], value: st['id']};
+        stArr.push(shopType);
+      });
+    }
+    return stArr;
+  }
+
+
+  typesChange(){
+    console.dir(this.selectedShopTypes);
+  }
+
+  afterShow() {
+    this.counterpartiesForSelect = this.counterpartiesTranformHelper(this.counterpartiesList);
+    this.selectedShopTypes = this.shopTypesTranformHelper(this.shop.shopTypes);
+    this.shopTypesForLabel = this.shopTypesTranformHelper(this.shopTypesList);
+
+    console.dir(this.selectedShopTypes);
+    console.dir(this.shopTypesForLabel);
   }
 
 }

@@ -23,12 +23,15 @@
     </p-toolbar>
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
-    <app-shop-data-table (counterpartiesListSelect)="loadCounterpartiesForLists()" (savedEdited)="onShopEdited($event)"
-                         (savedNew)="onShopNew($event)"
+    <app-shop-data-table (counterpartiesListSelect)="loadCounterpartiesForLists()"
+                         (savedShopEdited)="onShopEdited($event)"
+                         (savedShopNew)="onShopNew($event)"
+                         (shopTypeSelect)="loadShopTypesForList()"
                          *ngIf="dataType === 1"
+                         [shopTypesList]="shopTypes"
                          [counterpartiesList]="counterpartiesData" [dataItems]="tabData"
                          [loading]="loading"></app-shop-data-table>
-    <app-counterparties-data-table *ngIf="dataType === 2"></app-counterparties-data-table>
+    <app-counterparties-data-table *ngIf="dataType === 2" [dataItems]="tabData" (savedCounterpartyNew)="onCounterpartyNew($event)" (savedCounterpartyEdited)="onCounterpartyEdited($event)"></app-counterparties-data-table>
     <app-manufacture-data-table *ngIf="dataType === 3"></app-manufacture-data-table>
     <!--    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>-->
   </div>
