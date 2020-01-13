@@ -35,13 +35,14 @@ export class ShopTypeDialogComponent implements OnInit {
         ...this.newShopType,
           name: this.shopType.name,
           active: this.shopType.active,
-          manufacturer: {id: this.selectedManufactures[1].id}
+          manufacturer: {id: this.selectedManufactures[0].id}
       };
       this.onNewShopTypeSaved.emit(this.newShopType);
     } else {
       this.newShopType = {
         ...this.newShopType,
         id: this.shopType.id,
+        name: this.shopType.name,
         active: this.shopType.active,
         manufacturer: {id: this.selectedManufactures[0].id},
         version: this.shopType.version
@@ -70,6 +71,9 @@ export class ShopTypeDialogComponent implements OnInit {
     if( this.selectedManufactures !== []){
       this.selectedManufactures = [];
       this.selectedManufactures.push(this.shopType.manufacturer);
+    }
+    if(this.isNew){
+      this.selectedManufactures = []
     }
 
 
