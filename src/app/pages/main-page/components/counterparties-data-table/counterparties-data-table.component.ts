@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ShopModel} from "../../../../core/models/shop.model";
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
+import {DadataConfig} from "@kolkov/ngx-dadata";
 
 @Component({
   selector: 'app-counterparties-data-table',
@@ -10,6 +11,7 @@ import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 export class CounterpartiesDataTableComponent implements OnInit, OnChanges {
   @Input() dataItems: CounterpartyModel[];
   @Input() loading: boolean;
+  @Input() dadataConfig: DadataConfig;
   @Output() savedCounterpartyEdited = new EventEmitter<any>();
   @Output() savedCounterpartyNew = new EventEmitter<any>();
   private displayCounterpartyEditDialog: boolean;

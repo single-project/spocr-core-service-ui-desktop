@@ -9,6 +9,7 @@ import {MessageService} from "primeng";
 import {ShopTypesService} from "../../core/services/shop-types.service";
 import {ManufactureService} from "../../core/services/manufacture.service";
 import {FilterService} from "../../core/services/filter.service";
+import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
 
 
 @Component({
@@ -28,6 +29,10 @@ export class MainPageComponent implements OnInit {
   private activeChecked: boolean;
   private nonActiveChecked: boolean;
   private shopTypes = [];
+  private daDataConfig: DadataConfig = {
+    apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
+    type: DadataType.party
+  };
 
 
   constructor(

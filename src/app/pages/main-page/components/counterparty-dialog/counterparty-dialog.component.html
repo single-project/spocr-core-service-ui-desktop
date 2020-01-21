@@ -17,7 +17,14 @@
         <p-checkbox id="acive" [binary]="true" [(ngModel)]="counterparty.active"></p-checkbox>
       </div>
     </div>
-
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label>ИНН</label>
+      </div>
+      <div class="ui-g-8">
+        <ngx-dadata (selected)="onAddressSelected($event)" [config]="dadataConfig" [(ngModel)]="party"></ngx-dadata>
+      </div>
+    </div>
 
   </div>
   <p-footer>

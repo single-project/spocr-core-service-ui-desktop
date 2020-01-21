@@ -10,6 +10,7 @@ import {
   ToolbarModule
 } from "primeng";
 import { ActiveTagsPipe } from './pipes/active-tags.pipe';
+import {NgxDadataComponent, NgxDadataModule} from "@kolkov/ngx-dadata";
 
 
 
@@ -36,6 +37,7 @@ import { ActiveTagsPipe } from './pipes/active-tags.pipe';
     DropdownModule,
     MultiSelectModule,
     ToastModule,
+    NgxDadataModule,
 
 
   ],
@@ -58,6 +60,7 @@ import { ActiveTagsPipe } from './pipes/active-tags.pipe';
     DropdownModule,
     MultiSelectModule,
     ToastModule,
+    NgxDadataModule,
 
   ]
 

@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
+import {DadataAddress, DadataConfig, DadataSuggestion} from "@kolkov/ngx-dadata";
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -10,11 +11,12 @@ export class CounterpartyDialogComponent implements OnInit {
   @Input() counterparty;
   @Input() display;
   @Input() isNew;
+  @Input() dadataConfig: DadataConfig;
   @Output() onEditedCounterpartySave = new EventEmitter<any>();
   @Output() onNewCounterpartySaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newCounterparty = {};
-
+  private party;
 
   constructor() { }
 
@@ -44,7 +46,9 @@ export class CounterpartyDialogComponent implements OnInit {
   closeDialog() {
     this.onCloseDialog.emit(false);
   }
-
+  onAddressSelected(event: DadataSuggestion) {
+    console.dir(event);
+  }
 
 
 

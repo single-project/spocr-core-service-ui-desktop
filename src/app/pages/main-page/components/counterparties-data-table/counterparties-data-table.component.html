@@ -49,7 +49,7 @@
 
 </p-table>
 
-<app-counterparty-dialog (onNewCounterpartySaved)="onNewCounterpartySave($event)"
+<app-counterparty-dialog [dadataConfig]="dadataConfig" (onNewCounterpartySaved)="onNewCounterpartySave($event)"
                          (onEditedCounterpartySave)="onCounterpartyEditSave($event)" (onCloseDialog)="onCloseCounterpartyDialog($event)"
                          [isNew]="isNewCounterparty" [counterparty]="counterparty" [display]="displayCounterpartyEditDialog"></app-counterparty-dialog>
 
