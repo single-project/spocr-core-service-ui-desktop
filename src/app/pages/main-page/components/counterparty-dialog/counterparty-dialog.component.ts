@@ -16,7 +16,7 @@ export class CounterpartyDialogComponent implements OnInit {
   @Output() onNewCounterpartySaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newCounterparty = {};
-  private party;
+  private party: DadataSuggestion;
 
   constructor() { }
 
@@ -29,12 +29,14 @@ export class CounterpartyDialogComponent implements OnInit {
 
       this.newCounterparty = {
         name: this.counterparty.name,
-        active: this.counterparty.active
+        active: this.counterparty.active,
+        suggestion: this.party
 
       };
       this.onNewCounterpartySaved.emit(this.newCounterparty);
     } else {
       this.newCounterparty = {...this.counterparty};
+      this.newCounterparty['suggestion'] = this.party;
       this.onEditedCounterpartySave.emit(this.newCounterparty);
     }
 
@@ -47,7 +49,8 @@ export class CounterpartyDialogComponent implements OnInit {
     this.onCloseDialog.emit(false);
   }
   onAddressSelected(event: DadataSuggestion) {
-    console.dir(event);
+    this.counterparty.name = event.value;
+    this.party = event;
   }
 
 
