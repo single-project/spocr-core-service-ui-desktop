@@ -29,9 +29,13 @@ export class MainPageComponent implements OnInit {
   private activeChecked: boolean;
   private nonActiveChecked: boolean;
   private shopTypes = [];
-  private daDataConfig: DadataConfig = {
+  private dadataPartyConfig: DadataConfig = {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.party
+  };
+  private dadataAddressConfig: DadataConfig = {
+    apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
+    type: DadataType.address
   };
 
 

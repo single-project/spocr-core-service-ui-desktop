@@ -42,7 +42,14 @@
                        [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
       </div>
     </div>
-
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label>Адрес ТТ</label>
+      </div>
+      <div class="ui-g-8">
+        <ngx-dadata [(ngModel)]="shopAddress" [config]="dadataAddressConfig"></ngx-dadata>
+      </div>
+    </div>
   </div>
   <p-footer>
     <div class="ui-dialog-buttonpane ui-helper-clearfix">

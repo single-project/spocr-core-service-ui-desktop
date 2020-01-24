@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ShopModel} from "../../../../core/models/shop.model";
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
+import {DadataConfig} from "@kolkov/ngx-dadata";
 
 @Component({
   selector: 'app-shop-data-table',
@@ -14,6 +15,7 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
   @Input() loading: boolean;
   @Input() counterpartiesList: [];
   @Input() shopTypesList: [];
+  @Input() dadataAddressConfig: DadataConfig;
   @Output() savedShopEdited = new EventEmitter<any>();
   @Output() savedShopNew = new EventEmitter<any>();
   @Output() counterpartiesListSelect = new EventEmitter<any>();

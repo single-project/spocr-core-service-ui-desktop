@@ -79,7 +79,6 @@ export class ShopTypeDialogComponent implements OnInit {
 
     this.manufactureForLabels = this.manufactureList;
 
-    console.dir(this.selectedManufactures);
-    console.dir(this.manufactureForLabels);
+
   }
 }

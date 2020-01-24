@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 import {IdNameModel} from "../../../../core/models/id-name.model";
+import {DadataAddress, DadataConfig} from "@kolkov/ngx-dadata";
 
 @Component({
   selector: 'app-shop-dialog',
@@ -13,6 +14,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() counterpartiesList;
   @Input() shopTypesList;
   @Input() isNew;
+  @Input() dadataAddressConfig: DadataConfig;
   @Output() onEditedShopSave = new EventEmitter<any>();
   @Output() onNewShopSaved = new EventEmitter<any>();
   @Output() onShopTypeSaved = new EventEmitter<any>();
@@ -23,6 +25,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   private counterpartiesForSelect;
   private shopTypesForLabel: IdNameModel[];
   private selectedShopTypes: IdNameModel[] = [];
+  private shopAddress: DadataAddress;
 
 
   constructor() {
@@ -114,8 +117,6 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     this.selectedShopTypes = this.shop.shopTypes;
     this.shopTypesForLabel = this.shopTypesList;
 
-    console.dir(this.selectedShopTypes);
-    console.dir(this.shopTypesForLabel);
   }
 
 }
