@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, ViewChild, OnInit} from '@angular/core';
 import {ShopsService} from "../../core/services/shops.service";
 import {ShopModel} from "../../core/models/shop.model";
 import {SearchService} from "../../core/services/search.service";
@@ -10,6 +10,8 @@ import {ShopTypesService} from "../../core/services/shop-types.service";
 import {ManufactureService} from "../../core/services/manufacture.service";
 import {FilterService} from "../../core/services/filter.service";
 import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
+import {ShopDataTableComponent} from "./components/shop-data-table/shop-data-table.component";
+
 
 
 @Component({
@@ -33,11 +35,7 @@ export class MainPageComponent implements OnInit {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.party
   };
-  private dadataAddressConfig: DadataConfig = {
-    apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
-    type: DadataType.address
-  };
-
+  @ViewChild('shopDataTable', {static: false}) shopDataTable: ShopDataTableComponent;
 
   constructor(
     @Inject(ShopsService) private shopService: ShopsService,
@@ -53,7 +51,8 @@ export class MainPageComponent implements OnInit {
   ngOnInit() {
 
     this.userId = 1;
-    this.loadShopsData();
+    this.tableTitle = 'Торговые точки';
+    this.dataType = 1;
     this.activeChecked = false;
     this.nonActiveChecked = false;
 
@@ -63,7 +62,7 @@ export class MainPageComponent implements OnInit {
   clearSearch(): void {
     this.searchString = '';
     if (this.dataType === 1) {
-      this.loadShopsData();
+      this.shopDataTable.loadShopsData();
     } else if (this.dataType === 2) {
       this.loadCounterpartiesData();
     } else if (this.dataType === 3) {

@@ -1,4 +1,9 @@
-<app-navbar (onCounterParties)="counterpartiesToggle()" (onShopTypsMenu)="shopTypesToggle()" (onShopsMenu)="shopsToggle()" (onManufactureMenu)="manufactireToggle()" [userId]="userId"></app-navbar>
+<app-navbar (onCounterParties)="counterpartiesToggle()"
+            (onShopTypsMenu)="shopTypesToggle()"
+            (onShopsMenu)="shopsToggle()"
+            (onManufactureMenu)="manufactireToggle()"
+            [userId]="userId">
+</app-navbar>
 <div class="p-grid">
   <div class="ekc-content-container p-lg-12 p-sm-12">
     <p-toolbar>
@@ -11,7 +16,8 @@
         <div class="ui-g-8 ui-sm-12">
           <div class="ui-inputgroup">
 <!--            (click)="opfilter.toggle($event)"-->
-            <input  (keydown.enter)="onSearched()" [(ngModel)]="searchString"
+            <input  (keydown.enter)="onSearched()"
+                    [(ngModel)]="searchString"
                    id="search" pInputText
                    placeholder="Найти..." size="32"
                    type="text"/>
@@ -24,18 +30,23 @@
     </p-toolbar>
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
-    <app-shop-data-table (counterpartiesListSelect)="loadCounterpartiesForLists()"
-                         (savedShopEdited)="onShopEdited($event)"
-                         (savedShopNew)="onShopNew($event)"
-                         (shopTypeSelect)="loadShopTypesForList()"
-                         *ngIf="dataType === 1"
+    <app-shop-data-table *ngIf="dataType === 1"
                          [shopTypesList]="shopTypes"
-                         [counterpartiesList]="counterpartiesData" [dataItems]="tabData"
-                         [loading]="loading"
-                         [dadataAddressConfig]="dadataAddressConfig"
-    ></app-shop-data-table>
-    <app-counterparties-data-table *ngIf="dataType === 2" [dadataConfig]="dadataPartyConfig" [loading]="loading" [dataItems]="tabData" (savedCounterpartyNew)="onCounterpartyNew($event)" (savedCounterpartyEdited)="onCounterpartyEdited($event)"></app-counterparties-data-table>
-    <app-manufacture-data-table *ngIf="dataType === 3" [loading]="loading" [dataItems]="tabData" (savedManufactureEdited)="onManufactureEdited($event)" (savedManufactureNew)="onManufactureNew($event)"></app-manufacture-data-table>
+                         #shopDataTable>
+    </app-shop-data-table>
+    <app-counterparties-data-table *ngIf="dataType === 2"
+                                   [dadataConfig]="dadataPartyConfig"
+                                   [loading]="loading"
+                                   [dataItems]="tabData"
+                                   (savedCounterpartyNew)="onCounterpartyNew($event)"
+                                   (savedCounterpartyEdited)="onCounterpartyEdited($event)">
+    </app-counterparties-data-table>
+    <app-manufacture-data-table *ngIf="dataType === 3"
+                                [loading]="loading"
+                                [dataItems]="tabData"
+                                (savedManufactureEdited)="onManufactureEdited($event)"
+                                (savedManufactureNew)="onManufactureNew($event)">
+    </app-manufacture-data-table>
     <app-shop-types-data-table *ngIf="dataType === 4" [loading]="loading" [dataItems]="tabData" [manufactureList]="manufatureData" (shopTypeEdited)="onShopTypesEdit($event)" (shopTypeNew)="onShopTypeNew($event)" (manufactureListLoad)="loadManufatureDataForList()"></app-shop-types-data-table>
     <!--    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>-->
   </div>
@@ -45,11 +56,20 @@
 <!--                                 [checkedActive]="activeChecked"-->
 <!--                                 [checkedNonActive]="nonActiveChecked"></app-filters-popup-input-set>-->
 <!--  </p-overlayPanel>-->
-  <p-toast [style]="{marginTop: '80px'}" key="tc" position="top-center"></p-toast>
-  <p-toast [baseZIndex]="5000" [modal]="true" key="c" position="center">
-    <ng-template let-message pTemplate="message">
+  <p-toast [style]="{marginTop: '80px'}"
+           key="tc"
+           position="top-center">
+  </p-toast>
+  <p-toast [baseZIndex]="5000"
+           [modal]="true"
+           key="c"
+           position="center">
+    <ng-template let-message
+                 pTemplate="message">
       <div style="text-align: center">
-        <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+        <i class="pi pi-exclamation-triangle"
+           style="font-size: 3em">
+        </i>
         <h3>{{message.summary}}</h3>
         <p>{{message.detail}}</p>
       </div>
