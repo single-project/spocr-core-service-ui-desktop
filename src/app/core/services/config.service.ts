@@ -13,8 +13,6 @@ export class ConfigService {
   }
 
   fetchConfig() {
-
     return this.http.get('assets/config/cfg.json');
-
   }
 }

@@ -11,8 +11,7 @@ import {ManufactureService} from "../../core/services/manufacture.service";
 import {FilterService} from "../../core/services/filter.service";
 import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
 import {ShopDataTableComponent} from "./components/shop-data-table/shop-data-table.component";
-
-
+import {ConfigService} from "../../core/services/config.service";
 
 @Component({
   selector: 'app-main-page',
@@ -39,6 +38,7 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     @Inject(ShopsService) private shopService: ShopsService,
+    @Inject(ConfigService) private configService: ConfigService,
     @Inject(SearchService) private search: SearchService,
     @Inject(CounterpartiesService) private counterpartiesService: CounterpartiesService,
     @Inject(ShopTypesService) private shopTypesService: ShopTypesService,
@@ -56,7 +56,7 @@ export class MainPageComponent implements OnInit {
     this.activeChecked = false;
     this.nonActiveChecked = false;
 
-
+    this.setConfiguration();
   }
 
   clearSearch(): void {
@@ -72,24 +72,30 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  onSearched(): void {
+  onSearched(tableSearch: HTMLInputElement): void {
     if (this.dataType === 1) {
-      this.search.shopSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
-        this.tabData = this.shopDataTransformHelper(data);
-      })
+      this.shopDataTable.dataSearch(tableSearch.value);
     } else if (this.dataType === 2) {
-      this.search.counterpartiesSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
+      this.search.counterpartiesSearch(tableSearch.value).subscribe((data: ReferenceResponseModel) => {
         this.tabData = data.content;
       })
     } else if (this.dataType === 3) {
-      this.search.manufactureSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
+      this.search.manufactureSearch(tableSearch.value).subscribe((data: ReferenceResponseModel) => {
         this.tabData = data.content;
       })
     } else if (this.dataType === 4) {
-      this.search.shopTypeSearch(this.searchString).subscribe((data: ReferenceResponseModel) => {
+      this.search.shopTypeSearch(tableSearch.value).subscribe((data: ReferenceResponseModel) => {
         this.tabData = this.shopTypesDataTransformHelper(data);
       })
     }
+  }
+
+  setConfiguration(): void {
+    this.configService
+      .fetchConfig()
+      .subscribe((data) => {
+        console.log('');
+    });
   }
 
   loadShopsData(): void {

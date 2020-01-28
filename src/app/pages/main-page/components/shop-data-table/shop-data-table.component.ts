@@ -1,25 +1,24 @@
-import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {ShopModel} from "../../../../core/models/shop.model";
-import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
 import {ReferenceResponseModel} from "../../../../core/models/reference-response.model";
 import {ShopsService} from "../../../../core/services/shops.service";
 import {CounterpartiesService} from "../../../../core/services/counterparties.service";
 import {ShopTypesService} from "../../../../core/services/shop-types.service";
 import {MessageService} from "primeng";
+import {SearchService} from "../../../../core/services/search.service";
 
 @Component({
   selector: 'app-shop-data-table',
   templateUrl: './shop-data-table.component.html',
   styleUrls: ['./shop-data-table.component.scss']
 })
-export class ShopDataTableComponent implements OnInit, OnChanges {
-
+export class ShopDataTableComponent implements OnInit {
 
   private dataItems: ShopModel[];
   private loading: boolean;
   private counterPartiesList = [];
-  @Input() shopTypesList: [];
+  private shopTypesList = [];
   private daDataAddressConfig: DadataConfig = {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.address
@@ -37,20 +36,11 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
 
   constructor(
     @Inject(ShopsService) private shopService: ShopsService,
+    @Inject(SearchService) private search: SearchService,
     @Inject(CounterpartiesService) private counterPartiesService: CounterpartiesService,
     @Inject(ShopTypesService) private shopTypesService: ShopTypesService,
     @Inject(MessageService) private mService: MessageService,
   ) {
-  }
-
-  ngOnInit() {
-    this.loadShopsData();
-    this.counterPartiesListSelect();
-    this.shopTypeSelect();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-
 
     this.cols = [
       {field: 'id', header: 'ID'},
@@ -59,7 +49,12 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
       {field: 'active', header: 'Активный'},
     ];
     this.selectedCols = this.cols;
+  }
 
+  ngOnInit() {
+    this.loadShopsData();
+    this.counterPartiesListSelect();
+    this.shopTypeSelect();
   }
 
   onRowSelect(e) {
@@ -75,15 +70,12 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
       entity[prop] = e[prop];
     }
     return entity;
-
-
   }
 
   onShopEditSave(e) {
     this.savedShopEdited(e);
     this.displayShopEditDialog = false;
     this.shop = null;
-
   }
 
   onNewShopSave(e){
@@ -99,8 +91,8 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
     this.isNewShop = true;
     this.shop = {active: true};
     this.displayShopEditDialog = true;
-
   }
+
   columnsChange(){
     console.dir(this.selectedCols);
   }
@@ -149,12 +141,19 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
     this.mService.add({key: 'tc', severity: 'success', summary: 'Данные успешно сохранены'});
   }
 
-  loadShopsData(): void {
+  loadShopsData() {
     this.loading = true;
-    this.shopService.fetchShopData().subscribe((data: ReferenceResponseModel) => {
+    return this.shopService.fetchShopData().subscribe((data: ReferenceResponseModel) => {
       this.dataItems = [...this.shopDataTransformHelper(data)];
       this.loading = false;
     });
+  }
+
+
+  dataSearch (searchString: string) {
+    this.search.shopSearch(searchString).subscribe((data: ReferenceResponseModel) => {
+      this.dataItems = [...this.shopDataTransformHelper(data)];
+    })
   }
 
   counterPartiesListSelect() {
@@ -165,7 +164,7 @@ export class ShopDataTableComponent implements OnInit, OnChanges {
 
   shopTypeSelect() {
     this.shopTypesService.fetchShopTypesData().subscribe((data: ReferenceResponseModel) => {
-      //this.shopTypes = [...this.shopTypesDataTransformHelper(data)];
+      this.shopTypesList = [...this.shopTypesDataTransformHelper(data)];
     });
   }
 

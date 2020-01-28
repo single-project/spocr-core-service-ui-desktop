@@ -15,13 +15,12 @@
 
         <div class="ui-g-8 ui-sm-12">
           <div class="ui-inputgroup">
-<!--            (click)="opfilter.toggle($event)"-->
-            <input  (keydown.enter)="onSearched()"
+            <input  (keydown.enter)="onSearched(tableSearch)"
                     [(ngModel)]="searchString"
                    id="search" pInputText
                    placeholder="Найти..." size="32"
-                   type="text"/>
-            <button (click)="onSearched()" icon="pi pi-search" id="search-btn" pButton type="button"></button>
+                   type="text" #tableSearch/>
+            <button (click)="onSearched(tableSearch)" icon="pi pi-search" id="search-btn" pButton type="button"></button>
             <button (click)="clearSearch()" *ngIf="searchString" icon="pi pi-times" id="clear-btn" pButton
                     type="button"></button>
           </div>
@@ -31,7 +30,6 @@
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
     <app-shop-data-table *ngIf="dataType === 1"
-                         [shopTypesList]="shopTypes"
                          #shopDataTable>
     </app-shop-data-table>
     <app-counterparties-data-table *ngIf="dataType === 2"
