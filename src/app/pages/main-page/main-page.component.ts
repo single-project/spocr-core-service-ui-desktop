@@ -4,13 +4,12 @@ import {ShopModel} from "../../core/models/shop.model";
 import {SearchService} from "../../core/services/search.service";
 import {ReferenceResponseModel} from "../../core/models/reference-response.model";
 import {CounterpartiesService} from "../../core/services/counterparties.service";
-import {CounterpartyModel} from "../../core/models/counterparty.model";
 import {MessageService} from "primeng";
 import {ShopTypesService} from "../../core/services/shop-types.service";
 import {ManufactureService} from "../../core/services/manufacture.service";
 import {FilterService} from "../../core/services/filter.service";
-import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
 import {ShopDataTableComponent} from "./components/shop-data-table/shop-data-table.component";
+import {CounterpartiesDataTableComponent} from "./components/counterparties-data-table/counterparties-data-table.component";
 import {ConfigService} from "../../core/services/config.service";
 
 @Component({
@@ -30,11 +29,8 @@ export class MainPageComponent implements OnInit {
   private activeChecked: boolean;
   private nonActiveChecked: boolean;
   private shopTypes = [];
-  private dadataPartyConfig: DadataConfig = {
-    apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
-    type: DadataType.party
-  };
   @ViewChild('shopDataTable', {static: false}) shopDataTable: ShopDataTableComponent;
+  @ViewChild('counterPartiesDataTable', {static: false}) counterPartiesDataTable: CounterpartiesDataTableComponent;
 
   constructor(
     @Inject(ShopsService) private shopService: ShopsService,
@@ -49,13 +45,6 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.userId = 1;
-    this.tableTitle = 'Торговые точки';
-    this.dataType = 1;
-    this.activeChecked = false;
-    this.nonActiveChecked = false;
-
     this.setConfiguration();
   }
 
@@ -64,7 +53,7 @@ export class MainPageComponent implements OnInit {
     if (this.dataType === 1) {
       this.shopDataTable.loadShopsData();
     } else if (this.dataType === 2) {
-      this.loadCounterpartiesData();
+      this.counterPartiesDataTable.loadCounterPartiesData();
     } else if (this.dataType === 3) {
       this.loadManufactureData();
     } else if (this.dataType === 4) {
@@ -76,9 +65,7 @@ export class MainPageComponent implements OnInit {
     if (this.dataType === 1) {
       this.shopDataTable.dataSearch(tableSearch.value);
     } else if (this.dataType === 2) {
-      this.search.counterpartiesSearch(tableSearch.value).subscribe((data: ReferenceResponseModel) => {
-        this.tabData = data.content;
-      })
+      this.counterPartiesDataTable.dataSearch(tableSearch.value);
     } else if (this.dataType === 3) {
       this.search.manufactureSearch(tableSearch.value).subscribe((data: ReferenceResponseModel) => {
         this.tabData = data.content;
@@ -91,9 +78,28 @@ export class MainPageComponent implements OnInit {
   }
 
   setConfiguration(): void {
+
+    let tempTableConfigurations = [
+      {
+        userId: 1,
+        tableTitle: 'Торговые точки',
+        dataType: 1,
+        activeChecked:false,
+        nonActiveChecked: false
+      },
+      {
+        userId: 1,
+        tableTitle: 'Контрагенты',
+        dataType: 2,
+        activeChecked:false,
+        nonActiveChecked: false
+      },
+    ];
+
     this.configService
-      .fetchConfig()
+      .fetchAppSettings()
       .subscribe((data) => {
+        Object.assign(this, tempTableConfigurations[0]);
         console.log('');
     });
   }
@@ -117,7 +123,6 @@ export class MainPageComponent implements OnInit {
       this.tabData = [...data.content];
       this.loading = false;
     });
-
   }
 
   loadManufactureData(): void {
@@ -183,10 +188,8 @@ export class MainPageComponent implements OnInit {
     this.loadShopsData();
   }
 
-  counterpartiesToggle() {
-
-    this.loadCounterpartiesData();
-
+  counterPartiesToggle() {
+    this.counterPartiesDataTable.loadCounterPartiesData();
   }
 
   manufactireToggle() {
@@ -282,7 +285,7 @@ export class MainPageComponent implements OnInit {
   }
 
   onShopTypesEdit(e) {
-    console.dir
+    console.dir;
     let idx = this.tabData.findIndex((i) => i.id === e.id);
 
     this.shopTypesService.editShopType(e, e.id).subscribe((data) => {
@@ -321,7 +324,6 @@ export class MainPageComponent implements OnInit {
     }, error => {
       this.showServerErrorToast();
     })
-
   }
 
   onManufactureEdited(e) {

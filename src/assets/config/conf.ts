@@ -4,7 +4,7 @@ export class Conf {
   private _SHOP_URL = '/api/shops';
   private _COUNTERPARTIES_URL = '/api/counterparties';
   private _MANUFACTURES_URL = '/api/manufactures';
-  private _SHOP_TYPES_URL = '/api/shoptypes'
+  private _SHOP_TYPES_URL = '/api/shoptypes';
 
 
   get BASE_URL(): string {

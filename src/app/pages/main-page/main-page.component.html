@@ -1,4 +1,4 @@
-<app-navbar (onCounterParties)="counterpartiesToggle()"
+<app-navbar (onCounterParties)="counterPartiesToggle()"
             (onShopTypsMenu)="shopTypesToggle()"
             (onShopsMenu)="shopsToggle()"
             (onManufactureMenu)="manufactireToggle()"
@@ -33,11 +33,7 @@
                          #shopDataTable>
     </app-shop-data-table>
     <app-counterparties-data-table *ngIf="dataType === 2"
-                                   [dadataConfig]="dadataPartyConfig"
-                                   [loading]="loading"
-                                   [dataItems]="tabData"
-                                   (savedCounterpartyNew)="onCounterpartyNew($event)"
-                                   (savedCounterpartyEdited)="onCounterpartyEdited($event)">
+                                   #counterPartiesDataTable>
     </app-counterparties-data-table>
     <app-manufacture-data-table *ngIf="dataType === 3"
                                 [loading]="loading"
@@ -45,7 +41,14 @@
                                 (savedManufactureEdited)="onManufactureEdited($event)"
                                 (savedManufactureNew)="onManufactureNew($event)">
     </app-manufacture-data-table>
-    <app-shop-types-data-table *ngIf="dataType === 4" [loading]="loading" [dataItems]="tabData" [manufactureList]="manufatureData" (shopTypeEdited)="onShopTypesEdit($event)" (shopTypeNew)="onShopTypeNew($event)" (manufactureListLoad)="loadManufatureDataForList()"></app-shop-types-data-table>
+    <app-shop-types-data-table *ngIf="dataType === 4"
+                               [loading]="loading"
+                               [dataItems]="tabData"
+                               [manufactureList]="manufatureData"
+                               (shopTypeEdited)="onShopTypesEdit($event)"
+                               (shopTypeNew)="onShopTypeNew($event)"
+                               (manufactureListLoad)="loadManufatureDataForList()">
+    </app-shop-types-data-table>
     <!--    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>-->
   </div>
 
