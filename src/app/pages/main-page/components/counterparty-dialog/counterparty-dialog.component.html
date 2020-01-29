@@ -1,38 +1,44 @@
-<p-dialog (onShow)="afterShow()" header="Карточка контрагента" appendTo="body"  [(visible)]="display" [closable]="false" [focusOnShow]="false"  [responsive]="true" showEffect="fade" [modal]="true"  [style]="{width: '450px'}">
-  <div class="ui-g ui-fluid" *ngIf="counterparty">
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label for="name">ИМЯ</label>
-      </div>
-      <div class="ui-g-8">
-        <input pInputText id="name" [(ngModel)]="counterparty.name" placeholder="{{counterparty.name}}" autofocus />
-      </div>
-    </div>
+<p-dialog (onShow)="afterShow()" header="Карточка контрагента" appendTo="body" [(visible)]="display" [closable]="false"
+          [focusOnShow]="false" [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '450px'}">
 
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label for="acive">АКТИВНЫЙ</label>
+    <div class="ui-g ui-fluid" *ngIf="counterparty">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="name">ИМЯ</label>
+        </div>
+        <div class="ui-g-8" [formGroup]="counterPartyForm">
+          <input pInputText id="name"   formControlName="counterName" autofocus/>
+        </div>
       </div>
-      <div class="ui-g-8">
-        <p-checkbox id="acive" [binary]="true" [(ngModel)]="counterparty.active"></p-checkbox>
-      </div>
-    </div>
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label>Поиск по ИНН</label>
-      </div>
-      <div class="ui-g-8">
-        <ngx-dadata (selected)="onAddressSelected($event)" [config]="dadataConfig"></ngx-dadata>
-      </div>
-    </div>
 
-  </div>
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="acive">АКТИВНЫЙ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-checkbox id="acive" [binary]="true" [(ngModel)]="counterparty.active"></p-checkbox>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>Поиск по ИНН</label>
+        </div>
+        <div class="ui-g-8">
+          <ngx-dadata (selected)="onAddressSelected($event)" [config]="dadataConfig"></ngx-dadata>
+        </div>
+      </div>
 
-      <button type="button"  class="ui-button-success" pButton icon="fa fa-check" (click)="counterpartySaved()" label="Сохранить"></button>
-      <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()" label="Отмена"></button>
     </div>
-  </p-footer>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+
+        <button [disabled]="counterPartyForm.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check" (click)="counterpartySaved()"
+                label="Сохранить"></button>
+        <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
+                label="Отмена"></button>
+      </div>
+
+    </p-footer>
+
 </p-dialog>
 

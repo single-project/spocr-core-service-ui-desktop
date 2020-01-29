@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 import {DadataAddress, DadataConfig, DadataSuggestion} from "@kolkov/ngx-dadata";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -17,18 +18,29 @@ export class CounterpartyDialogComponent implements OnInit {
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newCounterparty = {};
   private party: DadataSuggestion;
+  counterPartyForm: FormGroup;
+  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
+    this.counterPartyForm = this.fb.group({
+      'counterName': ['', Validators.required]
+    })
 
-  constructor() { }
+  }
 
   ngOnInit() {
+
+
+
+
   }
+
+
 
   counterpartySaved() {
 
     if (this.isNew) {
 
       this.newCounterparty = {
-        name: this.counterparty.name,
+        name: this.counterPartyForm.get('counterName').value,
         active: this.counterparty.active,
         suggestion: this.party
 
@@ -36,6 +48,7 @@ export class CounterpartyDialogComponent implements OnInit {
       this.onNewCounterpartySaved.emit(this.newCounterparty);
     } else {
       this.newCounterparty = {...this.counterparty};
+      this.newCounterparty['name'] = this.counterPartyForm.get('counterName').value;
       this.newCounterparty['suggestion'] = this.party;
       this.onEditedCounterpartySave.emit(this.newCounterparty);
     }
@@ -58,6 +71,9 @@ export class CounterpartyDialogComponent implements OnInit {
 
   afterShow() {
 
+    this.counterPartyForm.patchValue({
+      'counterName': this.counterparty.name
+    })
 
 
   }

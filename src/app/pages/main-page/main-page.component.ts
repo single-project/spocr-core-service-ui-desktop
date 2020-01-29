@@ -99,7 +99,7 @@ export class MainPageComponent implements OnInit {
     this.configService
       .fetchAppSettings()
       .subscribe((data) => {
-        Object.assign(this, tempTableConfigurations[0]);
+        Object.assign(this, tempTableConfigurations[1]);
         console.log('');
     });
   }
@@ -190,6 +190,7 @@ export class MainPageComponent implements OnInit {
 
   counterPartiesToggle() {
     this.counterPartiesDataTable.loadCounterPartiesData();
+
   }
 
   manufactireToggle() {
