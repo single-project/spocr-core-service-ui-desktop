@@ -153,7 +153,7 @@ export class ShopDataTableComponent implements OnInit {
   dataSearch (searchString: string) {
     this.search.shopSearch(searchString).subscribe((data: ReferenceResponseModel) => {
       this.dataItems = [...this.shopDataTransformHelper(data)];
-    })
+    });
   }
 
   counterPartiesListSelect() {

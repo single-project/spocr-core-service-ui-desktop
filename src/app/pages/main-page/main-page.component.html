@@ -7,7 +7,6 @@
 <div class="p-grid">
   <div class="ekc-content-container p-lg-12 p-sm-12">
     <p-toolbar>
-
       <div class="ui-g ui-fluid">
         <div class="ui-g-2 ui-sm-12 ekc-input-groups-label">
           <div class="ekc-input-groups-label-txt">{{tableTitle}}</div>
@@ -17,12 +16,23 @@
           <div class="ui-inputgroup">
             <input  (keydown.enter)="onSearched(tableSearch)"
                     [(ngModel)]="searchString"
-                   id="search" pInputText
-                   placeholder="Найти..." size="32"
-                   type="text" #tableSearch/>
-            <button (click)="onSearched(tableSearch)" icon="pi pi-search" id="search-btn" pButton type="button"></button>
-            <button (click)="clearSearch()" *ngIf="searchString" icon="pi pi-times" id="clear-btn" pButton
-                    type="button"></button>
+                    id="search" pInputText
+                    placeholder="Найти..."
+                    size="32"
+                    type="text"
+                    #tableSearch/>
+            <button (click)="onSearched(tableSearch)"
+                    icon="pi pi-search" id="search-btn"
+                    pButton
+                    type="button">
+            </button>
+            <button *ngIf="searchString"
+                    (click)="clearSearch()"
+                    icon="pi pi-times"
+                    id="clear-btn"
+                    pButton
+                    type="button">
+            </button>
           </div>
         </div>
       </div>
@@ -36,27 +46,12 @@
                                    #counterPartiesDataTable>
     </app-counterparties-data-table>
     <app-manufacture-data-table *ngIf="dataType === 3"
-                                [loading]="loading"
-                                [dataItems]="tabData"
-                                (savedManufactureEdited)="onManufactureEdited($event)"
-                                (savedManufactureNew)="onManufactureNew($event)">
+                                #manufactureDataTable>
     </app-manufacture-data-table>
     <app-shop-types-data-table *ngIf="dataType === 4"
-                               [loading]="loading"
-                               [dataItems]="tabData"
-                               [manufactureList]="manufatureData"
-                               (shopTypeEdited)="onShopTypesEdit($event)"
-                               (shopTypeNew)="onShopTypeNew($event)"
-                               (manufactureListLoad)="loadManufatureDataForList()">
+                               #shopTypesDataTable>
     </app-shop-types-data-table>
-    <!--    <app-data-table (saved)="onShopEdited($event)" (counterpartiesListSelect)="loadCounterpartiesForLists()" [counterpartiesList]="counterpartiesData" [dataItems]="tabData" [DataSetType]="dataType" [loading]="loading"></app-data-table>-->
-  </div>
-
-<!--  <p-overlayPanel #opfilter>-->
-<!--    <app-filters-popup-input-set (onCheckActive)="activeCheck($event)" (onCheckedNonActive)="nonActiveCheck($event)"-->
-<!--                                 [checkedActive]="activeChecked"-->
-<!--                                 [checkedNonActive]="nonActiveChecked"></app-filters-popup-input-set>-->
-<!--  </p-overlayPanel>-->
+   </div>
   <p-toast [style]="{marginTop: '80px'}"
            key="tc"
            position="top-center">

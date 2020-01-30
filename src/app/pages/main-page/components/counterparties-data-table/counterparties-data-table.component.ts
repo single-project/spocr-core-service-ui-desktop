@@ -111,7 +111,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   dataSearch (searchString: string) {
     this.search.counterpartiesSearch(searchString).subscribe((data: ReferenceResponseModel) => {
       this.dataItems = data.content;
-    })
+    });
   }
 
   savedCounterPartyNew(e) {
