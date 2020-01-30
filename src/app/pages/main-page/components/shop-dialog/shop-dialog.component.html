@@ -13,9 +13,17 @@
       <div class="ui-g-4">
         <label for="counterparty">КОНТРАГЕНТ</label>
       </div>
-      <div class="ui-g-8">
-        <p-dropdown appendTo="body" placeholder="Выберите контрагента" id="counterparty"
-                    [options]="counterpartiesForSelect" [(ngModel)]="shop.counterpartyId"></p-dropdown>
+      <div class="ui-g-8" [formGroup]="shopFrom">
+        <p-dropdown appendTo="body"
+                    id="counterparty"
+                    [options]="counterpartiesList"
+                    optionLabel="name"
+                    dataKey="id"
+                    formControlName="counterparty"
+                    [filter]="true">
+
+
+        </p-dropdown>
       </div>
     </div>
     <div class="ui-g-12">
@@ -30,16 +38,27 @@
       <div class="ui-g-4">
         <label for="shop-type">ТИП ТТ</label>
       </div>
-      <div class="ui-g-8">
-        <p-multiSelect (onChange)="typesChange()"
-                       appendTo="body"
-                       id="shop-type"
-                       selectedItemsLabel="{0} Типов выбрано"
-                       defaultLabel="Выбрать тип ТТ"
-                       dataKey="id"
-                       optionLabel="name"
-                       [options]="shopTypesForLabel" [(ngModel)]="selectedShopTypes"
-                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+      <div id="shop-type" [formGroup]="shopFrom" class="ui-g-8">
+        <p-dropdown
+          appendTo="body"
+          [filter]="true"
+          [options]="shopTypesList"
+          optionLabel="name"
+          dataKey="id"
+          formControlName="shopType">
+
+
+        </p-dropdown>
+
+        <!--        <p-multiSelect  (onChange)="typesChange()"-->
+        <!--                       appendTo="body"-->
+        <!--                       id="shop-type"-->
+        <!--                       selectedItemsLabel="{0} Типов выбрано"-->
+        <!--                       defaultLabel="Выбрать тип ТТ"-->
+        <!--                       dataKey="id"-->
+        <!--                       optionLabel="name"-->
+        <!--                       [options]="shopTypesForLabel" [(ngModel)]="selectedShopTypes"-->
+        <!--                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>-->
       </div>
     </div>
     <div class="ui-g-12">

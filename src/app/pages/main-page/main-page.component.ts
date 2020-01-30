@@ -99,7 +99,7 @@ export class MainPageComponent implements OnInit {
     this.configService
       .fetchAppSettings()
       .subscribe((data) => {
-        Object.assign(this, tempTableConfigurations[1]);
+        Object.assign(this, tempTableConfigurations[0]);
         console.log('');
     });
   }

@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 import {IdNameModel} from "../../../../core/models/id-name.model";
 import {DadataAddress, DadataConfig} from "@kolkov/ngx-dadata";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-shop-dialog',
@@ -23,12 +24,15 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShop = {};
   private counterpartiesForSelect;
-  private shopTypesForLabel: IdNameModel[];
-  private selectedShopTypes: IdNameModel[] = [];
   private shopAddress: DadataAddress;
+  private shopFrom: FormGroup;
 
 
-  constructor() {
+  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
+    this.shopFrom = this.fb.group({
+      'shopType': [{}],
+      'counterparty': [0]
+    });
   }
 
   ngOnInit() {
@@ -36,7 +40,6 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
 
   }
 
@@ -49,12 +52,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
         shopData: {
           name: this.shop.name,
           active: this.shop.active,
-          counterparty: {id: this.shop.counterpartyId},
-          shopTypes: [...this.selectedShopTypes.map(t => {
-
-              return {id: t.id}
-
-          })]
+          counterparty: {id: this.shopFrom.get('counterparty').value['id']},
+          shopTypes: [{id: this.shopFrom.get('shopType').value['id']}]
         },
       };
       this.onNewShopSaved.emit(this.newShop);
@@ -65,15 +64,10 @@ export class ShopDialogComponent implements OnInit, OnChanges {
           name: this.shop.name,
           id: this.shop.id,
           active: this.shop.active,
-          counterparty: {id: this.shop.counterpartyId},
+          counterparty: {id: this.shopFrom.get('counterparty').value['id']},
           version: this.shop.version,
-          shopTypes: [...this.selectedShopTypes.map(st => {
-            return {id: st.id}
-          })]
-        },
-        types: [...this.selectedShopTypes.map(st => {
-          return {id: st.id}
-        })]
+          shopTypes: [{id: this.shopFrom.get('shopType').value['id']}]
+        }
 
       };
       this.onEditedShopSave.emit(this.newShop);
@@ -82,40 +76,25 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     this.onCloseDialog.emit(false);
   }
 
-  shopSavedShopType() {
-    this.onShopTypeSaved.emit([
-      ...this.selectedShopTypes.map(t => {
-        return {id: t.id}
-      })
-    ])
-  }
+
 
   closeDialog() {
     this.onCloseDialog.emit(false);
   }
 
-  counterpartiesTranformHelper(cpartyList: []) {
 
-    const cArr = [];
-    cpartyList.forEach((c: CounterpartyModel) => {
-      let cParty = {};
-      cParty = {...cParty, label: c.name, value: c.id};
-      cArr.push(cParty);
-    });
-
-    return cArr;
-  }
 
 
 
   typesChange(){
-    console.dir(this.selectedShopTypes);
+
   }
 
   afterShow() {
-    this.counterpartiesForSelect = this.counterpartiesTranformHelper(this.counterpartiesList);
-    this.selectedShopTypes = this.shop.shopTypes;
-    this.shopTypesForLabel = this.shopTypesList;
+
+
+    this.shopFrom.controls['shopType'].setValue(this.shop.shopTypes[0]);
+    this.shopFrom.controls['counterparty'].setValue(this.shop.counterparty);
 
   }
 
