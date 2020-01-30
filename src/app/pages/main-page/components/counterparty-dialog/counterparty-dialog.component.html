@@ -1,12 +1,12 @@
 <p-dialog (onShow)="afterShow()" header="Карточка контрагента" appendTo="body" [(visible)]="display" [closable]="false"
           [focusOnShow]="false" [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '450px'}">
-
+<form [formGroup]="counterPartyForm">
     <div class="ui-g ui-fluid" *ngIf="counterparty">
       <div class="ui-g-12">
         <div class="ui-g-4">
           <label for="name">ИМЯ</label>
         </div>
-        <div class="ui-g-8" [formGroup]="counterPartyForm">
+        <div class="ui-g-8">
           <input pInputText id="name"   formControlName="counterName" autofocus/>
         </div>
       </div>
@@ -16,7 +16,7 @@
           <label for="acive">АКТИВНЫЙ</label>
         </div>
         <div class="ui-g-8">
-          <p-checkbox id="acive" [binary]="true" [(ngModel)]="counterparty.active"></p-checkbox>
+          <p-checkbox id="acive" [binary]="true" formControlName="isActive"></p-checkbox>
         </div>
       </div>
       <div class="ui-g-12">
@@ -39,6 +39,6 @@
       </div>
 
     </p-footer>
-
+</form>
 </p-dialog>
 
