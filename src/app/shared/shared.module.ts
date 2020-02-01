@@ -8,16 +8,12 @@ import {
   SplitButtonModule,
   TableModule, ToastModule,
   ToolbarModule
-} from "primeng";
+} from 'primeng';
 import { ActiveTagsPipe } from './pipes/active-tags.pipe';
-import {NgxDadataComponent, NgxDadataModule} from "@kolkov/ngx-dadata";
-
-
-
-
+import { NgxDadataModule } from '@kolkov/ngx-dadata';
 
 @NgModule({
-  declarations: [ActiveTagsPipe,],
+  declarations: [ ActiveTagsPipe ],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -38,8 +34,6 @@ import {NgxDadataComponent, NgxDadataModule} from "@kolkov/ngx-dadata";
     MultiSelectModule,
     ToastModule,
     NgxDadataModule,
-
-
   ],
   exports: [
     ToolbarModule,
@@ -61,9 +55,7 @@ import {NgxDadataComponent, NgxDadataModule} from "@kolkov/ngx-dadata";
     MultiSelectModule,
     ToastModule,
     NgxDadataModule,
-
   ]
-
 })
 export class SharedModule {
 }
