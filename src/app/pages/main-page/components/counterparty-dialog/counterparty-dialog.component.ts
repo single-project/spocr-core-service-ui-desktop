@@ -71,7 +71,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
     this.party = event;
   }
 
-  initAfterViewFormValues(fields: { [key: string]: { prop: any } }[]): void {
+  initAfterViewFormValues(fields: { [key: string]: any  }[]): void {
     fields.forEach(field => {
       this.counterPartyForm.patchValue({...field});
     })
@@ -80,7 +80,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   newResetForm(): void{
     this.initAfterViewFormValues([
       {'counterName': null},
-      {'counterActive': null}
+      {'counterActive': true}
     ]);
   }
 

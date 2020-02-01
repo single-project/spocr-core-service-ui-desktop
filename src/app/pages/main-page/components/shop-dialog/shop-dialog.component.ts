@@ -28,8 +28,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
     this.shopFrom = this.fb.group({
-      'shopType': [{}],
-      'counterparty': [0],
+      'shopType': [{}, Validators.required],
+      'counterparty': [0, Validators.required],
       'shopName': ['', Validators.required],
       'shopActive': [true],
       'shopAddress': ['']
@@ -84,7 +84,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
 
-  initAfterViewFormValues(fields: { [key: string]: { prop: any } }[]): void {
+  initAfterViewFormValues(fields: { [key: string]: any  }[]): void {
     fields.forEach(field => {
       this.shopFrom.patchValue({...field});
     })
@@ -95,7 +95,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       {'shopType': null},
       {'counterparty': null},
       {'shopName': null},
-      {'shopActive': null}
+      {'shopActive': true}
     ]);
   }
 

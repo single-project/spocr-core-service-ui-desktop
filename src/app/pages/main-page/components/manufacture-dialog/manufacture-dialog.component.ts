@@ -49,7 +49,7 @@ export class ManufactureDialogComponent implements OnInit {
     this.onCloseDialog.emit(false);
   }
 
-  initAfterViewFormValues(fields: { [key: string]: { prop: any } }[]): void {
+  initAfterViewFormValues(fields: { [key: string]: any  }[]): void {
     fields.forEach(field => {
       this.manForm.patchValue({...field});
     })
@@ -58,7 +58,7 @@ export class ManufactureDialogComponent implements OnInit {
   newResetForm(): void {
     this.initAfterViewFormValues([
       {'manName': null},
-      {'manActive': null}
+      {'manActive': true}
     ]);
   }
 

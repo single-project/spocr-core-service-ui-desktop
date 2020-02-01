@@ -24,7 +24,7 @@ export class ShopTypeDialogComponent implements OnInit {
     this.shopTypeForm = this.fb.group({
       'shopTypeName': ['', Validators.required],
       'shopTypeActive': [true],
-      'manufacture': [{}]
+      'manufacture': [{}, Validators.required]
     })
   }
 
@@ -66,7 +66,7 @@ export class ShopTypeDialogComponent implements OnInit {
     this.onCloseDialog.emit(false);
   }
 
-  initAfterViewFormValues(fields: { [key: string]: { prop: any } }[]): void {
+  initAfterViewFormValues(fields: { [key: string]: any }[]): void {
     fields.forEach(field => {
       this.shopTypeForm.patchValue({...field});
     })
@@ -76,7 +76,7 @@ export class ShopTypeDialogComponent implements OnInit {
     this.initAfterViewFormValues([
       {'shopTypeName': null},
       {'manufacture': null},
-      {'shopTypeActive': null}
+      {'shopTypeActive': true}
     ]);
   }
   typesChange() {

@@ -24,12 +24,14 @@
                       [options]="counterpartiesList"
                       optionLabel="name"
                       dataKey="id"
+                      placeholder="Выберите контрагента (обязательно)"
                       formControlName="counterparty"
                       [filter]="true">
 
 
           </p-dropdown>
         </div>
+
       </div>
       <div class="ui-g-12">
         <div class="ui-g-4">
@@ -49,6 +51,7 @@
             [filter]="true"
             [options]="shopTypesList"
             optionLabel="name"
+            placeholder="Выберите тип ТТ (обязательно)"
             dataKey="id"
             formControlName="shopType">
 
