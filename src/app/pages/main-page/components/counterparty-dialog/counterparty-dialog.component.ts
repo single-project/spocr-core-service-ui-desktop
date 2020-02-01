@@ -24,7 +24,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
     this.counterPartyForm = this.fb.group({
       'counterName': ['', Validators.required],
-      'isActive': [true]
+      'counterActive': [true]
     })
 
   }
@@ -44,14 +44,14 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
       this.newCounterparty = {
         name: this.counterPartyForm.get('counterName').value,
-        active: this.counterPartyForm.get('isActive').value,
+        active: this.counterPartyForm.get('counterActive').value,
         suggestion: this.party
 
       };
       this.onNewCounterpartySaved.emit(this.newCounterparty);
     } else {
       this.newCounterparty['name'] = this.counterPartyForm.get('counterName').value;
-      this.newCounterparty['active'] = this.counterPartyForm.get('isActive').value;
+      this.newCounterparty['active'] = this.counterPartyForm.get('counterActive').value;
       this.newCounterparty['suggestion'] = this.party;
       this.newCounterparty['id'] = this.counterparty.id;
       this.newCounterparty['version'] = this.counterparty.version;
@@ -77,13 +77,22 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
     })
   }
 
+  newResetForm(): void{
+    this.initAfterViewFormValues([
+      {'counterName': null},
+      {'counterActive': null}
+    ]);
+  }
 
   afterShow(): void {
-
-    this.initAfterViewFormValues([
-      {'counterName': this.counterparty.name},
-      {'isActive': this.counterparty.active}
-    ]);
+    if (!this.isNew) {
+      this.initAfterViewFormValues([
+        {'counterName': this.counterparty.name},
+        {'counterActive': this.counterparty.active}
+      ]);
+    } else {
+      this.newResetForm();
+    }
 
 
   }

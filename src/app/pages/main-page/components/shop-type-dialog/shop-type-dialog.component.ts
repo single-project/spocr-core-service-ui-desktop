@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
 import {IdNameModel} from "../../../../core/models/id-name.model";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 
 @Component({
@@ -16,10 +17,15 @@ export class ShopTypeDialogComponent implements OnInit {
   @Output() onNewShopTypeSaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShopType = {};
-  private manufactureForLabels: IdNameModel[];
-  private selectedManufactures: IdNameModel[] = [];
+  private shopTypeForm: FormGroup;
 
-  constructor() {
+
+  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
+    this.shopTypeForm = this.fb.group({
+      'shopTypeName': ['', Validators.required],
+      'shopTypeActive': [true],
+      'manufacture': [{}]
+    })
   }
 
   ngOnInit() {
@@ -33,18 +39,18 @@ export class ShopTypeDialogComponent implements OnInit {
 
       this.newShopType = {
         ...this.newShopType,
-          name: this.shopType.name,
-          active: this.shopType.active,
-          manufacturer: {id: this.selectedManufactures[0].id}
+        name: this.shopTypeForm.get('shopTypeName').value,
+        active: this.shopTypeForm.get('shopTypeActive').value,
+        manufacturer: {id: this.shopTypeForm.get('manufacture').value['id']}
       };
       this.onNewShopTypeSaved.emit(this.newShopType);
     } else {
       this.newShopType = {
         ...this.newShopType,
         id: this.shopType.id,
-        name: this.shopType.name,
-        active: this.shopType.active,
-        manufacturer: {id: this.selectedManufactures[0].id},
+        name: this.shopTypeForm.get('shopTypeName').value,
+        active: this.shopTypeForm.get('shopTypeActive').value,
+        manufacturer: {id: this.shopTypeForm.get('manufacture').value['id']},
         version: this.shopType.version
 
 
@@ -60,25 +66,34 @@ export class ShopTypeDialogComponent implements OnInit {
     this.onCloseDialog.emit(false);
   }
 
-  typesChange(){
-    console.dir(this.selectedManufactures);
+  initAfterViewFormValues(fields: { [key: string]: { prop: any } }[]): void {
+    fields.forEach(field => {
+      this.shopTypeForm.patchValue({...field});
+    })
+  }
+
+  newResetForm(): void{
+    this.initAfterViewFormValues([
+      {'shopTypeName': null},
+      {'manufacture': null},
+      {'shopTypeActive': null}
+    ]);
+  }
+  typesChange() {
+
   }
 
 
-
   afterShow() {
-    console.dir(this.manufactureForLabels);
-    if( this.selectedManufactures !== []){
-      this.selectedManufactures = [];
-      this.selectedManufactures.push(this.shopType.manufacturer);
+    if(!this.isNew){
+      this.initAfterViewFormValues([
+        {'shopTypeName': this.shopType['name']},
+        {'manufacture': this.shopType['manufacturer']},
+        {'shopTypeActive': this.shopType['active']}
+      ]);
+    }else{
+      this.newResetForm();
     }
-    if(this.isNew){
-      this.selectedManufactures = []
-    }
-
-
-    this.manufactureForLabels = this.manufactureList;
-
 
   }
 }

@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-manufacture-dialog',
@@ -13,8 +14,13 @@ export class ManufactureDialogComponent implements OnInit {
   @Output() onNewManufactureSaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newManufacture = {};
+  private manForm: FormGroup;
 
-  constructor() {
+  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
+    this.manForm = this.fb.group({
+      'manName': ['', Validators.required],
+      'manActive': [true]
+    });
   }
 
   ngOnInit() {
@@ -25,19 +31,36 @@ export class ManufactureDialogComponent implements OnInit {
     if (this.isNew) {
 
       this.newManufacture = {
-        name: this.manufacture.name,
-        active: this.manufacture.active
+        name: this.manForm.get('manName').value,
+        active: this.manForm.get('manActive').value
 
       };
       this.onNewManufactureSaved.emit(this.newManufacture);
     } else {
-      this.newManufacture = {...this.manufacture};
+      this.newManufacture = {
+        name: this.manForm.get('manName').value,
+        active: this.manForm.get('manActive').value,
+        version: this.manufacture.version,
+        id: this.manufacture.id
+      };
       this.onEditedManufactureSave.emit(this.newManufacture);
     }
 
     this.onCloseDialog.emit(false);
   }
 
+  initAfterViewFormValues(fields: { [key: string]: { prop: any } }[]): void {
+    fields.forEach(field => {
+      this.manForm.patchValue({...field});
+    })
+  }
+
+  newResetForm(): void {
+    this.initAfterViewFormValues([
+      {'manName': null},
+      {'manActive': null}
+    ]);
+  }
 
   closeDialog() {
     this.onCloseDialog.emit(false);
@@ -45,7 +68,14 @@ export class ManufactureDialogComponent implements OnInit {
 
 
   afterShow() {
-
+    if (!this.isNew) {
+      this.initAfterViewFormValues([
+        {'manName': this.manufacture.name},
+        {'manActive': this.manufacture.active}
+      ]);
+    } else {
+      this.newResetForm();
+    }
 
   }
 }

@@ -2,7 +2,7 @@ import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, Simpl
 import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 import {IdNameModel} from "../../../../core/models/id-name.model";
 import {DadataAddress, DadataConfig} from "@kolkov/ngx-dadata";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-shop-dialog',
@@ -23,15 +23,16 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Output() onShopTypeSelection = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShop = {};
-  private counterpartiesForSelect;
-  private shopAddress: DadataAddress;
   private shopFrom: FormGroup;
 
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
     this.shopFrom = this.fb.group({
       'shopType': [{}],
-      'counterparty': [0]
+      'counterparty': [0],
+      'shopName': ['', Validators.required],
+      'shopActive': [true],
+      'shopAddress': ['']
     });
   }
 
@@ -50,8 +51,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       this.newShop = {
         ...this.newShop,
         shopData: {
-          name: this.shop.name,
-          active: this.shop.active,
+          name: this.shopFrom.get('shopName').value,
+          active: this.shopFrom.get('shopActive').value,
           counterparty: {id: this.shopFrom.get('counterparty').value['id']},
           shopTypes: [{id: this.shopFrom.get('shopType').value['id']}]
         },
@@ -61,9 +62,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       this.newShop = {
         ...this.newShop,
         shopData: {
-          name: this.shop.name,
+          name: this.shopFrom.get('shopName').value,
           id: this.shop.id,
-          active: this.shop.active,
+          active: this.shopFrom.get('shopActive').value,
           counterparty: {id: this.shopFrom.get('counterparty').value['id']},
           version: this.shop.version,
           shopTypes: [{id: this.shopFrom.get('shopType').value['id']}]
@@ -83,7 +84,20 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
 
+  initAfterViewFormValues(fields: { [key: string]: { prop: any } }[]): void {
+    fields.forEach(field => {
+      this.shopFrom.patchValue({...field});
+    })
+  }
 
+  newResetForm(): void{
+    this.initAfterViewFormValues([
+      {'shopType': null},
+      {'counterparty': null},
+      {'shopName': null},
+      {'shopActive': null}
+    ]);
+  }
 
 
   typesChange(){
@@ -91,10 +105,17 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   afterShow() {
+    if(!this.isNew){
+      this.initAfterViewFormValues([
+        {'shopType': this.shop.shopTypes[0]},
+        {'counterparty': this.shop.counterparty},
+        {'shopName': this.shop.name},
+        {'shopActive': this.shop.active}
+      ]);
+    }else{
+      this.newResetForm();
+    }
 
-
-    this.shopFrom.controls['shopType'].setValue(this.shop.shopTypes[0]);
-    this.shopFrom.controls['counterparty'].setValue(this.shop.counterparty);
 
   }
 

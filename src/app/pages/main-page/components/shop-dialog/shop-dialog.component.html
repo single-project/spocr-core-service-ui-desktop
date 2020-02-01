@@ -1,82 +1,88 @@
-<p-dialog (onShow)="afterShow()" header="Карточка ТТ" appendTo="body" [(visible)]="display" [closable]="false"
+<p-dialog [formGroup]="shopFrom" (onShow)="afterShow()" header="Карточка ТТ" appendTo="body" [(visible)]="display" [closable]="false"
           [focusOnShow]="false" [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '450px'}">
-  <div class="ui-g ui-fluid" *ngIf="shop">
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label for="name">ИМЯ</label>
+
+    <div class="ui-g ui-fluid" *ngIf="shop">
+
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="name">ИМЯ</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="name" formControlName="shopName" autofocus/>
+        </div>
+        <div class="ui-grid-col-8">
+          <p-message severity="error" text="Имя должно быть заполнено" *ngIf="!shopFrom.controls['shopName'].valid&&shopFrom.controls['shopName'].dirty"></p-message>
+        </div>
       </div>
-      <div class="ui-g-8">
-        <input pInputText id="name" [(ngModel)]="shop.name" placeholder="{{shop.name}}" autofocus/>
-      </div>
-    </div>
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label for="counterparty">КОНТРАГЕНТ</label>
-      </div>
-      <div class="ui-g-8" [formGroup]="shopFrom">
-        <p-dropdown appendTo="body"
-                    id="counterparty"
-                    [options]="counterpartiesList"
-                    optionLabel="name"
-                    dataKey="id"
-                    formControlName="counterparty"
-                    [filter]="true">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="counterparty">КОНТРАГЕНТ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown appendTo="body"
+                      id="counterparty"
+                      [options]="counterpartiesList"
+                      optionLabel="name"
+                      dataKey="id"
+                      formControlName="counterparty"
+                      [filter]="true">
 
 
-        </p-dropdown>
+          </p-dropdown>
+        </div>
       </div>
-    </div>
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label for="acive">АКТИВНЫЙ</label>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="active">АКТИВНЫЙ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-checkbox id="active" binary="true" formControlName="shopActive"></p-checkbox>
+        </div>
       </div>
-      <div class="ui-g-8">
-        <p-checkbox id="acive" [binary]="true" [(ngModel)]="shop.active"></p-checkbox>
-      </div>
-    </div>
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label for="shop-type">ТИП ТТ</label>
-      </div>
-      <div id="shop-type" [formGroup]="shopFrom" class="ui-g-8">
-        <p-dropdown
-          appendTo="body"
-          [filter]="true"
-          [options]="shopTypesList"
-          optionLabel="name"
-          dataKey="id"
-          formControlName="shopType">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="shop-type">ТИП ТТ</label>
+        </div>
+        <div id="shop-type" class="ui-g-8">
+          <p-dropdown
+            appendTo="body"
+            [filter]="true"
+            [options]="shopTypesList"
+            optionLabel="name"
+            dataKey="id"
+            formControlName="shopType">
 
 
-        </p-dropdown>
+          </p-dropdown>
 
-        <!--        <p-multiSelect  (onChange)="typesChange()"-->
-        <!--                       appendTo="body"-->
-        <!--                       id="shop-type"-->
-        <!--                       selectedItemsLabel="{0} Типов выбрано"-->
-        <!--                       defaultLabel="Выбрать тип ТТ"-->
-        <!--                       dataKey="id"-->
-        <!--                       optionLabel="name"-->
-        <!--                       [options]="shopTypesForLabel" [(ngModel)]="selectedShopTypes"-->
-        <!--                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>-->
+          <!--        <p-multiSelect  (onChange)="typesChange()"-->
+          <!--                       appendTo="body"-->
+          <!--                       id="shop-type"-->
+          <!--                       selectedItemsLabel="{0} Типов выбрано"-->
+          <!--                       defaultLabel="Выбрать тип ТТ"-->
+          <!--                       dataKey="id"-->
+          <!--                       optionLabel="name"-->
+          <!--                       [options]="shopTypesForLabel" [(ngModel)]="selectedShopTypes"-->
+          <!--                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>-->
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>Адрес ТТ</label>
+        </div>
+        <div class="ui-g-8">
+          <ngx-dadata formControlName="shopAddress" [config]="dadataAddressConfig"></ngx-dadata>
+        </div>
       </div>
     </div>
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label>Адрес ТТ</label>
-      </div>
-      <div class="ui-g-8">
-        <ngx-dadata [(ngModel)]="shopAddress" [config]="dadataAddressConfig"></ngx-dadata>
-      </div>
-    </div>
-  </div>
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
 
-      <button type="button" class="ui-button-success" pButton icon="fa fa-check" (click)="shopSaved()"
-              label="Сохранить"></button>
-      <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
-              label="Отмена"></button>
-    </div>
-  </p-footer>
+        <button [disabled]="shopFrom.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check" (click)="shopSaved()"
+                label="Сохранить"></button>
+        <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
+                label="Отмена"></button>
+      </div>
+    </p-footer>
+
 </p-dialog>
