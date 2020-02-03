@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ShopModel} from "../../../../core/models/shop.model";
 import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
 import {ReferenceResponseModel} from "../../../../core/models/reference-response.model";
@@ -23,23 +23,21 @@ export class ShopDataTableComponent implements OnInit {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.address
   };
-  // @Output() shopTypeSelect = new EventEmitter<any>();
+
   private displayShopEditDialog: boolean;
   private selectedShop: ShopModel;
   private isNewShop: boolean;
   private shop: any = {};
 
-
-
   cols: any[];
   selectedCols: any[];
 
   constructor(
-    @Inject(ShopsService) private shopService: ShopsService,
-    @Inject(SearchService) private search: SearchService,
-    @Inject(CounterpartiesService) private counterPartiesService: CounterpartiesService,
-    @Inject(ShopTypesService) private shopTypesService: ShopTypesService,
-    @Inject(MessageService) private mService: MessageService,
+    private shopService: ShopsService,
+    private search: SearchService,
+    private counterPartiesService: CounterpartiesService,
+    private shopTypesService: ShopTypesService,
+    private mService: MessageService,
   ) {
 
     this.cols = [
@@ -148,7 +146,6 @@ export class ShopDataTableComponent implements OnInit {
       this.loading = false;
     });
   }
-
 
   dataSearch (searchString: string) {
     this.search.shopSearch(searchString).subscribe((data: ReferenceResponseModel) => {
