@@ -29,8 +29,18 @@
               style="margin-left: 1em; top: -10px"
               type="button"
               class="ui-button-success"
-              pButton icon="fa fa-plus"
+              pButton
+              icon="fa fa-plus"
               label="Добавить">
+      </button>
+
+      <button (click)="isFilterShown = !isFilterShown"
+              style="margin-left: 1em; top: -10px"
+              type="button"
+              class="ui-button-success"
+              pButton
+              icon="fa fa-filter"
+              label="{{isFilterShown ? 'Спрятать фильтр' : 'Показать фильтр'}}">
       </button>
     </div>
 
@@ -38,7 +48,6 @@
   <ng-template pTemplate="header"
                let-columns>
     <tr>
-
       <th *ngFor="let col of columns" [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
         {{col.header}}
         <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'" [field]="col.field"
@@ -46,6 +55,13 @@
                     ariaLabelDesc="Activate to sort in descending order"
                     ariaLabelAsc="Activate to sort in ascending order">
         </p-sortIcon>
+      </th>
+    </tr>
+    <tr [hidden]="!isFilterShown">
+      <th *ngFor="let col of columns">
+        <input pInputText
+               type="text"
+               style="width:100%">
       </th>
     </tr>
   </ng-template>

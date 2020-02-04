@@ -30,6 +30,7 @@ export class ShopDataTableComponent implements OnInit {
   private shop: any = {};
   private totalElements: number;
   private numberOfElements: number;
+  private isFilterShown: boolean;
 
   cols: any[];
   selectedCols: any[];
@@ -95,16 +96,6 @@ export class ShopDataTableComponent implements OnInit {
 
   columnsChange() {
     console.dir(this.selectedCols);
-  }
-
-  shopDataTransformHelper(rawData: any): ShopModel[] {
-    const newData: ShopModel[] = [];
-    rawData.content.forEach((d) => {
-      d.counterpartyName = d.counterparty.name;
-      d.counterpartyId = d.counterparty.id;
-      newData.push(d)
-    });
-    return newData;
   }
 
   shopTypesDataTransformHelper(rawData: any) {
