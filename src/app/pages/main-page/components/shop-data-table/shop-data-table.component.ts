@@ -141,9 +141,9 @@ export class ShopDataTableComponent implements OnInit {
     this.mService.add({key: 'tc', severity: 'success', summary: 'Данные успешно сохранены'});
   }
 
-  loadShopsData() {
+  loadShopsData(options = {}) {
     this.loading = true;
-    return this.shopService.fetchShopData()
+    return this.shopService.fetchShopData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = data.content.map((shopObj: ShopModel) => ({
           ...shopObj,
@@ -158,10 +158,17 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   loadShopDataLazy(event: LazyLoadEvent) {
-    console.log('@@@@@@ call: loadShopDataLazy() ' + (event.first / event.rows));
+
     if (event.rows) {
+      let params = {};
+      params['page'] = event.first / event.rows;
+
+      if (event.sortField) {
+        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc': 'desc'}`;
+      }
+
       this.shopService
-        .fetchShopData({page: event.first / event.rows})
+        .fetchShopData(params)
         .subscribe(
           (data: ReferenceResponseModel) => {
             this.dataItems = data.content.map((shopObj: ShopModel) => ({
@@ -175,9 +182,7 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   dataSearch(searchString: string) {
-    this.search.shopSearch(searchString).subscribe((data: ReferenceResponseModel) => {
-      this.dataItems = [...this.shopDataTransformHelper(data)];
-    });
+    this.loadShopsData({q: searchString});
   }
 
   counterPartiesListSelect() {
