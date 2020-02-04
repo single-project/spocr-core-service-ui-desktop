@@ -1,0 +1,4 @@
+<div [formGroup]="addressGroup">
+  <p-autoComplete #addressInput formControlName="addressInput" appendTo="body" (onSelect)="select($event)" [suggestions]="results" (completeMethod)="find($event)"></p-autoComplete>
+</div>
+

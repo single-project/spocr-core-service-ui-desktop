@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
+  AutoCompleteModule,
   ButtonModule, CardModule, CheckboxModule, DialogModule, DropdownModule,
   InputTextModule,
   MenuModule, MessageModule, MessagesModule, MultiSelectModule,
@@ -11,9 +12,11 @@ import {
 } from 'primeng';
 import { ActiveTagsPipe } from './pipes/active-tags.pipe';
 import { NgxDadataModule } from '@kolkov/ngx-dadata';
+import { DadataAddressComponent } from './components/dadata-address/dadata-address.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
-  declarations: [ ActiveTagsPipe ],
+  declarations: [ ActiveTagsPipe, DadataAddressComponent ],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -34,7 +37,9 @@ import { NgxDadataModule } from '@kolkov/ngx-dadata';
     MultiSelectModule,
     ToastModule,
     NgxDadataModule,
-    TabMenuModule
+    TabMenuModule,
+    AutoCompleteModule,
+    ReactiveFormsModule,
   ],
   exports: [
     ToolbarModule,
@@ -57,6 +62,8 @@ import { NgxDadataModule } from '@kolkov/ngx-dadata';
     ToastModule,
     NgxDadataModule,
     TabMenuModule,
+    AutoCompleteModule,
+    DadataAddressComponent,
   ]
 })
 export class SharedModule {

@@ -12,7 +12,7 @@
 
   <p-tabMenu [model]="tabs"></p-tabMenu>
 <ng-container  *ngIf="currentTab===shopTabs.General; then general"></ng-container>
-
+  <ng-container  *ngIf="currentTab===shopTabs.Address; then address"></ng-container>
   <p-footer>
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
 
@@ -97,7 +97,7 @@
         <label>Адрес ТТ</label>
       </div>
       <div class="ui-g-8">
-        <ngx-dadata formControlName="shopAddress" [config]="dadataAddressConfig"></ngx-dadata>
+      <app-dadata-address></app-dadata-address>
       </div>
     </div>
   </div>
