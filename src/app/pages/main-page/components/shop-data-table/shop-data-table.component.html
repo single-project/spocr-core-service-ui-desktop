@@ -1,8 +1,12 @@
-<p-table [loading]="loading"
-         [columns]="selectedCols"
+<p-table [columns]="selectedCols"
          [value]="dataItems"
+         [lazy]="true"
+         (onLazyLoad)="loadShopDataLazy($event)"
+         [paginator]="true"
+         [rows]="numberOfElements"
+         [totalRecords]="totalElements"
+         [loading]="loading"
          [responsive]="true"
-         [paginator]="true" [rows]="13"
          selectionMode="single"
          [(selection)]="selectedShop"
          (onRowSelect)="onRowSelect($event)">
@@ -58,13 +62,8 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="summary" let-rowData>
-
-
     Всего {{dataItems?.length}} объектов
-
-
   </ng-template>
-
 </p-table>
 
 <app-shop-dialog (onNewShopSaved)="onNewShopSave($event)"

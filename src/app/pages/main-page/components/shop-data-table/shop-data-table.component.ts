@@ -5,7 +5,7 @@ import {ReferenceResponseModel} from "../../../../core/models/reference-response
 import {ShopsService} from "../../../../core/services/shops.service";
 import {CounterpartiesService} from "../../../../core/services/counterparties.service";
 import {ShopTypesService} from "../../../../core/services/shop-types.service";
-import {MessageService} from "primeng";
+import {LazyLoadEvent, MessageService} from "primeng";
 import {SearchService} from "../../../../core/services/search.service";
 
 @Component({
@@ -28,6 +28,8 @@ export class ShopDataTableComponent implements OnInit {
   private selectedShop: ShopModel;
   private isNewShop: boolean;
   private shop: any = {};
+  private totalElements: number;
+  private numberOfElements: number;
 
   cols: any[];
   selectedCols: any[];
@@ -76,7 +78,7 @@ export class ShopDataTableComponent implements OnInit {
     this.shop = null;
   }
 
-  onNewShopSave(e){
+  onNewShopSave(e) {
     this.savedShopNew(e);
   }
 
@@ -85,13 +87,13 @@ export class ShopDataTableComponent implements OnInit {
     this.shop = null;
   }
 
-  onShopCreate(){
+  onShopCreate() {
     this.isNewShop = true;
     this.shop = {active: true};
     this.displayShopEditDialog = true;
   }
 
-  columnsChange(){
+  columnsChange() {
     console.dir(this.selectedCols);
   }
 
@@ -141,13 +143,38 @@ export class ShopDataTableComponent implements OnInit {
 
   loadShopsData() {
     this.loading = true;
-    return this.shopService.fetchShopData().subscribe((data: ReferenceResponseModel) => {
-      this.dataItems = [...this.shopDataTransformHelper(data)];
-      this.loading = false;
-    });
+    return this.shopService.fetchShopData()
+      .subscribe((data: ReferenceResponseModel) => {
+        this.dataItems = data.content.map((shopObj: ShopModel) => ({
+          ...shopObj,
+          counterpartyName: shopObj.counterparty.name,
+          counterpartyId: shopObj.counterparty.id,
+        }));
+
+        this.totalElements = data.totalElements;
+        this.numberOfElements = data.numberOfElements;
+        this.loading = false;
+      });
   }
 
-  dataSearch (searchString: string) {
+  loadShopDataLazy(event: LazyLoadEvent) {
+    console.log('@@@@@@ call: loadShopDataLazy() ' + (event.first / event.rows));
+    if (event.rows) {
+      this.shopService
+        .fetchShopData({page: event.first / event.rows})
+        .subscribe(
+          (data: ReferenceResponseModel) => {
+            this.dataItems = data.content.map((shopObj: ShopModel) => ({
+              ...shopObj,
+              counterpartyName: shopObj.counterparty.name,
+              counterpartyId: shopObj.counterparty.id,
+            }));
+            this.loading = false;
+          });
+    }
+  }
+
+  dataSearch(searchString: string) {
     this.search.shopSearch(searchString).subscribe((data: ReferenceResponseModel) => {
       this.dataItems = [...this.shopDataTransformHelper(data)];
     });
