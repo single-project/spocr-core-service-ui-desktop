@@ -1,91 +1,104 @@
-<p-dialog [formGroup]="shopFrom" (onShow)="afterShow()" header="Карточка ТТ" appendTo="body" [(visible)]="display" [closable]="false"
-          [focusOnShow]="false" [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '450px'}">
+<p-dialog
+          (onShow)="afterShow()"
+          header="Карточка ТТ"
+          appendTo="body"
+          [(visible)]="display"
+          [closable]="false"
+          [focusOnShow]="false"
+          [responsive]="true"
+          showEffect="fade"
+          [modal]="true"
+          [style]="{width: '450px'}">
 
-    <div class="ui-g ui-fluid" *ngIf="shop">
+  <p-tabMenu [model]="tabs"></p-tabMenu>
+<ng-container  *ngIf="currentTab===shopTabs.General; then general"></ng-container>
 
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label for="name">ИМЯ</label>
-        </div>
-        <div class="ui-g-8">
-          <input pInputText id="name" formControlName="shopName" autofocus/>
-        </div>
-        <div class="ui-grid-col-8">
-          <p-message severity="error" text="Имя должно быть заполнено" *ngIf="!shopFrom.controls['shopName'].valid&&shopFrom.controls['shopName'].dirty"></p-message>
-        </div>
-      </div>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label for="counterparty">КОНТРАГЕНТ</label>
-        </div>
-        <div class="ui-g-8">
-          <p-dropdown appendTo="body"
-                      id="counterparty"
-                      [options]="counterpartiesList"
-                      optionLabel="name"
-                      dataKey="id"
-                      placeholder="Выберите контрагента (обязательно)"
-                      formControlName="counterparty"
-                      [filter]="true">
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
 
-
-          </p-dropdown>
-        </div>
-
-      </div>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label for="active">АКТИВНЫЙ</label>
-        </div>
-        <div class="ui-g-8">
-          <p-checkbox id="active" binary="true" formControlName="shopActive"></p-checkbox>
-        </div>
-      </div>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label for="shop-type">ТИП ТТ</label>
-        </div>
-        <div id="shop-type" class="ui-g-8">
-          <p-dropdown
-            appendTo="body"
-            [filter]="true"
-            [options]="shopTypesList"
-            optionLabel="name"
-            placeholder="Выберите тип ТТ (обязательно)"
-            dataKey="id"
-            formControlName="shopType">
-
-
-          </p-dropdown>
-
-          <!--        <p-multiSelect  (onChange)="typesChange()"-->
-          <!--                       appendTo="body"-->
-          <!--                       id="shop-type"-->
-          <!--                       selectedItemsLabel="{0} Типов выбрано"-->
-          <!--                       defaultLabel="Выбрать тип ТТ"-->
-          <!--                       dataKey="id"-->
-          <!--                       optionLabel="name"-->
-          <!--                       [options]="shopTypesForLabel" [(ngModel)]="selectedShopTypes"-->
-          <!--                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>-->
-        </div>
-      </div>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label>Адрес ТТ</label>
-        </div>
-        <div class="ui-g-8">
-          <ngx-dadata formControlName="shopAddress" [config]="dadataAddressConfig"></ngx-dadata>
-        </div>
-      </div>
+      <button [disabled]="shopFrom.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check"
+              (click)="shopSaved()"
+              label="Сохранить"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
+              label="Отмена"></button>
     </div>
-    <p-footer>
-      <div class="ui-dialog-buttonpane ui-helper-clearfix">
-
-        <button [disabled]="shopFrom.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check" (click)="shopSaved()"
-                label="Сохранить"></button>
-        <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
-                label="Отмена"></button>
-      </div>
-    </p-footer>
+  </p-footer>
 
 </p-dialog>
+
+
+<ng-template  #general>
+  <div [formGroup]="shopFrom" class="ui-g ui-fluid" *ngIf="shop">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="name">ИМЯ</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="name" formControlName="shopName" autofocus/>
+      </div>
+      <div class="ui-grid-col-8">
+        <p-message severity="error" text="Имя должно быть заполнено"
+                   *ngIf="!shopFrom.controls['shopName'].valid&&shopFrom.controls['shopName'].dirty"></p-message>
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="counterparty">КОНТРАГЕНТ</label>
+      </div>
+      <div class="ui-g-8">
+        <p-dropdown appendTo="body"
+                    id="counterparty"
+                    [options]="counterpartiesList"
+                    optionLabel="name"
+                    dataKey="id"
+                    placeholder="Выберите контрагента (обязательно)"
+                    formControlName="counterparty"
+                    [filter]="true">
+
+
+        </p-dropdown>
+      </div>
+
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="active">АКТИВНЫЙ</label>
+      </div>
+      <div class="ui-g-8">
+        <p-checkbox id="active" binary="true" formControlName="shopActive"></p-checkbox>
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="shop-type">ТИП ТТ</label>
+      </div>
+      <div id="shop-type" class="ui-g-8">
+        <p-dropdown
+          appendTo="body"
+          [filter]="true"
+          [options]="shopTypesList"
+          optionLabel="name"
+          placeholder="Выберите тип ТТ (обязательно)"
+          dataKey="id"
+          formControlName="shopType">
+
+        </p-dropdown>
+
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #address>
+  <div [formGroup]="shopFrom" class="ui-g ui-fluid" *ngIf="shop">
+
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label>Адрес ТТ</label>
+      </div>
+      <div class="ui-g-8">
+        <ngx-dadata formControlName="shopAddress" [config]="dadataAddressConfig"></ngx-dadata>
+      </div>
+    </div>
+  </div>
+</ng-template>

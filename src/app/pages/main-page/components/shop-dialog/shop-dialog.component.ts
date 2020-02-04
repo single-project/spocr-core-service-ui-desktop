@@ -3,6 +3,12 @@ import {CounterpartyModel} from "../../../../core/models/counterparty.model";
 import {IdNameModel} from "../../../../core/models/id-name.model";
 import {DadataAddress, DadataConfig} from "@kolkov/ngx-dadata";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {MenuItem} from "primeng";
+
+enum ShopTabs {
+  General,
+  Address
+}
 
 @Component({
   selector: 'app-shop-dialog',
@@ -24,6 +30,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShop = {};
   private shopFrom: FormGroup;
+  private tabs: MenuItem[];
+  private shopTabs = ShopTabs;
+  private currentTab: ShopTabs;
 
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
@@ -37,7 +46,11 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-
+    this.currentTab = ShopTabs.General;
+    this.tabs = [
+      {label: 'Основное', icon: 'fas fa-file-alt', command: (e) => {this.toggleTabs(ShopTabs.General)}},
+      {label: 'Адрес', icon: 'fas fa-map-marker-alt', command: (e) => {this.toggleTabs(ShopTabs.Address)}},
+    ]
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,19 +91,18 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
 
-
   closeDialog() {
     this.onCloseDialog.emit(false);
   }
 
 
-  initAfterViewFormValues(fields: { [key: string]: any  }[]): void {
+  initAfterViewFormValues(fields: { [key: string]: any }[]): void {
     fields.forEach(field => {
       this.shopFrom.patchValue({...field});
     })
   }
 
-  newResetForm(): void{
+  newResetForm(): void {
     this.initAfterViewFormValues([
       {'shopType': null},
       {'counterparty': null},
@@ -99,20 +111,30 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     ]);
   }
 
+  toggleTabs(triggerEvent: ShopTabs): void {
+    switch (triggerEvent) {
+      case ShopTabs.Address:
+        this.currentTab = this.shopTabs.Address;
+        break;
+      case ShopTabs.General:
+        this.currentTab = this.shopTabs.General;
+        break;
+    }
+  }
 
-  typesChange(){
+  typesChange() {
 
   }
 
   afterShow() {
-    if(!this.isNew){
+    if (!this.isNew) {
       this.initAfterViewFormValues([
         {'shopType': this.shop.shopTypes[0]},
         {'counterparty': this.shop.counterparty},
         {'shopName': this.shop.name},
         {'shopActive': this.shop.active}
       ]);
-    }else{
+    } else {
       this.newResetForm();
     }
 

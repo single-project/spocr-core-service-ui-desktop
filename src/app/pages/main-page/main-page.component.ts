@@ -5,6 +5,7 @@ import {ManufactureDataTableComponent} from "./components/manufacture-data-table
 import {ShopTypesDataTableComponent} from "./components/shop-types-data-table/shop-types-data-table.component";
 
 import {ConfigService} from "../../core/services/config.service";
+import {DadataService} from "../../core/services/dadata.service";
 
 @Component({
   selector: 'app-main-page',

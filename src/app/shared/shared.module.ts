@@ -6,7 +6,7 @@ import {
   MenuModule, MessageModule, MessagesModule, MultiSelectModule,
   OverlayPanelModule, PaginatorModule,
   SplitButtonModule,
-  TableModule, ToastModule,
+  TableModule, TabMenuModule, ToastModule,
   ToolbarModule
 } from 'primeng';
 import { ActiveTagsPipe } from './pipes/active-tags.pipe';
@@ -34,6 +34,7 @@ import { NgxDadataModule } from '@kolkov/ngx-dadata';
     MultiSelectModule,
     ToastModule,
     NgxDadataModule,
+    TabMenuModule
   ],
   exports: [
     ToolbarModule,
@@ -55,6 +56,7 @@ import { NgxDadataModule } from '@kolkov/ngx-dadata';
     MultiSelectModule,
     ToastModule,
     NgxDadataModule,
+    TabMenuModule,
   ]
 })
 export class SharedModule {
