@@ -9,7 +9,9 @@
          [responsive]="true"
          selectionMode="single"
          [(selection)]="selectedShop"
-         (onRowSelect)="onRowSelect($event)">
+         (onRowSelect)="onRowSelect($event)"
+         [scrollable]="true"
+         scrollHeight="400px">
   <ng-template pTemplate="caption"
                let-rowData>
     <div style="text-align:left"

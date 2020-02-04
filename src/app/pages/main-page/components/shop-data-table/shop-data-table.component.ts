@@ -167,6 +167,8 @@ export class ShopDataTableComponent implements OnInit {
         params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc': 'desc'}`;
       }
 
+      this.loading = true;
+
       this.shopService
         .fetchShopData(params)
         .subscribe(
