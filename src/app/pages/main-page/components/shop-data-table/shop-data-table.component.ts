@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {ShopModel} from "../../../../core/models/shop.model";
-import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
-import {ReferenceResponseModel} from "../../../../core/models/reference-response.model";
-import {ShopsService} from "../../../../core/services/shops.service";
-import {CounterpartiesService} from "../../../../core/services/counterparties.service";
-import {ShopTypesService} from "../../../../core/services/shop-types.service";
-import {LazyLoadEvent, MessageService} from "primeng";
-import {SearchService} from "../../../../core/services/search.service";
+import {ShopModel} from '../../../../core/models/shop.model';
+import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
+import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
+import {ShopsService} from '../../../../core/services/shops.service';
+import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import {ShopTypesService} from '../../../../core/services/shop-types.service';
+import {LazyLoadEvent, MessageService} from 'primeng';
+import {SearchService} from '../../../../core/services/search.service';
 
 @Component({
   selector: 'app-shop-data-table',
