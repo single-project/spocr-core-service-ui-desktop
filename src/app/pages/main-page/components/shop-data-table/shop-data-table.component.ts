@@ -132,7 +132,7 @@ export class ShopDataTableComponent implements OnInit {
     this.mService.add({key: 'tc', severity: 'success', summary: 'Данные успешно сохранены'});
   }
 
-  loadShopsData(options = {}) {
+  loadShopsData(options = {}, updatePageInfo = true) {
     this.loading = true;
     return this.shopService.fetchShopData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -142,8 +142,10 @@ export class ShopDataTableComponent implements OnInit {
           counterpartyId: shopObj.counterparty.id,
         }));
 
-        this.totalElements = data.totalElements;
-        this.numberOfElements = data.numberOfElements;
+        if (updatePageInfo) {
+          this.totalElements = data.totalElements;
+          this.numberOfElements = data.numberOfElements;
+        }
         this.loading = false;
       });
   }
@@ -152,25 +154,21 @@ export class ShopDataTableComponent implements OnInit {
 
     if (event.rows) {
       let params = {};
-      params['page'] = event.first / event.rows;
 
-      if (event.sortField) {
-        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc': 'desc'}`;
+      if (Object.entries(event.filters).length === 0) {
+        params['page'] = event.first / event.rows;
       }
 
-      this.loading = true;
+      if (event.sortField) {
+        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+      }
 
-      this.shopService
-        .fetchShopData(params)
-        .subscribe(
-          (data: ReferenceResponseModel) => {
-            this.dataItems = data.content.map((shopObj: ShopModel) => ({
-              ...shopObj,
-              counterpartyName: shopObj.counterparty.name,
-              counterpartyId: shopObj.counterparty.id,
-            }));
-            this.loading = false;
-          });
+      Object.entries(event.filters).forEach(
+        ([key, filterObj]) => {
+          params[key] = filterObj.value;
+        });
+
+      this.loadShopsData(params, false);
     }
   }
 

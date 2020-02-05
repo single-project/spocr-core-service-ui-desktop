@@ -1,4 +1,5 @@
-<p-table [columns]="selectedCols"
+<p-table #sdt
+         [columns]="selectedCols"
          [value]="dataItems"
          [lazy]="true"
          (onLazyLoad)="loadShopDataLazy($event)"
@@ -58,9 +59,21 @@
       </th>
     </tr>
     <tr [hidden]="!isFilterShown">
-      <th *ngFor="let col of columns">
-        <input pInputText
+      <th *ngFor="let col of columns" [ngSwitch]="col.field">
+        <input *ngSwitchCase="'id'"
+               pInputText
                type="text"
+               (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+               style="width:100%">
+        <input *ngSwitchCase="'name'"
+               pInputText
+               type="text"
+               (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+               style="width:100%">
+        <input *ngSwitchCase="'counterpartyName'"
+               pInputText
+               type="text"
+               (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
                style="width:100%">
       </th>
     </tr>
