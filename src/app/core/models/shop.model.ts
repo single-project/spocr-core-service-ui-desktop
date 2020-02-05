@@ -18,8 +18,6 @@ import {AddressSuggestion} from "./suggestion-address.model";
     manufacturer: Manufacturer;
   }
 
-
-
   export interface ShopAddress {
     id: number;
     version: number;

@@ -1,22 +1,33 @@
 import {Inject, Injectable} from '@angular/core';
 import {Observable} from "rxjs";
-import {AddressData, AddressSuggestion, AddressSuggestionRoot} from "../models/suggestion-address.model";
+import {AddressSuggestion, AddressSuggestionRoot} from "../models/suggestion-address.model";
 import {HttpClient} from "@angular/common/http";
-import {filter, map} from "rxjs/operators";
+import {map} from "rxjs/operators";
+import {PartySuggestion, PartySuggestionRoot} from "../models/suggestion-party.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DadataService {
 
-  constructor(@Inject(HttpClient) private http: HttpClient) { }
+  constructor(@Inject(HttpClient) private http: HttpClient) {
+  }
 
-  addressSuggest(address: string, count = 10): Observable<AddressSuggestion[]>{
+  addressSuggest(address: string, count = 10): Observable<AddressSuggestion[]> {
     return this.http.post<AddressSuggestionRoot>(`https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address`, {
       'query': address,
       'count': count,
-      'from_bound': { "value": "city" },
-      'to_bound': { "value": "house" },
+      'from_bound': {"value": "city"},
+      'to_bound': {"value": "house"},
+    }).pipe(
+      map(data => data.suggestions)
+    )
+  }
+
+  partySuggest(inn: string, count = 10): Observable<PartySuggestion[]> {
+    return this.http.post<PartySuggestionRoot>('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party', {
+      'query': inn,
+      'count': count
     }).pipe(
       map(data => data.suggestions)
     )

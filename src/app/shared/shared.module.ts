@@ -14,9 +14,10 @@ import { ActiveTagsPipe } from './pipes/active-tags.pipe';
 import { NgxDadataModule } from '@kolkov/ngx-dadata';
 import { DadataAddressComponent } from './components/dadata-address/dadata-address.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import { DadataPartyComponent } from './components/dadata-party/dadata-party.component';
 
 @NgModule({
-  declarations: [ ActiveTagsPipe, DadataAddressComponent ],
+  declarations: [ ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent ],
   imports: [
     CommonModule,
     ToolbarModule,

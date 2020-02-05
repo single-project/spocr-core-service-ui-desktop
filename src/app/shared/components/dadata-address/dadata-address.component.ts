@@ -16,14 +16,14 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   private results: string[];
   private suggestions: AddressSuggestion[];
   private suggetionForParent: any;
-  private addressGroup: FormGroup;
+  private addressForm: FormGroup;
   private selectedItem: string;
 
   constructor(
     @Inject(DadataService) private dadata: DadataService,
     @Inject(FormBuilder) private fb: FormBuilder
   ) {
-    this.addressGroup = this.fb.group({
+    this.addressForm = this.fb.group({
       'addressInput': ['']
     })
   }
@@ -38,11 +38,11 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
 
     if (this.currentAddress) {
-      this.addressGroup.patchValue({'addressInput': this.currentAddress.address});
+      this.addressForm.patchValue({'addressInput': this.currentAddress.address});
       this.suggetionForParent = this.currentAddress.suggestion;
     }
      else {
-      this.addressGroup.patchValue({'addressInput': ''})
+      this.addressForm.patchValue({'addressInput': ''})
     }
   }
 
@@ -62,7 +62,7 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   onAddressClean(): void {
     this.results = [];
     this.selectedItem = '';
-    this.addressGroup.patchValue(
+    this.addressForm.patchValue(
       {'addressInput': ''}
     )
 
