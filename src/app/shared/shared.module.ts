@@ -7,7 +7,7 @@ import {
   MenuModule, MessageModule, MessagesModule, MultiSelectModule,
   OverlayPanelModule, PaginatorModule,
   SplitButtonModule,
-  TableModule, TabMenuModule, ToastModule,
+  TableModule, TabMenuModule, TabViewModule, ToastModule,
   ToolbarModule
 } from 'primeng';
 import { ActiveTagsPipe } from './pipes/active-tags.pipe';
@@ -40,6 +40,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     TabMenuModule,
     AutoCompleteModule,
     ReactiveFormsModule,
+    TabViewModule,
+
   ],
   exports: [
     ToolbarModule,
@@ -64,6 +66,7 @@ import {ReactiveFormsModule} from "@angular/forms";
     TabMenuModule,
     AutoCompleteModule,
     DadataAddressComponent,
+    TabViewModule,
   ]
 })
 export class SharedModule {

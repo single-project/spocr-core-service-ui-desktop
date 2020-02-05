@@ -4,11 +4,9 @@ import {IdNameModel} from "../../../../core/models/id-name.model";
 import {DadataAddress, DadataConfig} from "@kolkov/ngx-dadata";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MenuItem} from "primeng";
+import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
+import {Counterparty, ShopModel, ShopType} from "../../../../core/models/shop.model";
 
-enum ShopTabs {
-  General,
-  Address
-}
 
 @Component({
   selector: 'app-shop-dialog',
@@ -16,11 +14,11 @@ enum ShopTabs {
   styleUrls: ['./shop-dialog.component.scss']
 })
 export class ShopDialogComponent implements OnInit, OnChanges {
-  @Input() shop;
-  @Input() display;
-  @Input() counterpartiesList;
-  @Input() shopTypesList;
-  @Input() isNew;
+  @Input() shop: ShopModel;
+  @Input() display: boolean;
+  @Input() counterpartiesList: Counterparty[];
+  @Input() shopTypesList: ShopType[];
+  @Input() isNew: boolean;
   @Input() dadataAddressConfig: DadataConfig;
   @Output() onEditedShopSave = new EventEmitter<any>();
   @Output() onNewShopSaved = new EventEmitter<any>();
@@ -30,9 +28,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShop = {};
   private shopFrom: FormGroup;
-  private tabs: MenuItem[];
-  private shopTabs = ShopTabs;
-  private currentTab: ShopTabs;
+  private addressSuggestion: AddressSuggestion;
+  private comment: string;
+  private tabIndex: number;
 
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
@@ -43,14 +41,13 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       'shopActive': [true],
       'shopAddress': ['']
     });
+
   }
 
   ngOnInit() {
-    this.currentTab = ShopTabs.General;
-    this.tabs = [
-      {label: 'Основное', icon: 'fas fa-file-alt', command: (e) => {this.toggleTabs(ShopTabs.General)}},
-      {label: 'Адрес', icon: 'fas fa-map-marker-alt', command: (e) => {this.toggleTabs(ShopTabs.Address)}},
-    ]
+
+    this.comment = 'test';
+    this.tabIndex = 0;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -67,7 +64,14 @@ export class ShopDialogComponent implements OnInit, OnChanges {
           name: this.shopFrom.get('shopName').value,
           active: this.shopFrom.get('shopActive').value,
           counterparty: {id: this.shopFrom.get('counterparty').value['id']},
-          shopTypes: [{id: this.shopFrom.get('shopType').value['id']}]
+          shopTypes: [{id: this.shopFrom.get('shopType').value['id']}],
+          address: {
+            active: true,
+            address: this.addressSuggestion.value,
+            comment: this.comment,
+            suggestion: this.addressSuggestion
+
+          }
         },
       };
       this.onNewShopSaved.emit(this.newShop);
@@ -80,7 +84,15 @@ export class ShopDialogComponent implements OnInit, OnChanges {
           active: this.shopFrom.get('shopActive').value,
           counterparty: {id: this.shopFrom.get('counterparty').value['id']},
           version: this.shop.version,
-          shopTypes: [{id: this.shopFrom.get('shopType').value['id']}]
+          shopTypes: [{id: this.shopFrom.get('shopType').value['id']}],
+          address: {
+            id: this.shop.address.id,
+            active: this.shop.address.active,
+            address: this.addressSuggestion.value,
+            version: this.shop.address.version,
+            comment: this.comment,
+            suggestion: this.addressSuggestion
+          }
         }
 
       };
@@ -92,7 +104,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
 
   closeDialog() {
+
     this.onCloseDialog.emit(false);
+
   }
 
 
@@ -111,18 +125,12 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     ]);
   }
 
-  toggleTabs(triggerEvent: ShopTabs): void {
-    switch (triggerEvent) {
-      case ShopTabs.Address:
-        this.currentTab = this.shopTabs.Address;
-        break;
-      case ShopTabs.General:
-        this.currentTab = this.shopTabs.General;
-        break;
-    }
-  }
 
-  typesChange() {
+
+  onAddressSuggest(e): void {
+    if(e){
+      this.addressSuggestion = e;
+    }
 
   }
 

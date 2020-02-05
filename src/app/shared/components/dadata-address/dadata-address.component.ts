@@ -1,31 +1,23 @@
-import {
-  AfterViewInit, asNativeElements,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {DadataService} from "../../../core/services/dadata.service";
-import {AddressData} from "../../../core/models/suggestion-address.model";
+import {AddressSuggestion} from "../../../core/models/suggestion-address.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
+import {ShopAddress} from "../../../core/models/shop.model";
 
 @Component({
   selector: 'app-dadata-address',
   templateUrl: './dadata-address.component.html',
   styleUrls: ['./dadata-address.component.scss']
 })
-export class DadataAddressComponent implements OnInit, AfterViewInit {
-  @ViewChild('addressInput', {static: false}) addressInput: ElementRef;
+export class DadataAddressComponent implements OnInit, OnChanges {
+  @Input() currentAddress: ShopAddress;
   @Output() onSuggest = new EventEmitter<any>();
   private results: string[];
+  private suggestions: AddressSuggestion[];
   private suggetionForParent: any;
   private addressGroup: FormGroup;
-  private selectedItems: string[];
-  private input$;
+  private selectedItem: string;
 
   constructor(
     @Inject(DadataService) private dadata: DadataService,
@@ -38,27 +30,46 @@ export class DadataAddressComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.results = [];
-    this.selectedItems = [];
-  }
+    this.selectedItem = '';
 
-  ngAfterViewInit(): void {
 
   }
 
-  find(e){
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (this.currentAddress) {
+      this.addressGroup.patchValue({'addressInput': this.currentAddress.address});
+      this.suggetionForParent = this.currentAddress.suggestion;
+    }
+     else {
+      this.addressGroup.patchValue({'addressInput': ''})
+    }
+  }
+
+  find(e) {
     this.dadata.addressSuggest(e.query).pipe(
-      map(s => s.map(s => s.value))
+      tap(su => this.suggestions = su),
+      map(su => su.map(s => s.value)),
     ).subscribe(v => this.results = v)
   }
 
-  select(e){
+  select(e) {
 
-    this.selectedItems.push(e);
-    console.log(this.selectedItems);
+    this.suggetionForParent = this.suggestions.filter(s => s.value === e);
 
   }
 
-  pushSuggest(): void {
-    this.onSuggest.emit(this.suggetionForParent);
+  onAddressClean(): void {
+    this.results = [];
+    this.selectedItem = '';
+    this.addressGroup.patchValue(
+      {'addressInput': ''}
+    )
+
+  }
+
+  onAddressSave(): void {
+    console.dir(this.suggetionForParent[0]);
+    this.onSuggest.emit(this.suggetionForParent[0]);
   }
 }

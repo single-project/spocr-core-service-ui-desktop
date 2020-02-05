@@ -1,4 +1,10 @@
 <div [formGroup]="addressGroup">
-  <p-autoComplete #addressInput formControlName="addressInput" appendTo="body" (onSelect)="select($event)" [suggestions]="results" (completeMethod)="find($event)"></p-autoComplete>
+  <div class="ui-inputgroup">
+
+    <p-autoComplete #addressInput formControlName="addressInput" appendTo="body" (onSelect)="select($event)"
+                    [suggestions]="results" (completeMethod)="find($event)"></p-autoComplete>
+    <button pButton (click)="onAddressSave()" type="button" icon="pi pi-check" class="ui-button-success"></button>
+    <button pButton (click)="onAddressClean()" type="button" icon="pi pi-times" class="ui-button-danger"></button>
+  </div>
 </div>
 
