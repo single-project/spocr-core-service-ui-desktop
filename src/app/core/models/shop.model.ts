@@ -3,7 +3,7 @@ import {AddressSuggestion} from "./suggestion-address.model";
 
 
 
-  export interface Manufacturer {
+  export interface ShopManufacturer {
     id: number;
     version: number;
     active: boolean;
@@ -15,7 +15,7 @@ import {AddressSuggestion} from "./suggestion-address.model";
     version: number;
     active: boolean;
     name: string;
-    manufacturer: Manufacturer;
+    manufacturer: ShopManufacturer;
   }
 
   export interface ShopAddress {
@@ -27,7 +27,7 @@ import {AddressSuggestion} from "./suggestion-address.model";
     suggestion: AddressSuggestion;
   }
 
-  export interface Counterparty {
+  export interface ShopCounterparty {
     id: number;
     version: number;
     active: boolean;
@@ -41,9 +41,9 @@ import {AddressSuggestion} from "./suggestion-address.model";
     name: string;
     shopTypes: ShopType[];
     address: ShopAddress;
-    counterparty: Counterparty;
-    counterpartyName: string;
-    counterpartyId: number;
+    counterparty: ShopCounterparty;
+    counterpartyName?: string;
+    counterpartyId?: number;
   }
 
 

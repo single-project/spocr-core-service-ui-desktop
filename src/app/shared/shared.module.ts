@@ -68,6 +68,7 @@ import { DadataPartyComponent } from './components/dadata-party/dadata-party.com
     AutoCompleteModule,
     DadataAddressComponent,
     TabViewModule,
+    DadataPartyComponent,
   ]
 })
 export class SharedModule {

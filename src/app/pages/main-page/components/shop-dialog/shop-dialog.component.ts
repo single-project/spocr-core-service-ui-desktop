@@ -5,7 +5,7 @@ import {DadataAddress, DadataConfig} from "@kolkov/ngx-dadata";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MenuItem} from "primeng";
 import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
-import {Counterparty, ShopModel, ShopType} from "../../../../core/models/shop.model";
+import {ShopCounterparty, ShopModel, ShopType} from "../../../../core/models/shop.model";
 
 
 @Component({
@@ -16,7 +16,7 @@ import {Counterparty, ShopModel, ShopType} from "../../../../core/models/shop.mo
 export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() shop: ShopModel;
   @Input() display: boolean;
-  @Input() counterpartiesList: Counterparty[];
+  @Input() counterpartiesList: ShopCounterparty[];
   @Input() shopTypesList: ShopType[];
   @Input() isNew: boolean;
   @Input() dadataAddressConfig: DadataConfig;
@@ -29,8 +29,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   private newShop = {};
   private shopFrom: FormGroup;
   private addressSuggestion: AddressSuggestion;
-  private comment: string;
-  private tabIndex: number;
+
 
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
@@ -39,15 +38,15 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       'counterparty': [0, Validators.required],
       'shopName': ['', Validators.required],
       'shopActive': [true],
-      'shopAddress': ['']
+      'shopAddress': [''],
+      'shopComment': ['']
     });
 
   }
 
   ngOnInit() {
 
-    this.comment = 'test';
-    this.tabIndex = 0;
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,7 +67,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
           address: {
             active: true,
             address: this.addressSuggestion.value,
-            comment: this.comment,
+            comment: this.shopFrom.get('shopComment').value,
             suggestion: this.addressSuggestion
 
           }
@@ -90,7 +89,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
             active: this.shop.address.active,
             address: this.addressSuggestion.value,
             version: this.shop.address.version,
-            comment: this.comment,
+            comment: this.shopFrom.get('shopComment').value,
             suggestion: this.addressSuggestion
           }
         }
@@ -140,7 +139,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
         {'shopType': this.shop.shopTypes[0]},
         {'counterparty': this.shop.counterparty},
         {'shopName': this.shop.name},
-        {'shopActive': this.shop.active}
+        {'shopActive': this.shop.active},
+        {'shopComment': this.shop.address.comment}
       ]);
     } else {
       this.newResetForm();

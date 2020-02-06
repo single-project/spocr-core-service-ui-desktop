@@ -1,8 +1,10 @@
 <div [formGroup]="partyForm">
+
   <div class="ui-inputgroup">
 
     <p-autoComplete  formControlName="partyInput" appendTo="body" (onSelect)="select($event)"
                     [suggestions]="results" (completeMethod)="find($event)"></p-autoComplete>
+
     <button pButton (click)="onPartySave()" type="button" icon="pi pi-check" class="ui-button-success"></button>
     <button pButton (click)="onPartyClean()" type="button" icon="pi pi-times" class="ui-button-danger"></button>
   </div>

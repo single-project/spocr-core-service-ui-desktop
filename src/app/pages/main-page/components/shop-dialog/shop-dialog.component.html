@@ -10,7 +10,7 @@
   [modal]="true"
   [style]="{width: '450px'}">
 
-  <p-tabView [activeIndex]="tabIndex">
+  <p-tabView>
     <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
       <div [formGroup]="shopFrom" class="ui-g ui-fluid" *ngIf="shop">
         <div class="ui-g-12">
@@ -84,7 +84,16 @@
                                 [currentAddress]="shop.address"></app-dadata-address>
           </div>
         </div>
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>Комментарий</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="shopComment">
+          </div>
+        </div>
       </div>
+
     </p-tabPanel>
   </p-tabView>
   <p-footer>

@@ -12,10 +12,10 @@ import {ShopAddress} from "../../../core/models/shop.model";
 })
 export class DadataAddressComponent implements OnInit, OnChanges {
   @Input() currentAddress: ShopAddress;
-  @Output() onSuggest = new EventEmitter<any>();
+  @Output() onSuggest = new EventEmitter<AddressSuggestion>();
   private results: string[];
   private suggestions: AddressSuggestion[];
-  private suggetionForParent: any;
+   suggetionForParent: any;
   private addressForm: FormGroup;
   private selectedItem: string;
 
@@ -62,6 +62,7 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   onAddressClean(): void {
     this.results = [];
     this.selectedItem = '';
+    this.suggestions = [];
     this.addressForm.patchValue(
       {'addressInput': ''}
     )
@@ -69,7 +70,9 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   }
 
   onAddressSave(): void {
-    console.dir(this.suggetionForParent[0]);
+    this.results = [];
+    this.selectedItem = '';
+    this.suggestions = [];
     this.onSuggest.emit(this.suggetionForParent[0]);
   }
 }
