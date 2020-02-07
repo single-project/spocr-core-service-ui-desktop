@@ -5,9 +5,9 @@ import {ReferenceResponseModel} from '../../../../core/models/reference-response
 import {ShopsService} from '../../../../core/services/shops.service';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
-import {AutoComplete, LazyLoadEvent, MessageService} from 'primeng';
+import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
-import {debounceTime, map, mergeMap, switchMap} from 'rxjs/operators';
+import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 
 @Component({
@@ -157,7 +157,11 @@ export class ShopDataTableComponent implements OnInit {
 
   showSuccessSavingMessage() {
     this.mService.clear();
-    this.mService.add({key: 'tc', severity: 'success', summary: 'Данные успешно сохранены'});
+    this.mService.add({
+      key: 'tc',
+      severity: 'success',
+      summary: 'Данные успешно сохранены'
+    });
   }
 
   loadShopsData(options = {}, updatePageInfo = true) {
@@ -204,9 +208,9 @@ export class ShopDataTableComponent implements OnInit {
     this.loadShopsData({q: searchString});
   }
 
-  cleanFilter(id: AutoComplete) {
-    id.inputFieldValue = '';
-    console.log();
+  cleanFilter(sdt: Table, element: AutoComplete, fieldId: string, matchMode: string) {
+    element.inputFieldValue = '';
+    sdt.filter(null, fieldId, matchMode);
   }
 
   filterSearch(event, fieldName) {
@@ -216,36 +220,20 @@ export class ShopDataTableComponent implements OnInit {
     });
   }
 
-  filterSearch1(event, fieldName) {
-    let query = event.query;
-
-    this.shopService.fetchShopData({q: query})
-      .pipe(
-        map((data) => {
-          data.content.forEach(shopObj => {
-            shopObj.counterpartyName = shopObj.counterparty.name;
-            shopObj.counterpartyId = shopObj.counterparty.id;
-          });
-          return data.content
-        }),
-        mergeMap(
-          (content: ShopModel[]) => [content.map((shop: ShopModel) => shop[fieldName])]),
-      )
-      .subscribe((data) => {
-        this.searchItems = [...data];
+  counterPartiesListSelect() {
+    this.counterPartiesService
+      .fetchCounterPartiesData()
+      .subscribe((data: ReferenceResponseModel) => {
+        this.counterPartiesList = [...data.content];
       });
   }
 
-  counterPartiesListSelect() {
-    this.counterPartiesService.fetchCounterPartiesData().subscribe((data: ReferenceResponseModel) => {
-      this.counterPartiesList = [...data.content];
-    });
-  }
-
   shopTypeSelect() {
-    this.shopTypesService.fetchShopTypesData().subscribe((data: ReferenceResponseModel) => {
-      this.shopTypesList = [...this.shopTypesDataTransformHelper(data)];
-    });
+    this.shopTypesService
+      .fetchShopTypesData()
+      .subscribe((data: ReferenceResponseModel) => {
+        this.shopTypesList = [...this.shopTypesDataTransformHelper(data)];
+      });
   }
 
   savedShopNew(e) {
