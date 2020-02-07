@@ -43,6 +43,14 @@
               icon="fa fa-filter"
               label="{{isFilterShown ? 'Спрятать фильтр' : 'Показать фильтр'}}">
       </button>
+      <button *ngIf="false"
+              style="margin-left: 1em; top: -10px"
+              type="button"
+              class="ui-button-success"
+              pButton
+              icon="fa fa-trash"
+              label="Очистить фильтры">
+      </button>
     </div>
 
   </ng-template>
@@ -61,36 +69,54 @@
     </tr>
     <tr [hidden]="!isFilterShown">
       <th *ngFor="let col of columns" [ngSwitch]="col.field">
-        <input *ngSwitchCase="'id1'"
-               pInputText
-               type="text"
-               (input)="sdt.filter(null, col.field, 'contains')"
-               (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
-               style="width:100%">
-        <p-autoComplete *ngSwitchCase="'id'"
-                        [suggestions]="searchItems"
-                        (onSelect)="sdt.filter($event, col.field, 'contains')"
-                        (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
-                        (completeMethod)="filterSearch($event, col.field)"
-                        [style]="{width: '100%'}"
-                        appendTo="body">
-        </p-autoComplete>
-        <p-autoComplete *ngSwitchCase="'name'"
-                        [suggestions]="searchItems"
-                        (onSelect)="sdt.filter($event, col.field, 'contains')"
-                        (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
-                        (completeMethod)="filterSearch($event, col.field)"
-                        [style]="{width: '100%'}"
-                        appendTo="body">
-        </p-autoComplete>
-        <p-autoComplete *ngSwitchCase="'counterpartyName'"
-                        [suggestions]="searchItems"
-                        (onSelect)="sdt.filter($event, col.field, 'contains')"
-                        (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
-                        (completeMethod)="filterSearch($event, col.field)"
-                        [style]="{width: '100%'}"
-                        appendTo="body">
-        </p-autoComplete>
+        <div *ngSwitchCase="'id'">
+          <p-autoComplete [suggestions]="searchItems"
+                          (onSelect)="sdt.filter($event, col.field, 'contains')"
+                          (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+                          (completeMethod)="filterSearch($event, col.field)"
+                          appendTo="body"
+                          #idFilter>
+          </p-autoComplete>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-times"
+            class="ui-button-secondary"
+            (click)="cleanFilter(idFilter)">
+          </button>
+        </div>
+        <div *ngSwitchCase="'name'">
+          <p-autoComplete [suggestions]="searchItems"
+                          (onSelect)="sdt.filter($event, col.field, 'contains')"
+                          (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+                          (completeMethod)="filterSearch($event, col.field)"
+                          appendTo="body"
+                          #nameFilter>
+          </p-autoComplete>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-times"
+            class="ui-button-secondary"
+            (click)="cleanFilter(nameFilter)">
+          </button>
+        </div>
+        <div *ngSwitchCase="'counterpartyName'">
+          <p-autoComplete [suggestions]="searchItems"
+                          (onSelect)="sdt.filter($event, col.field, 'contains')"
+                          (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+                          (completeMethod)="filterSearch($event, col.field)"
+                          appendTo="body"
+                          #counterpartyFilter>
+          </p-autoComplete>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-times"
+            class="ui-button-secondary"
+            (click)="cleanFilter(counterpartyFilter)">
+          </button>
+        </div>
       </th>
     </tr>
   </ng-template>

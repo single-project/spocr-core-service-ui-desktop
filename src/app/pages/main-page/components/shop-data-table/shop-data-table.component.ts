@@ -5,7 +5,7 @@ import {ReferenceResponseModel} from '../../../../core/models/reference-response
 import {ShopsService} from '../../../../core/services/shops.service';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
-import {LazyLoadEvent, MessageService} from 'primeng';
+import {AutoComplete, LazyLoadEvent, MessageService} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, mergeMap, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
@@ -202,6 +202,11 @@ export class ShopDataTableComponent implements OnInit {
 
   dataSearch(searchString: string) {
     this.loadShopsData({q: searchString});
+  }
+
+  cleanFilter(id: AutoComplete) {
+    id.inputFieldValue = '';
+    console.log();
   }
 
   filterSearch(event, fieldName) {
