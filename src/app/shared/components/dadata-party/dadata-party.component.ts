@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 
 import {DadataService} from "../../../core/services/dadata.service";
-import {ShopCounterparty} from "../../../core/models/shop.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {PartySuggestion} from "../../../core/models/suggestion-party.model";
 import {CounterpartyModel} from "../../../core/models/counterparty.model";
@@ -27,7 +26,9 @@ export class DadataPartyComponent implements OnInit, OnChanges {
     @Inject(DadataService) private dadata: DadataService
   ) {
     this.partyForm = fb.group({
-      'partyInput': ['']
+      'partyInput': [''],
+
+
     });
   }
 
@@ -37,11 +38,11 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.currentParty) {
+    if (this.currentParty.legalRekv) {
       this.partyForm.patchValue({'partyInput': this.currentParty.legalRekv.inn});
       this.suggetionForParent = this.currentParty.suggestion;
     } else {
-      this.partyForm.patchValue({'addressInput': ''})
+      this.partyForm.reset();
     }
   }
 
@@ -57,16 +58,18 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   }
 
   onPartySave() {
-    this.onPartySuggest.emit(this.suggetionForParent);
-    this.results = [];
-    this.selectedItem = '';
-    this.suggestions = [];
+    this.onPartySuggest.emit(this.suggetionForParent[0]);
+    this.suggestionReset();
   }
 
   onPartyClean() {
+    this.suggestionReset();
+    this.partyForm.reset();
+  }
+
+  suggestionReset(): void {
     this.results = [];
     this.selectedItem = '';
     this.suggestions = [];
-    this.partyForm.patchValue({'partyInput': ''});
   }
 }
