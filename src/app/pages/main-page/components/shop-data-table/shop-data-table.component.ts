@@ -7,6 +7,8 @@ import {CounterpartiesService} from '../../../../core/services/counterparties.se
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {LazyLoadEvent, MessageService} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
+import {debounceTime, map, mergeMap, switchMap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-shop-data-table',
@@ -19,6 +21,7 @@ export class ShopDataTableComponent implements OnInit {
   private loading: boolean;
   private counterPartiesList = [];
   private shopTypesList = [];
+  private searchItems = [];
   private daDataAddressConfig: DadataConfig = {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.address
@@ -31,6 +34,8 @@ export class ShopDataTableComponent implements OnInit {
   private totalElements: number;
   private numberOfElements: number;
   private isFilterShown: boolean;
+  private columnFilters$: Observable<any>;
+  private columnFilterSubj$ = new Subject();
 
   cols: any[];
   selectedCols: any[];
@@ -53,9 +58,32 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initColumnFilter();
     this.loadShopsData();
     this.counterPartiesListSelect();
     this.shopTypeSelect();
+  }
+
+  initColumnFilter() {
+    this.columnFilters$ = this.columnFilterSubj$.pipe(
+      debounceTime(1000),
+      switchMap(({params, fieldName}) =>
+        this.shopService.fetchShopData(params)
+          .pipe(
+            map((data) => {
+              return data.content.map(shopObj => {
+                shopObj.counterpartyName = shopObj.counterparty.name;
+                shopObj.counterpartyId = shopObj.counterparty.id;
+                return shopObj[fieldName];
+              });
+            }),
+          )
+      ),
+    );
+
+    this.columnFilters$.subscribe((data) => {
+      this.searchItems = [...data];
+    });
   }
 
   onRowSelect(e) {
@@ -152,7 +180,7 @@ export class ShopDataTableComponent implements OnInit {
 
   loadShopDataLazy(event: LazyLoadEvent) {
 
-    if (event.rows) {
+    if (event && event.rows) {
       let params = {};
 
       if (Object.entries(event.filters).length === 0) {
@@ -174,6 +202,33 @@ export class ShopDataTableComponent implements OnInit {
 
   dataSearch(searchString: string) {
     this.loadShopsData({q: searchString});
+  }
+
+  filterSearch(event, fieldName) {
+    this.columnFilterSubj$.next({
+      params: {q: event.query},
+      fieldName
+    });
+  }
+
+  filterSearch1(event, fieldName) {
+    let query = event.query;
+
+    this.shopService.fetchShopData({q: query})
+      .pipe(
+        map((data) => {
+          data.content.forEach(shopObj => {
+            shopObj.counterpartyName = shopObj.counterparty.name;
+            shopObj.counterpartyId = shopObj.counterparty.id;
+          });
+          return data.content
+        }),
+        mergeMap(
+          (content: ShopModel[]) => [content.map((shop: ShopModel) => shop[fieldName])]),
+      )
+      .subscribe((data) => {
+        this.searchItems = [...data];
+      });
   }
 
   counterPartiesListSelect() {

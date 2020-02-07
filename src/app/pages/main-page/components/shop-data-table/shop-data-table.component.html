@@ -60,21 +60,30 @@
     </tr>
     <tr [hidden]="!isFilterShown">
       <th *ngFor="let col of columns" [ngSwitch]="col.field">
-        <input *ngSwitchCase="'id'"
+        <input *ngSwitchCase="'id1'"
                pInputText
                type="text"
+               (input)="sdt.filter(null, col.field, 'contains')"
                (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
                style="width:100%">
-        <input *ngSwitchCase="'name'"
-               pInputText
-               type="text"
-               (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
-               style="width:100%">
-        <input *ngSwitchCase="'counterpartyName'"
-               pInputText
-               type="text"
-               (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
-               style="width:100%">
+        <p-autoComplete *ngSwitchCase="'id'"
+                        [suggestions]="searchItems"
+                        (completeMethod)="filterSearch($event, col.field)"
+                        [style]="{width: '100%'}"
+                        appendTo="body">
+        </p-autoComplete>
+        <p-autoComplete *ngSwitchCase="'name'"
+                        [suggestions]="searchItems"
+                        (completeMethod)="filterSearch($event, col.field)"
+                        [style]="{width: '100%'}"
+                        appendTo="body">
+        </p-autoComplete>
+        <p-autoComplete *ngSwitchCase="'counterpartyName'"
+                        [suggestions]="searchItems"
+                        (completeMethod)="filterSearch($event, col.field)"
+                        [style]="{width: '100%'}"
+                        appendTo="body">
+        </p-autoComplete>
       </th>
     </tr>
   </ng-template>
