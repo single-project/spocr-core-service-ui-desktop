@@ -180,7 +180,7 @@ export class ShopDataTableComponent implements OnInit {
 
   loadShopDataLazy(event: LazyLoadEvent) {
 
-    if (event && event.rows) {
+    if (event.rows) {
       let params = {};
 
       if (Object.entries(event.filters).length === 0) {

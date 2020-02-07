@@ -49,7 +49,8 @@
   <ng-template pTemplate="header"
                let-columns>
     <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
+      <th *ngFor="let col of columns"
+          [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
         {{col.header}}
         <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'" [field]="col.field"
                     ariaLabel="Activate to sort"
@@ -68,18 +69,24 @@
                style="width:100%">
         <p-autoComplete *ngSwitchCase="'id'"
                         [suggestions]="searchItems"
+                        (onSelect)="sdt.filter($event, col.field, 'contains')"
+                        (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
                         (completeMethod)="filterSearch($event, col.field)"
                         [style]="{width: '100%'}"
                         appendTo="body">
         </p-autoComplete>
         <p-autoComplete *ngSwitchCase="'name'"
                         [suggestions]="searchItems"
+                        (onSelect)="sdt.filter($event, col.field, 'contains')"
+                        (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
                         (completeMethod)="filterSearch($event, col.field)"
                         [style]="{width: '100%'}"
                         appendTo="body">
         </p-autoComplete>
         <p-autoComplete *ngSwitchCase="'counterpartyName'"
                         [suggestions]="searchItems"
+                        (onSelect)="sdt.filter($event, col.field, 'contains')"
+                        (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
                         (completeMethod)="filterSearch($event, col.field)"
                         [style]="{width: '100%'}"
                         appendTo="body">
