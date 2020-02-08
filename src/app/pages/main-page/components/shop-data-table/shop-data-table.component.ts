@@ -9,6 +9,7 @@ import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
+import {ShopColumnModel} from '../../../../core/models/shop-column.model';
 
 @Component({
   selector: 'app-shop-data-table',
@@ -37,8 +38,8 @@ export class ShopDataTableComponent implements OnInit {
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
 
-  cols: any[];
-  selectedCols: any[];
+  cols: ShopColumnModel[];
+  selectedCols: ShopColumnModel[];
 
   constructor(
     private shopService: ShopsService,
@@ -51,7 +52,7 @@ export class ShopDataTableComponent implements OnInit {
     this.cols = [
       {field: 'id', header: 'ID'},
       {field: 'name', header: 'Имя'},
-      {field: 'counterpartyName', header: 'Контрагент'},
+      {field: 'counterparty', header: 'Контрагент'},
       {field: 'active', header: 'Активный'},
     ];
     this.selectedCols = this.cols;
@@ -72,9 +73,10 @@ export class ShopDataTableComponent implements OnInit {
           .pipe(
             map((data) => {
               return data.content.map(shopObj => {
-                shopObj.counterpartyName = shopObj.counterparty.name;
-                shopObj.counterpartyId = shopObj.counterparty.id;
-                return shopObj[fieldName];
+                return {
+                  id: fieldName === 'counterparty'? shopObj[fieldName]['id']: shopObj.id,
+                  name: fieldName === 'counterparty'? shopObj[fieldName]['name']: shopObj[fieldName]
+                };
               });
             }),
           )
@@ -168,11 +170,7 @@ export class ShopDataTableComponent implements OnInit {
     this.loading = true;
     return this.shopService.fetchShopData(options)
       .subscribe((data: ReferenceResponseModel) => {
-        this.dataItems = data.content.map((shopObj: ShopModel) => ({
-          ...shopObj,
-          counterpartyName: shopObj.counterparty.name,
-          counterpartyId: shopObj.counterparty.id,
-        }));
+        this.dataItems = data.content;
 
         if (updatePageInfo) {
           this.totalElements = data.totalElements;
@@ -197,7 +195,7 @@ export class ShopDataTableComponent implements OnInit {
 
       Object.entries(event.filters).forEach(
         ([key, filterObj]) => {
-          params[key] = filterObj.value;
+          params[key] = filterObj.value.name;
         });
 
       this.loadShopsData(params, false);
