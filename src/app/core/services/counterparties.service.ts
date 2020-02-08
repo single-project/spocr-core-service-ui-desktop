@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Conf} from "../../../assets/config/conf";
+import {HttpClient} from '@angular/common/http';
+import {Conf} from '../../../assets/config/conf';
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -14,11 +14,13 @@ export class CounterpartiesService {
   constructor(@Inject(HttpClient) private http: HttpClient) {
   }
 
-  fetchCounterPartiesData(): Observable<any> {
-
-    return this.http.get(this.counterpartiesURL);
+  fetchCounterPartiesData(options = {}): Observable<any> {
+    return this.http.get(
+      this.counterpartiesURL,
+      {
+        params: {...options}
+      });
   }
-
 
   editCounterparty(updateData: {}, id: number):any {
 
