@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
-import {Conf} from "../../../assets/config/conf";
-import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import {Conf} from '../../../assets/config/conf';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,12 @@ export class ManufactureService {
 
   constructor(@Inject(HttpClient) private http: HttpClient) { }
 
-  fetchManufacturesData(): Observable<any> {
-    return this.http.get(this.manufactureURL);
+  fetchManufacturesData(options = {}): Observable<any> {
+    return this.http.get(
+      this.manufactureURL,
+      {
+        params: {...options}
+      });
   }
 
   editManufacture(updateData: {}, id: number): Observable<any> {
