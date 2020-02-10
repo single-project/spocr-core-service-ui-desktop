@@ -69,13 +69,13 @@ export class ShopDataTableComponent implements OnInit {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
-        this.shopService.fetchShopData(params)
+        this.fetchFilterData(params, fieldName)
           .pipe(
             map((data) => {
-              return data.content.map(shopObj => {
+              return data.content.map(dataObj => {
                 return {
-                  id: fieldName === 'counterparty'? shopObj[fieldName]['id']: shopObj.id,
-                  name: fieldName === 'counterparty'? shopObj[fieldName]['name']: shopObj[fieldName]
+                  id: dataObj.id,
+                  name: fieldName === 'counterparty' ? dataObj.name : dataObj[fieldName]
                 };
               });
             }),
@@ -86,6 +86,16 @@ export class ShopDataTableComponent implements OnInit {
     this.columnFilters$.subscribe((data) => {
       this.searchItems = [...data];
     });
+  }
+
+  fetchFilterData(params = {}, fieldName = '') {
+    let dataService$ = this.shopService.fetchShopData(params);
+
+    if (fieldName === 'counterparty') {
+      dataService$ = this.counterPartiesService.fetchCounterPartiesData(params);
+    }
+
+    return dataService$;
   }
 
   onRowSelect(e) {
@@ -195,7 +205,7 @@ export class ShopDataTableComponent implements OnInit {
 
       Object.entries(event.filters).forEach(
         ([key, filterObj]) => {
-          params[key] = filterObj.value.name;
+          params[key] = key === 'counterparty' ? filterObj.value.id : filterObj.value.name;
         });
 
       this.loadShopsData(params, false);
