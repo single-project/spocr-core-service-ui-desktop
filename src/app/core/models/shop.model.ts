@@ -1,9 +1,7 @@
-import {CounterpartyModel} from "./counterparty.model";
 import {AddressSuggestion} from "./suggestion-address.model";
 
 
-
-  export interface ShopManufacturer {
+export interface ShopManufacturer {
     id: number;
     version: number;
     active: boolean;

@@ -69,7 +69,6 @@ export class ShopDialogComponent implements OnInit, OnChanges {
             address: this.addressSuggestion.value,
             comment: this.shopFrom.get('shopComment').value,
             suggestion: this.addressSuggestion
-
           }
         },
       };
@@ -129,6 +128,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   onAddressSuggest(e): void {
     if(e){
       this.addressSuggestion = e;
+    }else{
+      this.addressSuggestion = <AddressSuggestion>{}
     }
 
   }
