@@ -1,11 +1,18 @@
-<p-table [loading]="loading"
+<p-table #sdt
          [columns]="selectedCols"
          [value]="dataItems"
+         [lazy]="true"
+         (onLazyLoad)="loadShopDataLazy($event)"
+         [paginator]="true"
+         [rows]="numberOfElements"
+         [totalRecords]="totalElements"
+         [loading]="loading"
          [responsive]="true"
-         [paginator]="true" [rows]="13"
          selectionMode="single"
          [(selection)]="selectedShop"
-         (onRowSelect)="onRowSelect($event)">
+         (onRowSelect)="onRowSelect($event)"
+         [scrollable]="true"
+         scrollHeight="400px">
   <ng-template pTemplate="caption"
                let-rowData>
     <div style="text-align:left"
@@ -23,8 +30,25 @@
               style="margin-left: 1em; top: -10px"
               type="button"
               class="ui-button-success"
-              pButton icon="fa fa-plus"
+              pButton
+              icon="fa fa-plus"
               label="Добавить">
+      </button>
+      <button (click)="isFilterShown = !isFilterShown"
+              style="margin-left: 1em; top: -10px"
+              type="button"
+              class="ui-button-success"
+              pButton
+              icon="fa fa-filter"
+              label="{{isFilterShown ? 'Спрятать фильтр' : 'Показать фильтр'}}">
+      </button>
+      <button *ngIf="false"
+              style="margin-left: 1em; top: -10px"
+              type="button"
+              class="ui-button-success"
+              pButton
+              icon="fa fa-trash"
+              label="Очистить фильтры">
       </button>
     </div>
 
@@ -32,39 +56,96 @@
   <ng-template pTemplate="header"
                let-columns>
     <tr>
-
-      <th *ngFor="let col of columns" [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
+      <th *ngFor="let col of columns"
+          [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
         {{col.header}}
-        <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'" [field]="col.field"
+        <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'"
+                    [field]="col.field"
                     ariaLabel="Activate to sort"
                     ariaLabelDesc="Activate to sort in descending order"
                     ariaLabelAsc="Activate to sort in ascending order">
         </p-sortIcon>
       </th>
     </tr>
+    <tr [hidden]="!isFilterShown">
+      <th *ngFor="let col of columns" [ngSwitch]="col.field">
+        <div *ngSwitchCase="'id'">
+          <p-autoComplete [suggestions]="searchItems"
+                          field="name"
+                          (onSelect)="sdt.filter($event, col.field, 'contains')"
+                          (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+                          (completeMethod)="filterSearch($event, col.field)"
+                          appendTo="body"
+                          #idFilter>
+          </p-autoComplete>
+          <button pButton
+                  type="button"
+                  icon="pi pi-times"
+                  class="ui-button-secondary"
+                  (click)="cleanFilter(sdt, idFilter, col.field, 'contains')">
+          </button>
+        </div>
+        <div *ngSwitchCase="'name'">
+          <p-autoComplete [suggestions]="searchItems"
+                          field="name"
+                          (onSelect)="sdt.filter($event, col.field, 'contains')"
+                          (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+                          (completeMethod)="filterSearch($event, col.field)"
+                          appendTo="body"
+                          #nameFilter>
+          </p-autoComplete>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-times"
+            class="ui-button-secondary"
+            (click)="cleanFilter(sdt, nameFilter, col.field, 'contains')">
+          </button>
+        </div>
+        <div *ngSwitchCase="'counterparty'">
+          <p-autoComplete [suggestions]="searchItems"
+                          field="name"
+                          (onSelect)="sdt.filter($event, col.field, 'contains')"
+                          (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
+                          (completeMethod)="filterSearch($event, col.field)"
+                          appendTo="body"
+                          #counterpartyFilter>
+          </p-autoComplete>
+          <button pButton
+                  type="button"
+                  icon="pi pi-times"
+                  class="ui-button-secondary"
+                  (click)="cleanFilter(sdt, counterpartyFilter, col.field, 'contains')">
+          </button>
+        </div>
+      </th>
+    </tr>
   </ng-template>
-  <ng-template
-    pTemplate="body"
-    let-dataItem
-    let-columns="columns"
-    let-rowData>
+  <ng-template pTemplate="body"
+               let-dataItem
+               let-columns="columns"
+               let-rowData>
     <tr [pSelectableRow]="rowData">
       <td *ngFor="let col of columns"
+          [ngSwitch]="col.field"
           style="text-align: center">
-        <ng-container *ngIf="col.field !== 'active'">{{dataItem[col.field]}}</ng-container>
-        <span *ngIf="col.field === 'active'"
-              [ngClass]="dataItem[col.field] === true ? 'ekc-table-span-active': 'ekc-table-span-passive'"> {{dataItem[col.field] | activeTags }}</span>
+        <ng-container *ngSwitchDefault>
+          {{dataItem[col.field]}}
+        </ng-container>
+        <ng-container *ngSwitchCase="'counterparty'">
+          {{dataItem[col.field]['name']}}
+        </ng-container>
+        <span *ngSwitchCase="'active'"
+              [ngClass]="dataItem[col.field] ? 'ekc-table-span-active': 'ekc-table-span-passive'">
+          {{dataItem[col.field] | activeTags }}
+        </span>
       </td>
     </tr>
   </ng-template>
-  <ng-template pTemplate="summary" let-rowData>
-
-
+  <ng-template pTemplate="summary"
+               let-rowData>
     Всего {{dataItems?.length}} объектов
-
-
   </ng-template>
-
 </p-table>
 
 <app-shop-dialog (onNewShopSaved)="onNewShopSave($event)"
@@ -77,5 +158,3 @@
                  [shopTypesList]="shopTypesList"
                  [dadataAddressConfig]="daDataAddressConfig">
 </app-shop-dialog>
-
-

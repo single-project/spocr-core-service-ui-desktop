@@ -3,7 +3,6 @@ import {Conf} from "../../../assets/config/conf";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -16,8 +15,12 @@ export class ShopsService {
   ) {
   }
 
-  fetchShopData(): Observable<any> {
-    return this.http.get(this.shopUrl);
+  fetchShopData(options = {}): Observable<any> {
+    return this.http.get(
+      this.shopUrl,
+      {
+        params: {...options}
+      });
   }
 
   editShop(updateData: {}, id: number): Observable<any> {

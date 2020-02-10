@@ -1,12 +1,15 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {ShopModel} from "../../../../core/models/shop.model";
-import {DadataConfig, DadataType} from "@kolkov/ngx-dadata";
-import {ReferenceResponseModel} from "../../../../core/models/reference-response.model";
-import {ShopsService} from "../../../../core/services/shops.service";
-import {CounterpartiesService} from "../../../../core/services/counterparties.service";
-import {ShopTypesService} from "../../../../core/services/shop-types.service";
-import {MessageService} from "primeng";
-import {SearchService} from "../../../../core/services/search.service";
+import {Component, OnInit} from '@angular/core';
+import {ShopModel} from '../../../../core/models/shop.model';
+import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
+import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
+import {ShopsService} from '../../../../core/services/shops.service';
+import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import {ShopTypesService} from '../../../../core/services/shop-types.service';
+import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
+import {SearchService} from '../../../../core/services/search.service';
+import {debounceTime, map, switchMap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {ShopColumnModel} from '../../../../core/models/shop-column.model';
 
 @Component({
   selector: 'app-shop-data-table',
@@ -19,42 +22,80 @@ export class ShopDataTableComponent implements OnInit {
   private loading: boolean;
   private counterPartiesList = [];
   private shopTypesList = [];
+  private searchItems = [];
   private daDataAddressConfig: DadataConfig = {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.address
   };
-  // @Output() shopTypeSelect = new EventEmitter<any>();
+
   private displayShopEditDialog: boolean;
   private selectedShop: ShopModel;
   private isNewShop: boolean;
   private shop: any = {};
+  private totalElements: number;
+  private numberOfElements: number;
+  private isFilterShown: boolean;
+  private columnFilters$: Observable<any>;
+  private columnFilterSubj$ = new Subject();
 
-
-
-  cols: any[];
-  selectedCols: any[];
+  cols: ShopColumnModel[];
+  selectedCols: ShopColumnModel[];
 
   constructor(
-    @Inject(ShopsService) private shopService: ShopsService,
-    @Inject(SearchService) private search: SearchService,
-    @Inject(CounterpartiesService) private counterPartiesService: CounterpartiesService,
-    @Inject(ShopTypesService) private shopTypesService: ShopTypesService,
-    @Inject(MessageService) private mService: MessageService,
+    private shopService: ShopsService,
+    private search: SearchService,
+    private counterPartiesService: CounterpartiesService,
+    private shopTypesService: ShopTypesService,
+    private mService: MessageService,
   ) {
 
     this.cols = [
       {field: 'id', header: 'ID'},
       {field: 'name', header: 'Имя'},
-      {field: 'counterpartyName', header: 'Контрагент'},
+      {field: 'counterparty', header: 'Контрагент'},
       {field: 'active', header: 'Активный'},
     ];
     this.selectedCols = this.cols;
   }
 
   ngOnInit() {
+    this.initColumnFilter();
     this.loadShopsData();
     this.counterPartiesListSelect();
     this.shopTypeSelect();
+  }
+
+  initColumnFilter() {
+    this.columnFilters$ = this.columnFilterSubj$.pipe(
+      debounceTime(1000),
+      switchMap(({params, fieldName}) =>
+        this.fetchFilterData(params, fieldName)
+          .pipe(
+            map((data) => {
+              return data.content.map(dataObj => {
+                return {
+                  id: dataObj.id,
+                  name: fieldName === 'counterparty' ? dataObj.name : dataObj[fieldName]
+                };
+              });
+            }),
+          )
+      ),
+    );
+
+    this.columnFilters$.subscribe((data) => {
+      this.searchItems = [...data];
+    });
+  }
+
+  fetchFilterData(params = {}, fieldName = '') {
+    let dataService$ = this.shopService.fetchShopData(params);
+
+    if (fieldName === 'counterparty') {
+      dataService$ = this.counterPartiesService.fetchCounterPartiesData(params);
+    }
+
+    return dataService$;
   }
 
   onRowSelect(e) {
@@ -78,7 +119,7 @@ export class ShopDataTableComponent implements OnInit {
     this.shop = null;
   }
 
-  onNewShopSave(e){
+  onNewShopSave(e) {
     this.savedShopNew(e);
   }
 
@@ -87,24 +128,14 @@ export class ShopDataTableComponent implements OnInit {
     this.shop = null;
   }
 
-  onShopCreate(){
+  onShopCreate() {
     this.isNewShop = true;
     this.shop = {active: true};
     this.displayShopEditDialog = true;
   }
 
-  columnsChange(){
+  columnsChange() {
     console.dir(this.selectedCols);
-  }
-
-  shopDataTransformHelper(rawData: any): ShopModel[] {
-    const newData: ShopModel[] = [];
-    rawData.content.forEach((d) => {
-      d.counterpartyName = d.counterparty.name;
-      d.counterpartyId = d.counterparty.id;
-      newData.push(d)
-    });
-    return newData;
   }
 
   shopTypesDataTransformHelper(rawData: any) {
@@ -138,34 +169,79 @@ export class ShopDataTableComponent implements OnInit {
 
   showSuccessSavingMessage() {
     this.mService.clear();
-    this.mService.add({key: 'tc', severity: 'success', summary: 'Данные успешно сохранены'});
-  }
-
-  loadShopsData() {
-    this.loading = true;
-    return this.shopService.fetchShopData().subscribe((data: ReferenceResponseModel) => {
-      this.dataItems = [...this.shopDataTransformHelper(data)];
-      this.loading = false;
+    this.mService.add({
+      key: 'tc',
+      severity: 'success',
+      summary: 'Данные успешно сохранены'
     });
   }
 
+  loadShopsData(options = {}, updatePageInfo = true) {
+    this.loading = true;
+    return this.shopService.fetchShopData(options)
+      .subscribe((data: ReferenceResponseModel) => {
+        this.dataItems = data.content;
 
-  dataSearch (searchString: string) {
-    this.search.shopSearch(searchString).subscribe((data: ReferenceResponseModel) => {
-      this.dataItems = [...this.shopDataTransformHelper(data)];
+        if (updatePageInfo) {
+          this.totalElements = data.totalElements;
+          this.numberOfElements = data.numberOfElements;
+        }
+        this.loading = false;
+      });
+  }
+
+  loadShopDataLazy(event: LazyLoadEvent) {
+
+    if (event.rows) {
+      let params = {};
+
+      if (Object.entries(event.filters).length === 0) {
+        params['page'] = event.first / event.rows;
+      }
+
+      if (event.sortField) {
+        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+      }
+
+      Object.entries(event.filters).forEach(
+        ([key, filterObj]) => {
+          params[key] = key === 'counterparty' ? filterObj.value.id : filterObj.value.name;
+        });
+
+      this.loadShopsData(params, true);
+    }
+  }
+
+  dataSearch(searchString: string) {
+    this.loadShopsData({q: searchString});
+  }
+
+  cleanFilter(sdt: Table, element: AutoComplete, fieldId: string, matchMode: string) {
+    element.inputFieldValue = '';
+    sdt.filter(null, fieldId, matchMode);
+  }
+
+  filterSearch(event, fieldName) {
+    this.columnFilterSubj$.next({
+      params: {q: event.query},
+      fieldName
     });
   }
 
   counterPartiesListSelect() {
-    this.counterPartiesService.fetchCounterPartiesData().subscribe((data: ReferenceResponseModel) => {
-      this.counterPartiesList = [...data.content];
-    });
+    this.counterPartiesService
+      .fetchCounterPartiesData()
+      .subscribe((data: ReferenceResponseModel) => {
+        this.counterPartiesList = [...data.content];
+      });
   }
 
   shopTypeSelect() {
-    this.shopTypesService.fetchShopTypesData().subscribe((data: ReferenceResponseModel) => {
-      this.shopTypesList = [...this.shopTypesDataTransformHelper(data)];
-    });
+    this.shopTypesService
+      .fetchShopTypesData()
+      .subscribe((data: ReferenceResponseModel) => {
+        this.shopTypesList = [...this.shopTypesDataTransformHelper(data)];
+      });
   }
 
   savedShopNew(e) {

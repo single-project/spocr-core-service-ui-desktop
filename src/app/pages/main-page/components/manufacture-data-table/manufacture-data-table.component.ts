@@ -1,9 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {ManufactureService} from "../../../../core/services/manufacture.service";
-import {MessageService} from "primeng";
-import {ReferenceResponseModel} from "../../../../core/models/reference-response.model";
-import {SearchService} from "../../../../core/services/search.service";
-
+import {Component, OnInit} from '@angular/core';
+import {ManufactureService} from '../../../../core/services/manufacture.service';
+import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
+import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
+import {SearchService} from '../../../../core/services/search.service';
+import {Observable, Subject} from 'rxjs';
+import {debounceTime, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-manufacture-data-table',
@@ -12,6 +13,7 @@ import {SearchService} from "../../../../core/services/search.service";
 })
 export class ManufactureDataTableComponent implements OnInit {
   private dataItems = [];
+  private searchItems = [];
   private loading: boolean;
   private displayManufactureEditDialog: boolean;
   private selectedManufacture: any;
@@ -20,12 +22,17 @@ export class ManufactureDataTableComponent implements OnInit {
 
   cols: any[];
   selectedCols: any[];
+  private totalElements: number;
+  private numberOfElements: number;
+  private isFilterShown: boolean;
+  private columnFilters$: Observable<any>;
+  private columnFilterSubj$ = new Subject();
 
   constructor(
-    @Inject(ManufactureService) private manufactureService: ManufactureService,
-    @Inject(MessageService) private mService: MessageService,
-    @Inject(SearchService) private search: SearchService,
-    ) {
+    private manufactureService: ManufactureService,
+    private mService: MessageService,
+    private search: SearchService,
+  ) {
     this.cols = [
       {field: 'id', header: 'ID'},
       {field: 'name', header: 'Имя'},
@@ -35,7 +42,31 @@ export class ManufactureDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initColumnFilter();
     this.loadManufactureData();
+  }
+
+  initColumnFilter() {
+    this.columnFilters$ = this.columnFilterSubj$.pipe(
+      debounceTime(1000),
+      switchMap(({params, fieldName}) =>
+        this.manufactureService.fetchManufacturesData(params)
+          .pipe(
+            map((data) => {
+              return data.content.map(manufactureObj => {
+                return {
+                  id: manufactureObj[fieldName],
+                  name: manufactureObj[fieldName]
+                };
+              });
+            }),
+          )
+      ),
+    );
+
+    this.columnFilters$.subscribe((data) => {
+      this.searchItems = [...data];
+    });
   }
 
   onRowSelect(e) {
@@ -61,7 +92,7 @@ export class ManufactureDataTableComponent implements OnInit {
 
   }
 
-  onNewManufactureSave(e){
+  onNewManufactureSave(e) {
     this.savedManufactureNew(e);
   }
 
@@ -70,28 +101,68 @@ export class ManufactureDataTableComponent implements OnInit {
     this.manufacture = null;
   }
 
-  onManufactureCreate(){
+  onManufactureCreate() {
     this.isNewManufacture = true;
     this.manufacture = {active: true};
     this.displayManufactureEditDialog = true;
   }
 
-  columnsChange(){
+  columnsChange() {
     console.dir(this.selectedCols);
   }
 
-  dataSearch (searchString: string) {
+  dataSearch(searchString: string) {
     this.search.manufactureSearch(searchString).subscribe((data: ReferenceResponseModel) => {
       this.dataItems = data.content;
     });
   }
 
-  loadManufactureData(): void {
-    this.loading = true;
-    this.manufactureService.fetchManufacturesData().subscribe((data: ReferenceResponseModel) => {
-      this.dataItems = [...data.content];
-      this.loading = false;
+  cleanFilter(sdt: Table, element: AutoComplete, fieldId: string, matchMode: string) {
+    element.inputFieldValue = '';
+    sdt.filter(null, fieldId, matchMode);
+  }
+
+  filterSearch(event, fieldName) {
+    this.columnFilterSubj$.next({
+      params: {q: event.query},
+      fieldName
     });
+  }
+
+  loadManufactureData(options = {}, updatePageInfo = true): void {
+    this.loading = true;
+    this.manufactureService.fetchManufacturesData(options)
+      .subscribe((data: ReferenceResponseModel) => {
+        this.dataItems = data.content;
+
+        if (updatePageInfo) {
+          this.totalElements = data.totalElements;
+          this.numberOfElements = data.numberOfElements;
+        }
+        this.loading = false;
+      });
+  }
+
+  loadManufactureDataLazy(event: LazyLoadEvent) {
+
+    if (event.rows) {
+      let params = {};
+
+      if (Object.entries(event.filters).length === 0) {
+        params['page'] = event.first / event.rows;
+      }
+
+      if (event.sortField) {
+        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+      }
+
+      Object.entries(event.filters).forEach(
+        ([key, filterObj]) => {
+          params[key] = filterObj.value.name;
+        });
+
+      this.loadManufactureData(params, false);
+    }
   }
 
   showServerErrorToast() {

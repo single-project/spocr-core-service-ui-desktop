@@ -1,11 +1,10 @@
 import {Component, Inject, ViewChild, OnInit} from '@angular/core';
-import {ShopDataTableComponent} from "./components/shop-data-table/shop-data-table.component";
-import {CounterpartiesDataTableComponent} from "./components/counterparties-data-table/counterparties-data-table.component";
-import {ManufactureDataTableComponent} from "./components/manufacture-data-table/manufacture-data-table.component";
-import {ShopTypesDataTableComponent} from "./components/shop-types-data-table/shop-types-data-table.component";
+import {ShopDataTableComponent} from './components/shop-data-table/shop-data-table.component';
+import {CounterpartiesDataTableComponent} from './components/counterparties-data-table/counterparties-data-table.component';
+import {ManufactureDataTableComponent} from './components/manufacture-data-table/manufacture-data-table.component';
+import {ShopTypesDataTableComponent} from './components/shop-types-data-table/shop-types-data-table.component';
 
-import {ConfigService} from "../../core/services/config.service";
-import {DadataService} from "../../core/services/dadata.service";
+import {ConfigService} from '../../core/services/config.service';
 
 @Component({
   selector: 'app-main-page',
