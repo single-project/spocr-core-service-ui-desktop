@@ -208,7 +208,7 @@ export class ShopDataTableComponent implements OnInit {
           params[key] = key === 'counterparty' ? filterObj.value.id : filterObj.value.name;
         });
 
-      this.loadShopsData(params, false);
+      this.loadShopsData(params, true);
     }
   }
 
