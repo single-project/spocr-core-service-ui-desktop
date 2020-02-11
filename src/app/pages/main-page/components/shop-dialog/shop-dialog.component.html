@@ -1,4 +1,5 @@
 <p-dialog
+
   (onShow)="afterShow()"
   header="Карточка ТТ"
   appendTo="body"
@@ -10,19 +11,19 @@
   [modal]="true"
   [style]="{width: '450px'}">
 
-  <p-tabView>
+  <p-tabView >
     <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
-      <div [formGroup]="shopFrom" class="ui-g ui-fluid" *ngIf="shop">
+      <div [formGroup]="shopFrom" class="ui-g ui-fluid" >
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label for="name">ИМЯ</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText id="name" formControlName="shopName" autofocus/>
+            <input pInputText id="name" formControlName="name" autofocus/>
           </div>
           <div class="ui-grid-col-8">
             <p-message severity="error" text="Имя должно быть заполнено"
-                       *ngIf="!shopFrom.controls['shopName'].valid&&shopFrom.controls['shopName'].dirty"></p-message>
+                       *ngIf="!shopFrom.controls['name'].valid&&shopFrom.controls['name'].dirty"></p-message>
           </div>
         </div>
         <div class="ui-g-12">
@@ -49,7 +50,7 @@
             <label for="active">АКТИВНЫЙ</label>
           </div>
           <div class="ui-g-8">
-            <p-checkbox id="active" binary="true" formControlName="shopActive"></p-checkbox>
+            <p-checkbox id="active" binary="true" formControlName="active"></p-checkbox>
           </div>
         </div>
         <div class="ui-g-12">
@@ -64,7 +65,7 @@
               optionLabel="name"
               placeholder="Выберите тип ТТ (обязательно)"
               dataKey="id"
-              formControlName="shopType">
+              formControlName="shopTypes">
 
             </p-dropdown>
 
@@ -88,8 +89,8 @@
           <div class="ui-g-4">
             <label>Комментарий</label>
           </div>
-          <div class="ui-g-8">
-            <input pInputText formControlName="shopComment">
+          <div class="ui-g-8" formGroupName="address">
+            <input pInputText formControlName="comment">
           </div>
         </div>
       </div>

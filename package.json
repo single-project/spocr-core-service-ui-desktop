@@ -24,6 +24,7 @@
     "@fullcalendar/daygrid": "^4.0.1",
     "@fullcalendar/interaction": "^4.0.1",
     "@kolkov/ngx-dadata": "~0.6.0",
+    "@types/lodash": "~4.14.149",
     "chart.js": "~2.9.3",
     "ng-fullcalendar": "~2.0.3",
     "ngx-cookie-service": "~2.3.0",
