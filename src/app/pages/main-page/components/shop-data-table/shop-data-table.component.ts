@@ -27,6 +27,8 @@ export class ShopDataTableComponent implements OnInit {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.address
   };
+  private sortField: string;
+  private sortOrder: number;
 
   private displayShopEditDialog: boolean;
   private selectedShop: ShopModel;
@@ -48,19 +50,12 @@ export class ShopDataTableComponent implements OnInit {
     private shopTypesService: ShopTypesService,
     private mService: MessageService,
   ) {
-
-    this.cols = [
-      {field: 'id', header: 'ID'},
-      {field: 'name', header: 'Имя'},
-      {field: 'counterparty', header: 'Контрагент'},
-      {field: 'active', header: 'Активный'},
-    ];
-    this.selectedCols = this.cols;
   }
 
   ngOnInit() {
+
+    this.loadShopsTableHeaders();
     this.initColumnFilter();
-    this.loadShopsData();
     this.counterPartiesListSelect();
     this.shopTypeSelect();
   }
@@ -149,7 +144,6 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   shopSingleTransformHelper(rawData: any): any {
-
     let newData: ShopModel = {...rawData};
     newData.counterpartyId = rawData.counterparty.id;
     newData.counterpartyName = rawData.counterparty.name;
@@ -176,6 +170,25 @@ export class ShopDataTableComponent implements OnInit {
     });
   }
 
+  loadShopsTableHeaders() {
+    const tableHeaders = {
+      columns: [
+        {field: 'id', header: 'ID'},
+        {field: 'name', header: 'Имя'},
+        {field: 'counterparty', header: 'Контрагент'},
+        {field: 'active', header: 'Активный'},
+      ],
+      sortField: 'name',
+      sortOrder: 'asc'
+    };
+
+
+    this.cols = tableHeaders.columns;
+    this.selectedCols = this.cols;
+    this.sortField = tableHeaders.sortField;
+    this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
+  }
+
   loadShopsData(options = {}, updatePageInfo = true) {
     this.loading = true;
     return this.shopService.fetchShopData(options)
@@ -192,24 +205,23 @@ export class ShopDataTableComponent implements OnInit {
 
   loadShopDataLazy(event: LazyLoadEvent) {
 
-    if (event.rows) {
-      let params = {};
+    let params = {};
 
-      if (Object.entries(event.filters).length === 0) {
-        params['page'] = event.first / event.rows;
-      }
-
-      if (event.sortField) {
-        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
-      }
-
-      Object.entries(event.filters).forEach(
-        ([key, filterObj]) => {
-          params[key] = key === 'counterparty' ? filterObj.value.id : filterObj.value.name;
-        });
-
-      this.loadShopsData(params, true);
+    if (event.first && event.rows) {
+      params['page'] = event.first / event.rows;
     }
+
+    if (event.sortField) {
+      params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+    }
+
+    Object.entries(event.filters).forEach(
+      ([key, filterObj]) => {
+        params[key] = key === 'counterparty' ? filterObj.value.id : filterObj.value.name;
+      });
+
+    this.loadShopsData(params, true);
+
   }
 
   dataSearch(searchString: string) {

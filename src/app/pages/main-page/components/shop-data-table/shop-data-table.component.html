@@ -11,6 +11,8 @@
          selectionMode="single"
          [(selection)]="selectedShop"
          (onRowSelect)="onRowSelect($event)"
+         [sortField]="sortField"
+         [sortOrder]="sortOrder">
          [scrollable]="true"
          scrollHeight="400px">
   <ng-template pTemplate="caption"
@@ -57,10 +59,9 @@
                let-columns>
     <tr>
       <th *ngFor="let col of columns"
-          [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
+          [pSortableColumn]="col.field">
         {{col.header}}
-        <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'"
-                    [field]="col.field"
+        <p-sortIcon [field]="col.field"
                     ariaLabel="Activate to sort"
                     ariaLabelDesc="Activate to sort in descending order"
                     ariaLabelAsc="Activate to sort in ascending order">
