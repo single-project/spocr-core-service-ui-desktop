@@ -12,7 +12,7 @@
          [(selection)]="selectedShop"
          (onRowSelect)="onRowSelect($event)"
          [sortField]="sortField"
-         [sortOrder]="sortOrder">
+         [sortOrder]="sortOrder"
          [scrollable]="true"
          scrollHeight="400px">
   <ng-template pTemplate="caption"
@@ -70,7 +70,7 @@
     </tr>
     <tr [hidden]="!isFilterShown">
       <th *ngFor="let col of columns" [ngSwitch]="col.field">
-        <div *ngSwitchCase="'id'">
+        <div *ngSwitchDefault>
           <p-autoComplete [suggestions]="searchItems"
                           field="name"
                           (onSelect)="sdt.filter($event, col.field, 'contains')"
@@ -84,23 +84,6 @@
                   icon="pi pi-times"
                   class="ui-button-secondary"
                   (click)="cleanFilter(sdt, idFilter, col.field, 'contains')">
-          </button>
-        </div>
-        <div *ngSwitchCase="'name'">
-          <p-autoComplete [suggestions]="searchItems"
-                          field="name"
-                          (onSelect)="sdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="sdt.filter($event.target.value, col.field, 'contains')"
-                          (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body"
-                          #nameFilter>
-          </p-autoComplete>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-times"
-            class="ui-button-secondary"
-            (click)="cleanFilter(sdt, nameFilter, col.field, 'contains')">
           </button>
         </div>
         <div *ngSwitchCase="'counterparty'">

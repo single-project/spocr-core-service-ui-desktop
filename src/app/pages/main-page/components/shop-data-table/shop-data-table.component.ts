@@ -53,7 +53,7 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.loading = true;
     this.loadShopsTableHeaders();
     this.initColumnFilter();
     this.counterPartiesListSelect();
@@ -190,7 +190,6 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   loadShopsData(options = {}, updatePageInfo = true) {
-    this.loading = true;
     return this.shopService.fetchShopData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = data.content;
@@ -199,12 +198,12 @@ export class ShopDataTableComponent implements OnInit {
           this.totalElements = data.totalElements;
           this.numberOfElements = data.numberOfElements;
         }
-        this.loading = false;
+       this.loading = false;
       });
   }
 
   loadShopDataLazy(event: LazyLoadEvent) {
-
+    this.loading = true;
     let params = {};
 
     if (event.first && event.rows) {
