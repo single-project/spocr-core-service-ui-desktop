@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ShopModel} from '../../../../core/models/shop.model';
 import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
@@ -40,8 +40,10 @@ export class ShopDataTableComponent implements OnInit {
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
 
-  cols: ShopColumnModel[];
-  selectedCols: ShopColumnModel[];
+  private cols: ShopColumnModel[];
+  private selectedCols: ShopColumnModel[];
+  @ViewChildren(AutoComplete)
+  private tableFilters : QueryList<AutoComplete>;
 
   constructor(
     private shopService: ShopsService,
@@ -74,8 +76,7 @@ export class ShopDataTableComponent implements OnInit {
                 };
               });
             }),
-          )
-      ),
+          )),
     );
 
     this.columnFilters$.subscribe((data) => {
@@ -198,7 +199,7 @@ export class ShopDataTableComponent implements OnInit {
           this.totalElements = data.totalElements;
           this.numberOfElements = data.numberOfElements;
         }
-       this.loading = false;
+        this.loading = false;
       });
   }
 
@@ -216,7 +217,15 @@ export class ShopDataTableComponent implements OnInit {
 
     Object.entries(event.filters).forEach(
       ([key, filterObj]) => {
-        params[key] = key === 'counterparty' ? filterObj.value.id : filterObj.value.name;
+        if (key === 'counterparty') {
+          if (filterObj.value.id === -1) {
+            params[`${key}.name`] = filterObj.value.name;
+          } else {
+            params[`${key}.id`] = filterObj.value.id;
+          }
+        } else {
+          params[key] = filterObj.value.name;
+        }
       });
 
     this.loadShopsData(params, true);
@@ -227,8 +236,11 @@ export class ShopDataTableComponent implements OnInit {
     this.loadShopsData({q: searchString});
   }
 
-  cleanFilter(sdt: Table, element: AutoComplete, fieldId: string, matchMode: string) {
-    element.inputFieldValue = '';
+  cleanFilter(sdt: Table, index: number, fieldId: string, matchMode: string) {
+    const filterObj: AutoComplete = this.tableFilters.toArray()[index];
+
+    filterObj.inputEL.nativeElement.value = '';
+
     sdt.filter(null, fieldId, matchMode);
   }
 
