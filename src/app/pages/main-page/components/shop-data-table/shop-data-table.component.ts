@@ -69,7 +69,7 @@ export class ShopDataTableComponent implements OnInit {
         this.fetchFilterData(params, fieldName)
           .pipe(
             map((data) => {
-              let arrayTemp = [];
+              let arrayTemp: Array<Object>;
               if (fieldName === 'active') {
                 arrayTemp = [...new Set(data.content.map(
                   dataObj => dataObj.active))]
@@ -229,6 +229,7 @@ export class ShopDataTableComponent implements OnInit {
 
     Object.entries(event.filters).forEach(
       ([key, filterObj]) => {
+
         if (key === 'counterparty') {
           if (filterObj.value.id === -1) {
             params[`${key}.name`] = filterObj.value.name;
@@ -236,12 +237,12 @@ export class ShopDataTableComponent implements OnInit {
             params[`${key}.id`] = filterObj.value.id;
           }
         } else if (key === 'active') {
-          params['active'] = filterObj.value.name;
+          params[key] = filterObj.value.name;
 
           if (filterObj.value.name.toLowerCase() === 'да') {
-            params['active'] = true;
+            params[key] = true;
           } else if (filterObj.value.name.toLowerCase() === 'нет') {
-            params['active'] = false;
+            params[key] = false;
           }
         } else {
           params[key] = filterObj.value.name;

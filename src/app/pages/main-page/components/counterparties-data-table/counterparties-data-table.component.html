@@ -11,6 +11,8 @@
          selectionMode="single"
          [(selection)]="selectedCounterparty"
          (onRowSelect)="onRowSelect($event)"
+         [sortField]="sortField"
+         [sortOrder]="sortOrder"
          [scrollable]="true"
          scrollHeight="400px">
   <ng-template pTemplate="caption"
@@ -49,50 +51,31 @@
                let-columns>
     <tr>
       <th *ngFor="let col of columns"
-          [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
+          [pSortableColumn]="col.field">
         {{col.header}}
-        <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'"
-                    [field]="col.field"
+        <p-sortIcon [field]="col.field"
                     ariaLabel="Activate to sort"
                     ariaLabelDesc="Activate to sort in descending order"
-                    ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
+                    ariaLabelAsc="Activate to sort in ascending order">
+        </p-sortIcon>
       </th>
     <tr [hidden]="!isFilterShown">
-      <th *ngFor="let col of columns" [ngSwitch]="col.field">
-        <div *ngSwitchCase="'id'">
+      <th *ngFor="let col of columns; let i = index">
+        <div>
           <p-autoComplete [suggestions]="searchItems"
                           field="name"
                           (onSelect)="cdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="cdt.filter($event.target.value, col.field, 'contains')"
+                          (keydown.enter)="cdt.filter({id: -1, name: $event.target.value}, col.field, 'contains'); searchItems = []"
                           (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body"
-                          #idFilter>
+                          appendTo="body">
           </p-autoComplete>
           <button pButton
                   type="button"
                   icon="pi pi-times"
                   class="ui-button-secondary"
-                  (click)="cleanFilter(cdt, idFilter, col.field, 'contains')">
+                  (click)="cleanFilter(cdt, i, col.field, 'contains')">
           </button>
         </div>
-        <div *ngSwitchCase="'name'">
-          <p-autoComplete [suggestions]="searchItems"
-                          field="name"
-                          (onSelect)="cdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="cdt.filter($event.target.value, col.field, 'contains')"
-                          (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body"
-                          #nameFilter>
-          </p-autoComplete>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-times"
-            class="ui-button-secondary"
-            (click)="cleanFilter(cdt, nameFilter, col.field, 'contains')">
-          </button>
-        </div>
-
       </th>
     </tr>
   </ng-template>
