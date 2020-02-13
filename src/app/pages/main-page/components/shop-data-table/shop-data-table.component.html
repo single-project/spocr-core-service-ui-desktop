@@ -69,27 +69,12 @@
       </th>
     </tr>
     <tr [hidden]="!isFilterShown">
-      <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field">
-        <div *ngSwitchDefault>
+      <th *ngFor="let col of columns; let i = index">
+        <div>
           <p-autoComplete [suggestions]="searchItems"
                           field="name"
                           (onSelect)="sdt.filter($event, col.field, 'contains')"
                           (keydown.enter)="sdt.filter({id: -1, name: $event.target.value}, col.field, 'contains');  searchItems = []"
-                          (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body">
-          </p-autoComplete>
-          <button pButton
-                  type="button"
-                  icon="pi pi-times"
-                  class="ui-button-secondary"
-                  (click)="cleanFilter(sdt, i, col.field, 'contains')">
-          </button>
-        </div>
-        <div *ngSwitchCase="'counterparty'">
-          <p-autoComplete [suggestions]="searchItems"
-                          field="name"
-                          (onSelect)="sdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="sdt.filter({id: -1, name: $event.target.value}, col.field, 'contains')"
                           (completeMethod)="filterSearch($event, col.field)"
                           appendTo="body">
           </p-autoComplete>

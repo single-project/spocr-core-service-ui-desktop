@@ -43,7 +43,7 @@ export class ShopDataTableComponent implements OnInit {
   private cols: ShopColumnModel[];
   private selectedCols: ShopColumnModel[];
   @ViewChildren(AutoComplete)
-  private tableFilters : QueryList<AutoComplete>;
+  private tableFilters: QueryList<AutoComplete>;
 
   constructor(
     private shopService: ShopsService,
@@ -69,12 +69,24 @@ export class ShopDataTableComponent implements OnInit {
         this.fetchFilterData(params, fieldName)
           .pipe(
             map((data) => {
-              return data.content.map(dataObj => {
-                return {
-                  id: dataObj.id,
-                  name: fieldName === 'counterparty' ? dataObj.name : dataObj[fieldName]
-                };
-              });
+              let arrayTemp = [];
+              if (fieldName === 'active') {
+                arrayTemp = [...new Set(data.content.map(
+                  dataObj => dataObj.active))]
+                  .map((val) => ({
+                    id: -1,
+                    name: val ? 'Да' : 'Нет'
+                  }));
+              } else {
+                arrayTemp = data.content.map(dataObj => (
+                  {
+                    id: dataObj.id,
+                    name: fieldName === 'counterparty' ? dataObj.name : dataObj[fieldName]
+                  }
+                ));
+              }
+
+              return arrayTemp;
             }),
           )),
     );
@@ -207,7 +219,7 @@ export class ShopDataTableComponent implements OnInit {
     this.loading = true;
     let params = {};
 
-    if (event.first && event.rows) {
+    if (typeof event.first === 'number' && event.rows) {
       params['page'] = event.first / event.rows;
     }
 
@@ -222,6 +234,14 @@ export class ShopDataTableComponent implements OnInit {
             params[`${key}.name`] = filterObj.value.name;
           } else {
             params[`${key}.id`] = filterObj.value.id;
+          }
+        } else if (key === 'active') {
+          params['active'] = filterObj.value.name;
+
+          if (filterObj.value.name.toLowerCase() === 'да') {
+            params['active'] = true;
+          } else if (filterObj.value.name.toLowerCase() === 'нет') {
+            params['active'] = false;
           }
         } else {
           params[key] = filterObj.value.name;
@@ -245,8 +265,20 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   filterSearch(event, fieldName) {
+    let propName = 'q';
+    let propValue = event.query;
+
+    if (fieldName === 'active') {
+      propName = 'active';
+      if (event.query.toLowerCase() === 'да') {
+        propValue = true;
+      } else if (event.query.toLowerCase() === 'нет') {
+        propValue = false;
+      }
+    }
+
     this.columnFilterSubj$.next({
-      params: {q: event.query},
+      params: {[propName]: propValue},
       fieldName
     });
   }
