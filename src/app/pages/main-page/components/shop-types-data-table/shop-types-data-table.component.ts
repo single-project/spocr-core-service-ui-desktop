@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {ManufactureService} from '../../../../core/services/manufacture.service';
@@ -26,6 +26,10 @@ export class ShopTypesDataTableComponent implements OnInit {
   private isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
+  private sortField: string;
+  private sortOrder: number;
+  @ViewChildren(AutoComplete)
+  private tableFilters: QueryList<AutoComplete>;
 
   constructor(
     private shopTypesService: ShopTypesService,
@@ -33,21 +37,15 @@ export class ShopTypesDataTableComponent implements OnInit {
     private mService: MessageService,
     private search: SearchService,
   ) {
-    this.cols = [
-      {field: 'id', header: 'ID'},
-      {field: 'name', header: 'Имя'},
-      {field: 'manufacturer', header: 'Производитель'},
-      {field: 'active', header: 'Активный'},
-    ];
-    this.selectedCols = this.cols;
   }
 
   cols: any[];
   selectedCols: any[];
 
   ngOnInit() {
+    this.loading = true;
+    this.loadShopsTableHeaders();
     this.initColumnFilter();
-    this.loadShopTypesData();
     this.manufactureListLoad();
   }
 
@@ -55,15 +53,26 @@ export class ShopTypesDataTableComponent implements OnInit {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
-        this.shopTypesService.fetchShopTypesData(params)
+        this.fetchFilterData(params, fieldName)
           .pipe(
             map((data: any) => {
-              return data.content.map(shopTypeObj => {
-                return {
-                  id: fieldName === 'manufacturer'? shopTypeObj[fieldName]['id']: shopTypeObj.id,
-                  name: fieldName === 'manufacturer'? shopTypeObj[fieldName]['name']: shopTypeObj[fieldName]
-                };
-              });
+              let arrayTemp: Array<Object>;
+              if (fieldName === 'active') {
+                arrayTemp = [...new Set(data.content.map(
+                  dataObj => dataObj.active))]
+                  .map((val) => ({
+                    id: -1,
+                    name: val ? 'Да' : 'Нет'
+                  }));
+              } else {
+                arrayTemp = data.content.map(dataObj => {
+                  return {
+                    id: dataObj.id,
+                    name: fieldName === 'manufacturer'? dataObj.name: dataObj[fieldName]
+                  };
+                });
+              }
+              return arrayTemp;
             }),
           )
       ),
@@ -74,6 +83,15 @@ export class ShopTypesDataTableComponent implements OnInit {
     });
   }
 
+  fetchFilterData(params = {}, fieldName = '') {
+    let dataService$ = this.shopTypesService.fetchShopTypesData(params);
+
+    if (fieldName === 'manufacturer') {
+      dataService$ = this.manufactureService.fetchManufacturesData(params);
+    }
+
+    return dataService$;
+  }
 
   onRowSelect(e) {
     this.isNewShopType = false;
@@ -96,7 +114,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     this.shopType = null;
   }
 
-  onNewShopTypeSave(e){
+  onNewShopTypeSave(e) {
     this.shopTypeNew(e);
   }
 
@@ -105,30 +123,45 @@ export class ShopTypesDataTableComponent implements OnInit {
     this.shopType = null;
   }
 
-  onShopTypeCreate(){
+  onShopTypeCreate() {
     this.isNewShopType = true;
     this.shopType = {active: true};
     this.displayShopTypeEditDialog = true;
   }
 
-  columnsChange(){
+  columnsChange() {
     console.dir(this.selectedCols);
   }
 
-  dataSearch (searchString: string) {
+  dataSearch(searchString: string) {
     this.search.shopTypeSearch(searchString).subscribe((data: ReferenceResponseModel) => {
       this.dataItems = this.shopTypesDataTransformHelper(data);
     });
   }
 
-  cleanFilter(sdt: Table, element: AutoComplete, fieldId: string, matchMode: string) {
-    element.inputFieldValue = '';
+  cleanFilter(sdt: Table, index: number, fieldId: string, matchMode: string) {
+    const filterObj: AutoComplete = this.tableFilters.toArray()[index];
+
+    filterObj.inputEL.nativeElement.value = '';
+
     sdt.filter(null, fieldId, matchMode);
   }
 
-  filterSearch(event, fieldName) {
+  filterSearch(event, fieldName: string) {
+    let propName = 'q';
+    let propValue = event.query;
+
+    if (fieldName === 'active') {
+      propName = 'active';
+      if (event.query.toLowerCase() === 'да') {
+        propValue = true;
+      } else if (event.query.toLowerCase() === 'нет') {
+        propValue = false;
+      }
+    }
+
     this.columnFilterSubj$.next({
-      params: {q: event.query},
+      params: {[propName]: propValue},
       fieldName
     });
   }
@@ -194,42 +227,76 @@ export class ShopTypesDataTableComponent implements OnInit {
     this.loading = true;
     this.shopTypesService.fetchShopTypesData(options)
       .subscribe((data: ReferenceResponseModel) => {
-      this.dataItems = data.content;
+        this.dataItems = data.content;
 
         if (updatePageInfo) {
           this.totalElements = data.totalElements;
           this.numberOfElements = data.numberOfElements;
         }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
   }
 
   loadShopTypesDataLazy(event: LazyLoadEvent) {
+    const params = {};
 
-    if (event.rows) {
-      const params = {};
-
-      if (Object.entries(event.filters).length === 0) {
-        params['page'] = event.first / event.rows;
-      }
-
-      if (event.sortField) {
-        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
-      }
-
-      Object.entries(event.filters).forEach(
-        ([key, filterObj]) => {
-          params[key] = filterObj.value.name;
-        });
-
-      this.loadShopTypesData(params, false);
+    if (typeof event.first === 'number' && event.rows) {
+      params['page'] = event.first / event.rows;
     }
+
+    if (event.sortField) {
+      params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+    }
+
+    Object.entries(event.filters).forEach(
+      ([key, filterObj]) => {
+
+        if (key === 'manufacturer') {
+          if (filterObj.value.id === -1) {
+            params[`${key}.name`] = filterObj.value.name;
+          } else {
+            params[`${key}.id`] = filterObj.value.id;
+          }
+        } else if (key === 'active') {
+          params[key] = filterObj.value.name;
+
+          if (filterObj.value.name.toLowerCase() === 'да') {
+            params[key] = true;
+          } else if (filterObj.value.name.toLowerCase() === 'нет') {
+            params[key] = false;
+          }
+        } else {
+          params[key] = filterObj.value.name;
+        }
+      });
+
+    this.loadShopTypesData(params, true);
+
+  }
+
+  loadShopsTableHeaders() {
+    const tableHeaders = {
+      columns: [
+        {field: 'id', header: 'ID'},
+        {field: 'name', header: 'Имя'},
+        {field: 'manufacturer', header: 'Производитель'},
+        {field: 'active', header: 'Активный'},
+      ],
+      sortField: 'name',
+      sortOrder: 'asc'
+    };
+
+
+    this.cols = tableHeaders.columns;
+    this.selectedCols = this.cols;
+    this.sortField = tableHeaders.sortField;
+    this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
   manufactureListLoad() {
     this.manufactureService.fetchManufacturesData()
       .subscribe((data: ReferenceResponseModel) => {
-      this.manufactureList = [...data.content];
-    });
+        this.manufactureList = [...data.content];
+      });
   }
 }

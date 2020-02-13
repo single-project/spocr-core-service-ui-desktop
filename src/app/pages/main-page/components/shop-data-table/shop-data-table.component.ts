@@ -265,7 +265,7 @@ export class ShopDataTableComponent implements OnInit {
     sdt.filter(null, fieldId, matchMode);
   }
 
-  filterSearch(event, fieldName) {
+  filterSearch(event, fieldName: string) {
     let propName = 'q';
     let propValue = event.query;
 

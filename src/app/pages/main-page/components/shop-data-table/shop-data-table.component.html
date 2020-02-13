@@ -74,7 +74,7 @@
           <p-autoComplete [suggestions]="searchItems"
                           field="name"
                           (onSelect)="sdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="sdt.filter({id: -1, name: $event.target.value}, col.field, 'contains');  searchItems = []"
+                          (keydown.enter)="sdt.filter({id: -1, name: $event.target.value}, col.field, 'contains');searchItems = []"
                           (completeMethod)="filterSearch($event, col.field)"
                           appendTo="body">
           </p-autoComplete>
