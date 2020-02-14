@@ -11,10 +11,13 @@
          selectionMode="single"
          [(selection)]="selectedShopType"
          (onRowSelect)="onRowSelect($event)"
+         [sortField]="sortField"
+         [sortOrder]="sortOrder"
          [scrollable]="true"
          scrollHeight="400px">
   <ng-template pTemplate="caption" let-rowData>
-    <div style="text-align:left" class="p-align-center">
+    <div style="text-align:left"
+         class="p-align-center">
       <p-multiSelect (onChange)="columnsChange()"
                      [options]="cols"
                      [(ngModel)]="selectedCols"
@@ -45,64 +48,30 @@
   <ng-template pTemplate="header"
                let-columns>
     <tr>
-      <th *ngFor="let col of columns" [pSortableColumn]="col.field === 'id' || col.field === 'name'? col.field : null">
+      <th *ngFor="let col of columns"
+          [pSortableColumn]="col.field">
         {{col.header}}
-        <p-sortIcon *ngIf="col.field === 'id' || col.field === 'name'"
-                    [field]="col.field"
+        <p-sortIcon [field]="col.field"
                     ariaLabel="Activate to sort"
                     ariaLabelDesc="Activate to sort in descending order"
                     ariaLabelAsc="Activate to sort in ascending order"></p-sortIcon>
       </th>
     </tr>
     <tr [hidden]="!isFilterShown">
-      <th *ngFor="let col of columns" [ngSwitch]="col.field">
-        <div *ngSwitchCase="'id'">
+      <th *ngFor="let col of columns let i = index">
+        <div>
           <p-autoComplete [suggestions]="searchItems"
                           field="name"
                           (onSelect)="stdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="stdt.filter($event.target.value, col.field, 'contains')"
+                          (keydown.enter)="stdt.filter({id: -1, name: $event.target.value}, col.field, 'contains');searchItems = []"
                           (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body"
-                          #idFilter>
+                          appendTo="body">
           </p-autoComplete>
           <button pButton
                   type="button"
                   icon="pi pi-times"
                   class="ui-button-secondary"
-                  (click)="cleanFilter(stdt, idFilter, col.field, 'contains')">
-          </button>
-        </div>
-        <div *ngSwitchCase="'name'">
-          <p-autoComplete [suggestions]="searchItems"
-                          field="name"
-                          (onSelect)="stdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="stdt.filter($event.target.value, col.field, 'contains')"
-                          (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body"
-                          #nameFilter>
-          </p-autoComplete>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-times"
-            class="ui-button-secondary"
-            (click)="cleanFilter(stdt, nameFilter, col.field, 'contains')">
-          </button>
-        </div>
-        <div *ngSwitchCase="'manufacturer'">
-          <p-autoComplete [suggestions]="searchItems"
-                          field="name"
-                          (onSelect)="stdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="stdt.filter($event.target.value, col.field, 'contains')"
-                          (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body"
-                          #counterpartyFilter>
-          </p-autoComplete>
-          <button pButton
-                  type="button"
-                  icon="pi pi-times"
-                  class="ui-button-secondary"
-                  (click)="cleanFilter(stdt, counterpartyFilter, col.field, 'contains')">
+                  (click)="cleanFilter(stdt, i, col.field, 'contains')">
           </button>
         </div>
       </th>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ShopModel} from '../../../../core/models/shop.model';
 import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
@@ -27,6 +27,8 @@ export class ShopDataTableComponent implements OnInit {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.address
   };
+  private sortField: string;
+  private sortOrder: number;
 
   private displayShopEditDialog: boolean;
   private selectedShop: ShopModel;
@@ -38,8 +40,10 @@ export class ShopDataTableComponent implements OnInit {
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
 
-  cols: ShopColumnModel[];
-  selectedCols: ShopColumnModel[];
+  private cols: ShopColumnModel[];
+  private selectedCols: ShopColumnModel[];
+  @ViewChildren(AutoComplete)
+  private tableFilters: QueryList<AutoComplete>;
 
   constructor(
     private shopService: ShopsService,
@@ -48,19 +52,12 @@ export class ShopDataTableComponent implements OnInit {
     private shopTypesService: ShopTypesService,
     private mService: MessageService,
   ) {
-
-    this.cols = [
-      {field: 'id', header: 'ID'},
-      {field: 'name', header: 'Имя'},
-      {field: 'counterparty', header: 'Контрагент'},
-      {field: 'active', header: 'Активный'},
-    ];
-    this.selectedCols = this.cols;
   }
 
   ngOnInit() {
+    this.loading = true;
+    this.loadShopsTableHeaders();
     this.initColumnFilter();
-    this.loadShopsData();
     this.counterPartiesListSelect();
     this.shopTypeSelect();
   }
@@ -72,15 +69,26 @@ export class ShopDataTableComponent implements OnInit {
         this.fetchFilterData(params, fieldName)
           .pipe(
             map((data) => {
-              return data.content.map(dataObj => {
-                return {
-                  id: dataObj.id,
-                  name: fieldName === 'counterparty' ? dataObj.name : dataObj[fieldName]
-                };
-              });
+              let arrayTemp: Array<Object>;
+              if (fieldName === 'active') {
+                arrayTemp = [...new Set(data.content.map(
+                  dataObj => dataObj.active))]
+                  .map((val) => ({
+                    id: -1,
+                    name: val ? 'Да' : 'Нет'
+                  }));
+              } else {
+                arrayTemp = data.content.map(dataObj => (
+                  {
+                    id: dataObj.id,
+                    name: fieldName === 'counterparty' ? dataObj.name : dataObj[fieldName]
+                  }
+                ));
+              }
+
+              return arrayTemp;
             }),
-          )
-      ),
+          )),
     );
 
     this.columnFilters$.subscribe((data) => {
@@ -149,7 +157,6 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   shopSingleTransformHelper(rawData: any): any {
-
     let newData: ShopModel = {...rawData};
     newData.counterpartyId = rawData.counterparty.id;
     newData.counterpartyName = rawData.counterparty.name;
@@ -176,8 +183,26 @@ export class ShopDataTableComponent implements OnInit {
     });
   }
 
+  loadShopsTableHeaders() {
+    const tableHeaders = {
+      columns: [
+        {field: 'id', header: 'ID'},
+        {field: 'name', header: 'Имя'},
+        {field: 'counterparty', header: 'Контрагент'},
+        {field: 'active', header: 'Активный'},
+      ],
+      sortField: 'name',
+      sortOrder: 'asc'
+    };
+
+
+    this.cols = tableHeaders.columns;
+    this.selectedCols = this.cols;
+    this.sortField = tableHeaders.sortField;
+    this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
+  }
+
   loadShopsData(options = {}, updatePageInfo = true) {
-    this.loading = true;
     return this.shopService.fetchShopData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = data.content;
@@ -191,39 +216,70 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   loadShopDataLazy(event: LazyLoadEvent) {
+    this.loading = true;
+    let params = {};
 
-    if (event.rows) {
-      let params = {};
-
-      if (Object.entries(event.filters).length === 0) {
-        params['page'] = event.first / event.rows;
-      }
-
-      if (event.sortField) {
-        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
-      }
-
-      Object.entries(event.filters).forEach(
-        ([key, filterObj]) => {
-          params[key] = key === 'counterparty' ? filterObj.value.id : filterObj.value.name;
-        });
-
-      this.loadShopsData(params, true);
+    if (typeof event.first === 'number' && event.rows) {
+      params['page'] = event.first / event.rows;
     }
+
+    if (event.sortField) {
+      params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+    }
+
+    Object.entries(event.filters).forEach(
+      ([key, filterObj]) => {
+
+        if (key === 'counterparty') {
+          if (filterObj.value.id === -1) {
+            params[`${key}.name`] = filterObj.value.name;
+          } else {
+            params[`${key}.id`] = filterObj.value.id;
+          }
+        } else if (key === 'active') {
+          params[key] = filterObj.value.name;
+
+          if (filterObj.value.name.toLowerCase() === 'да') {
+            params[key] = true;
+          } else if (filterObj.value.name.toLowerCase() === 'нет') {
+            params[key] = false;
+          }
+        } else {
+          params[key] = filterObj.value.name;
+        }
+      });
+
+    this.loadShopsData(params, true);
+
   }
 
   dataSearch(searchString: string) {
     this.loadShopsData({q: searchString});
   }
 
-  cleanFilter(sdt: Table, element: AutoComplete, fieldId: string, matchMode: string) {
-    element.inputFieldValue = '';
+  cleanFilter(sdt: Table, index: number, fieldId: string, matchMode: string) {
+    const filterObj: AutoComplete = this.tableFilters.toArray()[index];
+
+    filterObj.inputEL.nativeElement.value = '';
+
     sdt.filter(null, fieldId, matchMode);
   }
 
-  filterSearch(event, fieldName) {
+  filterSearch(event, fieldName: string) {
+    let propName = 'q';
+    let propValue = event.query;
+
+    if (fieldName === 'active') {
+      propName = 'active';
+      if (event.query.toLowerCase() === 'да') {
+        propValue = true;
+      } else if (event.query.toLowerCase() === 'нет') {
+        propValue = false;
+      }
+    }
+
     this.columnFilterSubj$.next({
-      params: {q: event.query},
+      params: {[propName]: propValue},
       fieldName
     });
   }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ManufactureService} from '../../../../core/services/manufacture.service';
 import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
@@ -27,23 +27,22 @@ export class ManufactureDataTableComponent implements OnInit {
   private isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
+  private sortField: string;
+  private sortOrder: number;
+  @ViewChildren(AutoComplete)
+  private tableFilters: QueryList<AutoComplete>;
 
   constructor(
     private manufactureService: ManufactureService,
     private mService: MessageService,
     private search: SearchService,
   ) {
-    this.cols = [
-      {field: 'id', header: 'ID'},
-      {field: 'name', header: 'Имя'},
-      {field: 'active', header: 'Активный'},
-    ];
-    this.selectedCols = this.cols;
   }
 
   ngOnInit() {
+    this.loading = true;
+    this.loadShopsTableHeaders();
     this.initColumnFilter();
-    this.loadManufactureData();
   }
 
   initColumnFilter() {
@@ -53,12 +52,24 @@ export class ManufactureDataTableComponent implements OnInit {
         this.manufactureService.fetchManufacturesData(params)
           .pipe(
             map((data) => {
-              return data.content.map(manufactureObj => {
-                return {
-                  id: manufactureObj[fieldName],
-                  name: manufactureObj[fieldName]
-                };
-              });
+              let arrayTemp: Array<Object>;
+              if (fieldName === 'active') {
+                arrayTemp = [...new Set(data.content.map(
+                  dataObj => dataObj.active))]
+                  .map((val) => ({
+                    id: -1,
+                    name: val ? 'Да' : 'Нет'
+                  }));
+              } else {
+                arrayTemp = data.content.map(manufactureObj => {
+                  return {
+                    id: manufactureObj[fieldName],
+                    name: manufactureObj[fieldName]
+                  };
+                });
+              }
+
+              return arrayTemp;
             }),
           )
       ),
@@ -117,16 +128,48 @@ export class ManufactureDataTableComponent implements OnInit {
     });
   }
 
-  cleanFilter(sdt: Table, element: AutoComplete, fieldId: string, matchMode: string) {
-    element.inputFieldValue = '';
+  cleanFilter(sdt: Table, index: number, fieldId: string, matchMode: string) {
+    const filterObj: AutoComplete = this.tableFilters.toArray()[index];
+
+    filterObj.inputEL.nativeElement.value = '';
+
     sdt.filter(null, fieldId, matchMode);
   }
 
   filterSearch(event, fieldName) {
+    let propName = 'q';
+    let propValue = event.query;
+
+    if (fieldName === 'active') {
+      propName = 'active';
+      if (event.query.toLowerCase() === 'да') {
+        propValue = true;
+      } else if (event.query.toLowerCase() === 'нет') {
+        propValue = false;
+      }
+    }
+
     this.columnFilterSubj$.next({
-      params: {q: event.query},
+      params: {[propName]: propValue},
       fieldName
     });
+  }
+
+  loadShopsTableHeaders() {
+    const tableHeaders = {
+      columns: [
+        {field: 'id', header: 'ID'},
+        {field: 'name', header: 'Имя'},
+        {field: 'active', header: 'Активный'},
+      ],
+      sortField: 'name',
+      sortOrder: 'asc'
+    };
+
+    this.cols = tableHeaders.columns;
+    this.selectedCols = this.cols;
+    this.sortField = tableHeaders.sortField;
+    this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
   loadManufactureData(options = {}, updatePageInfo = true): void {
@@ -145,24 +188,32 @@ export class ManufactureDataTableComponent implements OnInit {
 
   loadManufactureDataLazy(event: LazyLoadEvent) {
 
-    if (event.rows) {
-      let params = {};
+    let params = {};
 
-      if (Object.entries(event.filters).length === 0) {
-        params['page'] = event.first / event.rows;
-      }
-
-      if (event.sortField) {
-        params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
-      }
-
-      Object.entries(event.filters).forEach(
-        ([key, filterObj]) => {
-          params[key] = filterObj.value.name;
-        });
-
-      this.loadManufactureData(params, false);
+    if (typeof event.first === 'number' && event.rows) {
+      params['page'] = event.first / event.rows;
     }
+
+    if (event.sortField) {
+      params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+    }
+
+    Object.entries(event.filters).forEach(
+      ([key, filterObj]) => {
+        params[key] = filterObj.value.name;
+
+        if (key === 'active') {
+          params[key] = filterObj.value.name;
+
+          if (filterObj.value.name.toLowerCase() === 'да') {
+            params[key] = true;
+          } else if (filterObj.value.name.toLowerCase() === 'нет') {
+            params[key] = false;
+          }
+        }
+      });
+
+    this.loadManufactureData(params, true);
   }
 
   showServerErrorToast() {
