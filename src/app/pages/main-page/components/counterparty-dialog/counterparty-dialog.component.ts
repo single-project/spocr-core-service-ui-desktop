@@ -1,8 +1,9 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {CounterpartyModel} from "../../../../core/models/counterparty.model";
+import {CounterpartyModel, PartyLegalRekv, PartyPaymentDetails} from "../../../../core/models/counterparty.model";
 import {DadataConfig} from "@kolkov/ngx-dadata";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {PartySuggestion} from "../../../../core/models/suggestion-party.model";
+import {version} from "punycode";
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -22,15 +23,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   counterPartyForm: FormGroup;
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
-    this.counterPartyForm = this.fb.group({
-      'counterName': ['', Validators.required],
-      'counterActive': [true],
-      'partyNameShort': [{value: '', disabled: true}],
-      'partyNameFull': [{value: '', disabled: true}],
-      'partyInn': [{value: '', disabled: true}],
-      'partyOgrn': [{value: '', disabled: true}],
-      'partyKpp': [{value: '', disabled: true}]
-    });
+    this.counterPartyForm = this.counterpartyBuildForm();
 
   }
 
@@ -78,35 +71,58 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
     }
 
     this.onCloseDialog.emit(false);
+
   }
 
 
   closeDialog() {
     this.onCloseDialog.emit(false);
+    this.counterPartyForm.reset();
   }
 
 
-  initPertyFormValues(fields: { [key: string]: any }[]): void {
+  initPartyFormValues(fields: { [key: string]: any }[]): void {
     fields.forEach(field => {
       this.counterPartyForm.patchValue({...field});
     })
   }
 
-  newResetForm(): void {
-    this.initPertyFormValues([
-      {'counterName': null},
-      {'counterActive': true}
-    ]);
+
+
+  counterpartyBuildForm(): FormGroup {
+    return this.fb.group({
+      id: null,
+      version: null,
+      active: true,
+      name: ['', Validators.required],
+      legalType: null,
+      legalRekv: this.fb.group({
+        shortName: '',
+        fullName: '',
+        inn: '',
+        ogrn: '',
+        kpp: ''
+      }),
+      paymentDetails: this.fb.group({
+
+      }),
+      suggestion: null,
+    });
   }
 
   afterShow(): void {
     if (!this.isNew) {
-      this.initPertyFormValues([
-        {'counterName': this.counterparty.name},
-        {'counterActive': this.counterparty.active}
+      this.initPartyFormValues([
+        {name: this.counterparty.name},
+        {active: this.counterparty.active},
+        {shortName: this.counterparty.legalRekv.shortName},
+        {fullName: this.counterparty.legalRekv.fullName},
+        {inn: this.counterparty.legalRekv.inn},
+        {ogrn: this.counterparty.legalRekv.ogrn},
+        {kpp: this.counterparty.legalRekv.kpp}
       ]);
     } else {
-      this.newResetForm();
+      this.counterPartyForm.reset();
     }
 
 
@@ -116,12 +132,12 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
     this.partyRequisitesSuggestion = e;
     console.dir(e);
-    this.initPertyFormValues([
-      {'partyNameShort': this.partyRequisitesSuggestion.value},
-      {'partyNameFull': this.partyRequisitesSuggestion.unrestricted_value},
-      {'partyInn': this.partyRequisitesSuggestion.data.inn},
-      {'partyOgrn': this.partyRequisitesSuggestion.data.ogrn},
-      {'partyKpp': this.partyRequisitesSuggestion.data.kpp}
+    this.initPartyFormValues([
+      {shortName: this.partyRequisitesSuggestion.value},
+      {fullName: this.partyRequisitesSuggestion.unrestricted_value},
+      {inn: this.partyRequisitesSuggestion.data.inn},
+      {ogrn: this.partyRequisitesSuggestion.data.ogrn},
+      {kpp: this.partyRequisitesSuggestion.data.kpp}
     ])
   }
 

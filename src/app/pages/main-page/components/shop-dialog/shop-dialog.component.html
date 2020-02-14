@@ -9,11 +9,11 @@
   [responsive]="true"
   showEffect="fade"
   [modal]="true"
-  [style]="{width: '450px'}">
+  [style]="{width: '900px'}">
 
-  <p-tabView >
+  <p-tabView>
     <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
-      <div [formGroup]="shopFrom" class="ui-g ui-fluid" >
+      <div [formGroup]="shopFrom" class="ui-g ui-fluid">
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label for="name">ИМЯ</label>
@@ -39,9 +39,8 @@
                         placeholder="Выберите контрагента (обязательно)"
                         formControlName="counterparty"
                         [filter]="true">
-
-
             </p-dropdown>
+
           </div>
 
         </div>
@@ -58,7 +57,7 @@
             <label for="shop-type">ТИП ТТ</label>
           </div>
           <div id="shop-type" class="ui-g-8">
-            <p-dropdown
+            <p-multiSelect
               appendTo="body"
               [filter]="true"
               [options]="shopTypesList"
@@ -67,7 +66,7 @@
               dataKey="id"
               formControlName="shopTypes">
 
-            </p-dropdown>
+            </p-multiSelect>
 
           </div>
         </div>

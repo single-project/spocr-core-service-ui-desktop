@@ -1,19 +1,27 @@
 <p-dialog (onShow)="afterShow()" header="Карточка контрагента" appendTo="body"
-          [(visible)]="display" [closable]="false"
-          [focusOnShow]="false" [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '450px'}">
+          [(visible)]="display"
+          [closable]="false"
+          [focusOnShow]="false"
+          [responsive]="true"
+          showEffect="fade"
+          [modal]="true"
+          [style]="{width: '900px'}">
   <p-tabView>
     <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
-      <div [formGroup]="counterPartyForm" class="ui-g ui-fluid" *ngIf="counterparty">
+      <div
+        [formGroup]="counterPartyForm"
+        class="ui-g ui-fluid"
+        *ngIf="counterparty">
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label for="name">ИМЯ</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText id="name" formControlName="counterName" autofocus/>
+            <input pInputText id="name" formControlName="name" autofocus/>
           </div>
           <div class="ui-grid-col-8">
             <p-message severity="error" text="Имя должно быть заполнено"
-                       *ngIf="!counterPartyForm.controls['counterName'].valid&&counterPartyForm.controls['counterName'].dirty"></p-message>
+                       *ngIf="!counterPartyForm.controls['name'].valid&&counterPartyForm.controls['name'].dirty"></p-message>
           </div>
         </div>
 
@@ -22,7 +30,7 @@
             <label for="acive">АКТИВНЫЙ</label>
           </div>
           <div class="ui-g-8">
-            <p-checkbox id="acive" [binary]="true" formControlName="counterActive"></p-checkbox>
+            <p-checkbox id="acive" [binary]="true" formControlName="active"></p-checkbox>
           </div>
         </div>
 
@@ -30,13 +38,20 @@
       </div>
     </p-tabPanel>
     <p-tabPanel header="Реквизиты" leftIcon="fas fa-file-signature">
-      <div [formGroup]="counterPartyForm" class="ui-g ui-fluid" *ngIf="counterparty">
+      <div
+        [formGroup]="counterPartyForm"
+        class="ui-g ui-fluid"
+        *ngIf="counterparty">
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label>Поиск по ИНН</label>
           </div>
           <div class="ui-g-8">
-            <app-dadata-party [currentParty]="counterparty" (onPartySuggest)="onPartyRequisitesSaved($event)"></app-dadata-party>
+            <app-dadata-party
+              [currentParty]="counterparty"
+              (onPartySuggest)="onPartyRequisitesSaved($event)">
+
+            </app-dadata-party>
           </div>
         </div>
         <div class="ui-g-12">
@@ -44,31 +59,31 @@
             <label>НАИМ.</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText  formControlName="partyNameShort">
+            <input pInputText  formControlName="shortName">
           </div>
           <div class="ui-g-4">
             <label>НАИМ.(ПОЛНОЕ)</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText  formControlName="partyNameFull">
+            <input pInputText  formControlName="fullName">
           </div>
           <div class="ui-g-4">
             <label>ИНН</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText  formControlName="partyInn">
+            <input pInputText  formControlName="inn">
           </div>
           <div class="ui-g-4">
             <label>ОГРН/ОГРНИП</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText  formControlName="partyOgrn">
+            <input pInputText  formControlName="ogrn">
           </div>
           <div class="ui-g-4">
             <label>КПП</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText  formControlName="partyKpp">
+            <input pInputText  formControlName="kpp">
           </div>
         </div>
       </div>

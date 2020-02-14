@@ -146,22 +146,7 @@ export class ShopDataTableComponent implements OnInit {
     console.dir(this.selectedCols);
   }
 
-  shopTypesDataTransformHelper(rawData: any) {
-    const newData = [];
-    rawData.content.forEach((d) => {
-      d.manufactureName = d.manufacturer.name;
-      d.manufactureId = d.manufacturer.id;
-      newData.push(d)
-    });
-    return newData;
-  }
 
-  shopSingleTransformHelper(rawData: any): any {
-    let newData: ShopModel = {...rawData};
-    newData.counterpartyId = rawData.counterparty.id;
-    newData.counterpartyName = rawData.counterparty.name;
-    return newData;
-  }
 
   showServerErrorToast() {
     this.mService.clear();
@@ -296,15 +281,15 @@ export class ShopDataTableComponent implements OnInit {
     this.shopTypesService
       .fetchShopTypesData()
       .subscribe((data: ReferenceResponseModel) => {
-        this.shopTypesList = [...this.shopTypesDataTransformHelper(data)];
+        this.shopTypesList = [...data.content];
       });
   }
 
   savedShopNew(e) {
-    let idx = this.dataItems.findIndex((i) => i.id === e.shopData.id);
+    let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopService.newShop(e.shopData).subscribe((data) => {
-      this.dataItems = [...this.dataItems, this.shopSingleTransformHelper(data)];
+    this.shopService.newShop(e).subscribe((data) => {
+      this.dataItems = [...this.dataItems, data];
       this.showSuccessSavingMessage()
     }, error => {
       this.showServerErrorToast();
@@ -313,10 +298,10 @@ export class ShopDataTableComponent implements OnInit {
 
   savedShopEdited(e) {
     console.dir(e.types);
-    let idx = this.dataItems.findIndex((i) => i.id === e.shopData.id);
+    let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopService.editShop(e.shopData, e.shopData.id).subscribe((data) => {
-      this.dataItems[idx] = {...this.shopSingleTransformHelper(data)};
+    this.shopService.editShop(e, e.id).subscribe((data) => {
+      this.dataItems[idx] = {...data['content']};
       this.showSuccessSavingMessage()
     }, error => {
       this.showServerErrorToast();

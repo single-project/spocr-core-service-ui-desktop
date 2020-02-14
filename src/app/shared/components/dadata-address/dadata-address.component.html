@@ -1,8 +1,15 @@
 <div [formGroup]="addressForm">
   <div class="ui-inputgroup">
 
-    <p-autoComplete  formControlName="addressInput" appendTo="body" (onSelect)="select($event)"
-                    [suggestions]="results" (completeMethod)="find($event)"></p-autoComplete>
+    <p-autoComplete
+      [delay]="500"
+      formControlName="addressInput"
+      appendTo="body"
+      (onSelect)="select($event)"
+      [suggestions]="results"
+      (completeMethod)="find($event)">
+
+    </p-autoComplete>
     <button pButton (click)="onAddressSave()" type="button" icon="pi pi-check" class="ui-button-success"></button>
     <button pButton (click)="onAddressClean()" type="button" icon="pi pi-times" class="ui-button-danger"></button>
   </div>

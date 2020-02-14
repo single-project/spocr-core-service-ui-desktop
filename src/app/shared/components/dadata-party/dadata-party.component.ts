@@ -14,8 +14,9 @@ import {map, tap} from "rxjs/operators";
 export class DadataPartyComponent implements OnInit, OnChanges {
   @Input() currentParty: CounterpartyModel;
   @Output() onPartySuggest = new EventEmitter<PartySuggestion>();
+  @Output() onInnClear = new EventEmitter<any>();
 
-  private results: string[];
+  private results: any;
   private suggestions: PartySuggestion[];
   private suggetionForParent: any;
   private partyForm: FormGroup;
@@ -47,13 +48,12 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   }
 
   select(e: any) {
-    this.suggetionForParent = this.suggestions.filter(s => s.data.inn === e);
+    this.suggetionForParent = this.suggestions.filter(s => s.data.inn === e['data']['inn']);
   }
 
   find(e: any) {
     this.dadata.partySuggest(e.query).pipe(
       tap(su => this.suggestions = su),
-      map(su => su.map(s => s.data.inn)),
     ).subscribe(v => this.results = v)
   }
 
@@ -65,6 +65,7 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   onPartyClean() {
     this.suggestionReset();
     this.partyForm.reset();
+    this.onInnClear.emit();
   }
 
   suggestionReset(): void {

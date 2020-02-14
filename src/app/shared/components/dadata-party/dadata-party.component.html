@@ -2,8 +2,16 @@
 
   <div class="ui-inputgroup">
 
-    <p-autoComplete  formControlName="partyInput" appendTo="body" (onSelect)="select($event)"
-                    [suggestions]="results" (completeMethod)="find($event)"></p-autoComplete>
+    <p-autoComplete formControlName="partyInput" appendTo="body" (onSelect)="select($event)"
+                    [suggestions]="results" (completeMethod)="find($event)" delay="500" field="data.inn">
+      <ng-template let-party pTemplate="item">
+
+        <div>{{party['data']['inn']}}</div>
+        <div [ngStyle]="{fontSize: '0.7rem', maxWidth:'15em'}">{{party['value']}}</div>
+
+      </ng-template>
+
+    </p-autoComplete>
 
     <button pButton (click)="onPartySave()" type="button" icon="pi pi-check" class="ui-button-success"></button>
     <button pButton (click)="onPartyClean()" type="button" icon="pi pi-times" class="ui-button-danger"></button>
