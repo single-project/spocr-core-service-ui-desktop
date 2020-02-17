@@ -1,5 +1,4 @@
 <p-dialog
-
   (onShow)="afterShow()"
   header="Карточка ТТ"
   appendTo="body"
@@ -9,6 +8,7 @@
   [responsive]="true"
   showEffect="fade"
   [modal]="true"
+  (keyup.escape)="closeDialog()"
   [style]="{width: '900px'}">
 
   <p-tabView>
@@ -62,7 +62,7 @@
               [filter]="true"
               [options]="shopTypesList"
               optionLabel="name"
-              placeholder="Выберите тип ТТ (обязательно)"
+              defaultLabel="Выберать тип ТТ (обязательно)"
               dataKey="id"
               formControlName="shopTypes">
 
@@ -80,8 +80,27 @@
             <label>Адрес ТТ</label>
           </div>
           <div class="ui-g-8">
-            <app-dadata-address (onSuggest)="onAddressSuggest($event)"
-                                [currentAddress]="shop.address"></app-dadata-address>
+            <app-dadata-address
+              [parentForm]="shopFrom"
+            >
+
+            </app-dadata-address>
+          </div>
+        </div>
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>Широта</label>
+          </div>
+          <div class="ui-g-8" formGroupName="address">
+            <input pInputText formControlName="latitude">
+          </div>
+        </div>
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>Долгота</label>
+          </div>
+          <div class="ui-g-8" formGroupName="address">
+            <input pInputText formControlName="longitude">
           </div>
         </div>
         <div class="ui-g-12">

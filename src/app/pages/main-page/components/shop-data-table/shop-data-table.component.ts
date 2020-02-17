@@ -23,10 +23,6 @@ export class ShopDataTableComponent implements OnInit {
   private counterPartiesList = [];
   private shopTypesList = [];
   private searchItems = [];
-  private daDataAddressConfig: DadataConfig = {
-    apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
-    type: DadataType.address
-  };
   private sortField: string;
   private sortOrder: number;
 

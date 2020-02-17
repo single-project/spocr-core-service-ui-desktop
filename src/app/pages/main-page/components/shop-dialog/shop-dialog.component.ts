@@ -22,7 +22,6 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Output() onShopTypeSelection = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private shopFrom: FormGroup;
-  private addressSuggestion: AddressSuggestion;
 
 
   constructor(
@@ -43,18 +42,14 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   shopSaved() {
 
     this.shopFrom.patchValue({updatedFields: this.getUpdatedFields(this.shopFrom)});
-    if (this.addressSuggestion) {
-      this.shopFrom.patchValue({
-        address: {
-          address: this.addressSuggestion.value,
-          suggestion: this.addressSuggestion
-        }
-      });
-    }
+
 
     if (!this.isNew) {
 
-      this.onEditedShopSave.emit(this.shopFrom.value);
+      if (this.shopFrom.dirty) {
+        this.onEditedShopSave.emit(this.shopFrom.value);
+      } else this.closeDialog();
+
 
     } else {
 
@@ -62,13 +57,12 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
       this.onNewShopSaved.emit(this.shopFrom.value);
     }
-    this.addressSuggestion = <AddressSuggestion>{};
-    this.onCloseDialog.emit(false);
+    this.closeDialog();
   }
 
 
   closeDialog() {
-
+    this.shopFrom.reset();
     this.onCloseDialog.emit(false);
 
   }
@@ -79,6 +73,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       let currentControl = form.controls[k];
       if (currentControl.dirty) {
         dirtyValues[k] = currentControl.value;
+
       }
     });
     return Object.keys(dirtyValues);
@@ -90,15 +85,6 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     })
   }
 
-
-  onAddressSuggest(e): void {
-    if (e) {
-      this.addressSuggestion = e;
-    } else {
-      this.addressSuggestion = <AddressSuggestion>{}
-    }
-
-  }
 
   buildShopForm(): FormGroup {
     return this.fb.group({
@@ -113,6 +99,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
         active: true,
         address: '',
         comment: '',
+        latitude: '',
+        longitude: '',
         suggestion: <AddressSuggestion>{},
       }),
       version: null,
@@ -135,7 +123,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
             active: this.shop.address.active,
             address: this.shop.address.address,
             comment: this.shop.address.comment,
-            suggestion: this.shop.address.suggestion
+            suggestion: this.shop.address.suggestion,
+            latitude: this.shop.address.latitude,
+            longitude: this.shop.address.longitude
           },
           version: this.shop.version,
           updatedFields: null
