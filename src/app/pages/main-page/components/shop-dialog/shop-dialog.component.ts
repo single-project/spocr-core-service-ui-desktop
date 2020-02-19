@@ -7,6 +7,7 @@ import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
 import {ShopdepartsService} from '../../../../core/services/shopdeparts.service';
 import {ShopspecializationsService} from '../../../../core/services/shopspecializations.service';
+import {map} from 'rxjs/operators';
 
 
 @Component({
@@ -16,13 +17,15 @@ import {ShopspecializationsService} from '../../../../core/services/shopspeciali
 })
 export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() shop: ShopModel;
-  @Input() display: boolean;
+
   @Output() onEditedShopSave = new EventEmitter<any>();
   @Output() onNewShopSaved = new EventEmitter<any>();
   @Output() onShopTypeSaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   public counterpartiesList: ShopCounterparty[] = [];
   public shopTypesList: ShopType[] = [];
+  public salesChannels: any = [];
+  public _display = false;
   private shopFrom: FormGroup;
   private isNew =  false;
 
@@ -43,12 +46,16 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   ngOnInit() {
   this.loadCounterpartiesList();
   this.loadShopTypesList();
+  this.loadSalesChannels();
 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
 
   }
+
+
+
 
   shopSaved() {
 
@@ -74,7 +81,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   closeDialog() {
     this.shopFrom.reset();
-    this.onCloseDialog.emit(false);
+    this._display = false;
 
   }
 
@@ -103,6 +110,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       name: ['', Validators.required],
       shopTypes: [[<ShopType>{}], Validators.required],
       counterparty: [<ShopCounterparty>{}, Validators.required],
+      salesChannels: [[]],
       active: true,
       address: this.fb.group({
         id: null,
@@ -119,14 +127,24 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     });
   }
   loadCounterpartiesList(): void{
-     this.counterpartiesSevice.fetchCounterPartiesData(party => {
-      this.counterpartiesList = party;
-    });
+     this.counterpartiesSevice.fetchCounterPartiesData().pipe(
+       map(p => p.content)
+     ).subscribe(party => {
+       this.counterpartiesList = party
+     });
   }
   loadShopTypesList(): void{
-    this.shopTypeService.fetchShopTypesData(type => {
-      this.shopTypesList = type;
-    })
+    this.shopTypeService.fetchShopTypesData().pipe(
+      map(t => t.content)
+    ).subscribe(type => {
+      this.shopTypesList = type
+      console.dir(type);
+    });
+  }
+  loadSalesChannels():void{
+    this.salesChanelService.fetchAllSalesChannels().pipe(
+      map(sc => sc.content)
+    ).subscribe(channels => this.salesChannels = channels)
   }
   afterShow() {
     if(Object.keys(this.shop).length <= 1){
@@ -141,6 +159,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
         {name: this.shop.name},
         {shopTypes: this.shop.shopTypes},
         {counterparty: this.shop.counterparty},
+        {salesChannels: this.shop.salesChannels},
         {active: this.shop.active},
         {
           address: {

@@ -13,7 +13,7 @@ export class ShopTypesService {
   constructor(@Inject(HttpClient) private http: HttpClient) {
   }
 
-  fetchShopTypesData(options = {}): any {
+  fetchShopTypesData(options = {}): Observable<any> {
     return this.http.get(
       this.shopTypesURL,
       {

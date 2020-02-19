@@ -40,6 +40,7 @@ export class ShopDataTableComponent implements OnInit {
   private selectedCols: ShopColumnModel[];
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
+  @ViewChild('shopDialogComponent', {static: false}) shopDialogComponent: ShopDialogComponent;
 
 
   constructor(
@@ -107,7 +108,7 @@ export class ShopDataTableComponent implements OnInit {
   onRowSelect(e) {
 
     this.shop = e.data;
-    this.displayShopEditDialog = true;
+    this.shopDialogComponent._display = true;
     console.log(this.shop);
 
   }
@@ -116,7 +117,7 @@ export class ShopDataTableComponent implements OnInit {
 
   onShopEditSave(e) {
     this.savedShopEdited(e);
-    this.displayShopEditDialog = false;
+    this.shopDialogComponent._display = false;
     this.shop = null;
   }
 
@@ -125,14 +126,14 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   onCloseShopDialog(e) {
-    this.displayShopEditDialog = e;
+    this.shopDialogComponent._display = false;
     this.shop = null;
   }
 
   onShopCreate() {
 
     this.shop = {active: true};
-    this.displayShopEditDialog = true;
+    this.shopDialogComponent._display = true;
   }
 
   columnsChange() {

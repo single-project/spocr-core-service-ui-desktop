@@ -3,7 +3,7 @@
   (onHide)="closeDialog()"
   header="Карточка ТТ"
   appendTo="body"
-  [(visible)]="display"
+  [(visible)]="_display"
   [closable]="true"
   [focusOnShow]="false"
   [responsive]="true"
@@ -54,6 +54,11 @@
             <p-checkbox id="active" binary="true" formControlName="active"></p-checkbox>
           </div>
         </div>
+
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Свойства" leftIcon="fas fa-file-alt">
+      <div [formGroup]="shopFrom" class="ui-g ui-fluid">
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label for="shop-type">ТИП ТТ</label>
@@ -67,6 +72,24 @@
               defaultLabel="Выберать тип ТТ (обязательно)"
               dataKey="id"
               formControlName="shopTypes">
+
+            </p-multiSelect>
+
+          </div>
+        </div>
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label for="shop-type">КАНАЛ ПРОДАЖ</label>
+          </div>
+          <div id="sales-channel" class="ui-g-8">
+            <p-multiSelect
+              appendTo="body"
+              [filter]="true"
+              [options]="salesChannels"
+              optionLabel="name"
+              defaultLabel="Выберать тип Канал Продаж"
+              dataKey="id"
+              formControlName="salesChannels">
 
             </p-multiSelect>
 

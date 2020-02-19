@@ -115,10 +115,9 @@
   </ng-template>
 </p-table>
 
-<!--<app-shop-dialog (onNewShopSaved)="onNewShopSave($event)"-->
-<!--                 (onEditedShopSave)="onShopEditSave($event)"-->
-<!--                 (onCloseDialog)="onCloseShopDialog($event)"-->
-<!--                 [display]="displayShopEditDialog"-->
-<!--                 [shop]="shop">-->
+<app-shop-dialog (onNewShopSaved)="onNewShopSave($event)"
+                 (onEditedShopSave)="onShopEditSave($event)"
+                 [shop]="shop"
+                  #shopDialogComponent>
 
-<!--</app-shop-dialog>-->
+</app-shop-dialog>
