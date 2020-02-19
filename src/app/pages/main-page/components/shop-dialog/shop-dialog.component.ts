@@ -2,6 +2,11 @@ import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, Simpl
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
 import {ShopCounterparty, ShopModel, ShopType} from "../../../../core/models/shop.model";
+import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import {ShopTypesService} from '../../../../core/services/shop-types.service';
+import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
+import {ShopdepartsService} from '../../../../core/services/shopdeparts.service';
+import {ShopspecializationsService} from '../../../../core/services/shopspecializations.service';
 
 
 @Component({
@@ -12,26 +17,32 @@ import {ShopCounterparty, ShopModel, ShopType} from "../../../../core/models/sho
 export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() shop: ShopModel;
   @Input() display: boolean;
-  @Input() counterpartiesList: ShopCounterparty[];
-  @Input() shopTypesList: ShopType[];
-  @Input() isNew: boolean;
   @Output() onEditedShopSave = new EventEmitter<any>();
   @Output() onNewShopSaved = new EventEmitter<any>();
   @Output() onShopTypeSaved = new EventEmitter<any>();
-  @Output() onCounterpartySelection = new EventEmitter<any>();
-  @Output() onShopTypeSelection = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
+  public counterpartiesList: ShopCounterparty[] = [];
+  public shopTypesList: ShopType[] = [];
   private shopFrom: FormGroup;
+  private isNew =  false;
 
 
   constructor(
     @Inject(FormBuilder) private fb: FormBuilder,
+    @Inject(CounterpartiesService) private counterpartiesSevice: CounterpartiesService,
+    @Inject(ShopTypesService) private shopTypeService: ShopTypesService,
+    @Inject(SaleschannelsService) private salesChanelService: SaleschannelsService,
+    @Inject(ShopdepartsService) private shopdepartsService: ShopdepartsService,
+    @Inject(ShopspecializationsService) private shopSpecializationsService: ShopspecializationsService
+
   ) {
     this.shopFrom = this.buildShopForm();
+
   }
 
   ngOnInit() {
-
+  this.loadCounterpartiesList();
+  this.loadShopTypesList();
 
   }
 
@@ -107,8 +118,23 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       updatedFields: null,
     });
   }
-
+  loadCounterpartiesList(): void{
+     this.counterpartiesSevice.fetchCounterPartiesData(party => {
+      this.counterpartiesList = party;
+    });
+  }
+  loadShopTypesList(): void{
+    this.shopTypeService.fetchShopTypesData(type => {
+      this.shopTypesList = type;
+    })
+  }
   afterShow() {
+    if(Object.keys(this.shop).length <= 1){
+      this.isNew = true;
+    }else {
+      this.isNew = false;
+    }
+
     if (!this.isNew) {
       this.initAfterShowFormValues([
         {id: this.shop.id},

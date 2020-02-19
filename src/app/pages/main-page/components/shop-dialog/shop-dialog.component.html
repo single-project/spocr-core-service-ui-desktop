@@ -1,14 +1,16 @@
 <p-dialog
   (onShow)="afterShow()"
+  (onHide)="closeDialog()"
   header="Карточка ТТ"
   appendTo="body"
   [(visible)]="display"
-  [closable]="false"
+  [closable]="true"
   [focusOnShow]="false"
   [responsive]="true"
   showEffect="fade"
   [modal]="true"
-  (keyup.escape)="closeDialog()"
+  [closeOnEscape]="true"
+
   [style]="{width: '900px'}">
 
   <p-tabView>

@@ -1,4 +1,4 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ShopModel} from '../../../../core/models/shop.model';
 import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
@@ -10,6 +10,7 @@ import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ShopColumnModel} from '../../../../core/models/shop-column.model';
+import {ShopDialogComponent} from "../shop-dialog/shop-dialog.component";
 
 @Component({
   selector: 'app-shop-data-table',
@@ -28,7 +29,6 @@ export class ShopDataTableComponent implements OnInit {
 
   private displayShopEditDialog: boolean;
   private selectedShop: ShopModel;
-  private isNewShop: boolean;
   private shop: any = {};
   private totalElements: number;
   private numberOfElements: number;
@@ -41,6 +41,7 @@ export class ShopDataTableComponent implements OnInit {
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
+
   constructor(
     private shopService: ShopsService,
     private search: SearchService,
@@ -48,6 +49,7 @@ export class ShopDataTableComponent implements OnInit {
     private shopTypesService: ShopTypesService,
     private mService: MessageService,
   ) {
+    this.displayShopEditDialog = false;
   }
 
   ngOnInit() {
@@ -103,19 +105,14 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   onRowSelect(e) {
-    this.isNewShop = false;
-    this.shop = this.cloneEntity(e.data);
-    console.log(this.shop);
+
+    this.shop = e.data;
     this.displayShopEditDialog = true;
+    console.log(this.shop);
+
   }
 
-  cloneEntity(e: any) {
-    let entity = {};
-    for (let prop in e) {
-      entity[prop] = e[prop];
-    }
-    return entity;
-  }
+
 
   onShopEditSave(e) {
     this.savedShopEdited(e);
@@ -133,7 +130,7 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   onShopCreate() {
-    this.isNewShop = true;
+
     this.shop = {active: true};
     this.displayShopEditDialog = true;
   }
