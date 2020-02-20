@@ -114,16 +114,15 @@ export class ShopDataTableComponent implements OnInit {
   }
 
 
-
-  onShopEditSave(e) {
-    this.savedShopEdited(e);
-    this.shopDialogComponent._display = false;
-    this.shop = null;
-  }
-
-  onNewShopSave(e) {
-    this.savedShopNew(e);
-  }
+  // onShopEditSave(e) {
+  //   this.savedShopEdited(e);
+  //   this.shopDialogComponent._display = false;
+  //   this.shop = null;
+  // }
+  //
+  // onNewShopSave(e) {
+  //   this.savedShopNew(e);
+  // }
 
   onCloseShopDialog(e) {
     this.shopDialogComponent._display = false;
@@ -139,7 +138,6 @@ export class ShopDataTableComponent implements OnInit {
   columnsChange() {
     console.dir(this.selectedCols);
   }
-
 
 
   showServerErrorToast() {
@@ -279,26 +277,37 @@ export class ShopDataTableComponent implements OnInit {
       });
   }
 
-  savedShopNew(e) {
+  shopSavedFromDialog(e: ShopModel): void {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
-
-    this.shopService.newShop(e).subscribe((data) => {
-      this.dataItems = [...this.dataItems, data];
+    if (idx > 0) {
+      this.dataItems[idx] = {...e};
       this.showSuccessSavingMessage()
-    }, error => {
-      this.showServerErrorToast();
-    });
+    } else {
+      this.dataItems = [...this.dataItems, e];
+    }
+
   }
 
-  savedShopEdited(e) {
-    console.dir(e.types);
-    let idx = this.dataItems.findIndex((i) => i.id === e.id);
-
-    this.shopService.editShop(e, e.id).subscribe((data) => {
-      this.dataItems[idx] = {...data['content']};
-      this.showSuccessSavingMessage()
-    }, error => {
-      this.showServerErrorToast();
-    })
-  }
+  // savedShopNew(e) {
+  //   let idx = this.dataItems.findIndex((i) => i.id === e.id);
+  //
+  //   this.shopService.newShop(e).subscribe((data) => {
+  //     this.dataItems = [...this.dataItems, data];
+  //     this.showSuccessSavingMessage()
+  //   }, error => {
+  //     this.showServerErrorToast();
+  //   });
+  // }
+  //
+  // savedShopEdited(e) {
+  //   console.dir(e.types);
+  //   let idx = this.dataItems.findIndex((i) => i.id === e.id);
+  //
+  //   this.shopService.editShop(e, e.id).subscribe((data) => {
+  //     this.dataItems[idx] = {...data['content']};
+  //     this.showSuccessSavingMessage()
+  //   }, error => {
+  //     this.showServerErrorToast();
+  //   })
+  // }
 }

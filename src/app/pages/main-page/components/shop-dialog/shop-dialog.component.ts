@@ -1,13 +1,14 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
-import {ShopCounterparty, ShopModel, ShopType} from "../../../../core/models/shop.model";
+import {ShopCounterparty, ShopModel, ShopSalesChannel, ShopType} from "../../../../core/models/shop.model";
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
 import {ShopdepartsService} from '../../../../core/services/shopdeparts.service';
 import {ShopspecializationsService} from '../../../../core/services/shopspecializations.service';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
+import {ShopsService} from '../../../../core/services/shops.service';
 
 
 @Component({
@@ -17,17 +18,13 @@ import {map} from 'rxjs/operators';
 })
 export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() shop: ShopModel;
-
-  @Output() onEditedShopSave = new EventEmitter<any>();
-  @Output() onNewShopSaved = new EventEmitter<any>();
-  @Output() onShopTypeSaved = new EventEmitter<any>();
-  @Output() onCloseDialog = new EventEmitter<boolean>();
+  @Output() onShopSaved = new EventEmitter<ShopModel>();
   public counterpartiesList: ShopCounterparty[] = [];
   public shopTypesList: ShopType[] = [];
-  public salesChannels: any = [];
+  public salesChannels: ShopSalesChannel[] = [];
   public _display = false;
   private shopFrom: FormGroup;
-  private isNew =  false;
+  private isNew = false;
 
 
   constructor(
@@ -36,25 +33,23 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     @Inject(ShopTypesService) private shopTypeService: ShopTypesService,
     @Inject(SaleschannelsService) private salesChanelService: SaleschannelsService,
     @Inject(ShopdepartsService) private shopdepartsService: ShopdepartsService,
-    @Inject(ShopspecializationsService) private shopSpecializationsService: ShopspecializationsService
-
+    @Inject(ShopspecializationsService) private shopSpecializationsService: ShopspecializationsService,
+    @Inject(ShopsService) private shopService: ShopsService
   ) {
     this.shopFrom = this.buildShopForm();
 
   }
 
   ngOnInit() {
-  this.loadCounterpartiesList();
-  this.loadShopTypesList();
-  this.loadSalesChannels();
+    this.loadCounterpartiesList();
+    this.loadShopTypesList();
+    this.loadSalesChannels();
 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
 
   }
-
-
 
 
   shopSaved() {
@@ -65,15 +60,18 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     if (!this.isNew) {
 
       if (this.shopFrom.dirty) {
-        this.onEditedShopSave.emit(this.shopFrom.value);
+        this.shopService.editShop(this.shopFrom.value, this.shop.id).pipe(
+          tap(s => this.onShopSaved.emit(s))
+        ).subscribe();
       } else this.closeDialog();
 
 
     } else {
 
       this.shopFrom.removeControl('updatedFields');
-
-      this.onNewShopSaved.emit(this.shopFrom.value);
+      this.shopService.newShop(this.shopFrom.value).pipe(
+        tap(s => this.onShopSaved.emit(s))
+      ).subscribe();
     }
     this.closeDialog();
   }
@@ -126,14 +124,16 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       updatedFields: null,
     });
   }
-  loadCounterpartiesList(): void{
-     this.counterpartiesSevice.fetchCounterPartiesData().pipe(
-       map(p => p.content)
-     ).subscribe(party => {
-       this.counterpartiesList = party
-     });
+
+  loadCounterpartiesList(): void {
+    this.counterpartiesSevice.fetchCounterPartiesData().pipe(
+      map(p => p.content)
+    ).subscribe(party => {
+      this.counterpartiesList = party
+    });
   }
-  loadShopTypesList(): void{
+
+  loadShopTypesList(): void {
     this.shopTypeService.fetchShopTypesData().pipe(
       map(t => t.content)
     ).subscribe(type => {
@@ -141,15 +141,17 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       console.dir(type);
     });
   }
-  loadSalesChannels():void{
+
+  loadSalesChannels(): void {
     this.salesChanelService.fetchAllSalesChannels().pipe(
       map(sc => sc.content)
     ).subscribe(channels => this.salesChannels = channels)
   }
+
   afterShow() {
-    if(Object.keys(this.shop).length <= 1){
+    if (Object.keys(this.shop).length <= 1) {
       this.isNew = true;
-    }else {
+    } else {
       this.isNew = false;
     }
 
