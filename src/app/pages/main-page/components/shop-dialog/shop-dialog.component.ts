@@ -21,7 +21,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   @Output() onShopSaved = new EventEmitter<ShopModel>();
   public counterpartiesList: ShopCounterparty[] = [];
   public shopTypesList: ShopType[] = [];
-  public salesChannels: ShopSalesChannel[] = [];
+  public salesChannelsList: ShopSalesChannel[] = [];
   public _display = false;
   private shopFrom: FormGroup;
   private isNew = false;
@@ -38,12 +38,14 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   ) {
     this.shopFrom = this.buildShopForm();
 
+
   }
 
   ngOnInit() {
     this.loadCounterpartiesList();
     this.loadShopTypesList();
     this.loadSalesChannels();
+
 
   }
 
@@ -145,10 +147,11 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   loadSalesChannels(): void {
     this.salesChanelService.fetchAllSalesChannels().pipe(
       map(sc => sc.content)
-    ).subscribe(channels => this.salesChannels = channels)
+    ).subscribe(channels => this.salesChannelsList = channels)
   }
 
   afterShow() {
+
     if (Object.keys(this.shop).length <= 1) {
       this.isNew = true;
     } else {
@@ -179,11 +182,15 @@ export class ShopDialogComponent implements OnInit, OnChanges {
         },
       ]);
 
+
+
     } else {
       this.shopFrom.reset();
     }
 
 
   }
-
+ optionLabelMaker(e){
+    console.dir(e)
+ }
 }

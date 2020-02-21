@@ -85,12 +85,15 @@
             <p-multiSelect
               appendTo="body"
               [filter]="true"
-              [options]="salesChannels"
-              optionLabel="name"
-              defaultLabel="Выберать тип Канал Продаж"
+              [options]="salesChannelsList"
               dataKey="id"
               formControlName="salesChannels">
-
+              <ng-template let-selectedChans  pTemplate="selectedItems">
+                <span *ngFor="let selectedChan of selectedChans">{{selectedChan.name + ' / ' + selectedChan.manufacturer.name}}</span>
+              </ng-template>
+              <ng-template let-chan  pTemplate="item">
+                <span>{{chan.name + ' / ' + chan.manufacturer.name}}</span>
+              </ng-template>
             </p-multiSelect>
 
           </div>

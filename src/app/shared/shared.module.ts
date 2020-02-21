@@ -2,19 +2,31 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
   AutoCompleteModule,
-  ButtonModule, CardModule, CheckboxModule, DialogModule, DropdownModule,
+  ButtonModule,
+  CardModule,
+  CheckboxModule,
+  DialogModule,
+  DropdownModule,
   InputTextModule,
-  MenuModule, MessageModule, MessagesModule, MultiSelectModule,
-  OverlayPanelModule, PaginatorModule,
+  MenuModule,
+  MessageModule,
+  MessagesModule,
+  MultiSelectModule,
+  OverlayPanelModule,
+  PaginatorModule,
   SplitButtonModule,
-  TableModule, TabMenuModule, TabViewModule, ToastModule,
+  TableModule,
+  TabMenuModule,
+  TabViewModule,
+  ToastModule,
   ToolbarModule
 } from 'primeng';
-import { ActiveTagsPipe } from './pipes/active-tags.pipe';
-import { NgxDadataModule } from '@kolkov/ngx-dadata';
-import { DadataAddressComponent } from './components/dadata-address/dadata-address.component';
+import {ActiveTagsPipe} from './pipes/active-tags.pipe';
+import {NgxDadataModule} from '@kolkov/ngx-dadata';
+import {DadataAddressComponent} from './components/dadata-address/dadata-address.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import { DadataPartyComponent } from './components/dadata-party/dadata-party.component';
+import {DadataPartyComponent} from './components/dadata-party/dadata-party.component';
+
 
 @NgModule({
   declarations: [ ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent ],
@@ -69,6 +81,7 @@ import { DadataPartyComponent } from './components/dadata-party/dadata-party.com
     DadataAddressComponent,
     TabViewModule,
     DadataPartyComponent,
+
   ]
 })
 export class SharedModule {
