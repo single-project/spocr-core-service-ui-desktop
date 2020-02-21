@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
-import {ShopCounterparty, ShopModel, ShopSalesChannel, ShopType} from "../../../../core/models/shop.model";
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
@@ -9,6 +8,12 @@ import {ShopdepartsService} from '../../../../core/services/shopdeparts.service'
 import {ShopspecializationsService} from '../../../../core/services/shopspecializations.service';
 import {map, tap} from 'rxjs/operators';
 import {ShopsService} from '../../../../core/services/shops.service';
+import {
+  CounterpartyModel,
+  SalesChannelModel,
+  ShopModel,
+  ShopTypeModel
+} from '../../../../core/models/global-reference.model';
 
 
 @Component({
@@ -19,9 +24,9 @@ import {ShopsService} from '../../../../core/services/shops.service';
 export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() shop: ShopModel;
   @Output() onShopSaved = new EventEmitter<ShopModel>();
-  public counterpartiesList: ShopCounterparty[] = [];
-  public shopTypesList: ShopType[] = [];
-  public salesChannelsList: ShopSalesChannel[] = [];
+  public counterpartiesList: any[] = [];
+  public shopTypesList: ShopTypeModel[] = [];
+  public salesChannelsList: { name: string, id: number }[] = [];
   public _display = false;
   private shopFrom: FormGroup;
   private isNew = false;
@@ -108,8 +113,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     return this.fb.group({
       id: null,
       name: ['', Validators.required],
-      shopTypes: [[<ShopType>{}], Validators.required],
-      counterparty: [<ShopCounterparty>{}, Validators.required],
+      shopTypes: [[<ShopTypeModel>{}], Validators.required],
+      counterparty: [<CounterpartyModel>{}, Validators.required],
       salesChannels: [[]],
       active: true,
       address: this.fb.group({
@@ -129,7 +134,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   loadCounterpartiesList(): void {
     this.counterpartiesSevice.fetchCounterPartiesData().pipe(
-      map(p => p.content)
+      map(p => p.content),
     ).subscribe(party => {
       this.counterpartiesList = party
     });
@@ -137,7 +142,10 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   loadShopTypesList(): void {
     this.shopTypeService.fetchShopTypesData().pipe(
-      map(t => t.content)
+      map(tp => tp.content),
+      map(tp => tp.map(t => {
+        return {id: t.id, name: `${t.name} / ${t.manufacturer.name}`}
+      }))
     ).subscribe(type => {
       this.shopTypesList = type
       console.dir(type);
@@ -146,7 +154,10 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   loadSalesChannels(): void {
     this.salesChanelService.fetchAllSalesChannels().pipe(
-      map(sc => sc.content)
+      map(sc => sc.content),
+      map((sc: SalesChannelModel[]) => sc.map(s => {
+        return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}
+      }))
     ).subscribe(channels => this.salesChannelsList = channels)
   }
 
@@ -183,14 +194,14 @@ export class ShopDialogComponent implements OnInit, OnChanges {
       ]);
 
 
-
     } else {
       this.shopFrom.reset();
     }
 
 
   }
- optionLabelMaker(e){
+
+  optionLabelMaker(e) {
     console.dir(e)
- }
+  }
 }

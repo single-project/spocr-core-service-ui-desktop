@@ -87,13 +87,8 @@
               [filter]="true"
               [options]="salesChannelsList"
               dataKey="id"
+              optionLabel="name"
               formControlName="salesChannels">
-              <ng-template let-selectedChans  pTemplate="selectedItems">
-                <span *ngFor="let selectedChan of selectedChans">{{selectedChan.name + ' / ' + selectedChan.manufacturer.name}}</span>
-              </ng-template>
-              <ng-template let-chan  pTemplate="item">
-                <span>{{chan.name + ' / ' + chan.manufacturer.name}}</span>
-              </ng-template>
             </p-multiSelect>
 
           </div>

@@ -1,6 +1,4 @@
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {ShopModel} from '../../../../core/models/shop.model';
-import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {ShopsService} from '../../../../core/services/shops.service';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
@@ -11,6 +9,7 @@ import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ShopColumnModel} from '../../../../core/models/shop-column.model';
 import {ShopDialogComponent} from "../shop-dialog/shop-dialog.component";
+import {ShopModel} from '../../../../core/models/global-reference.model';
 
 @Component({
   selector: 'app-shop-data-table',
@@ -278,8 +277,11 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   shopSavedFromDialog(e: ShopModel): void {
+    console.log('event fired');
+    console.dir(e);
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
-    if (idx > 0) {
+    console.log('IDX' + idx);
+    if (idx !== -1) {
       this.dataItems[idx] = {...e};
       this.showSuccessSavingMessage()
     } else {
