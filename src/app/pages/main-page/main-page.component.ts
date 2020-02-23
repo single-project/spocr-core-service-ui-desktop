@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild, OnInit} from '@angular/core';
+import {Component, ViewChild, OnInit} from '@angular/core';
 import {ShopDataTableComponent} from './components/shop-data-table/shop-data-table.component';
 import {CounterpartiesDataTableComponent} from './components/counterparties-data-table/counterparties-data-table.component';
 import {ManufactureDataTableComponent} from './components/manufacture-data-table/manufacture-data-table.component';
@@ -12,11 +12,10 @@ import {ConfigService} from '../../core/services/config.service';
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit {
-  private searchString: string;
-  private tableTitle: string;
-  private dataType: number;
-  private userId: number;
-  private tableTypes: any;
+  private _searchString: string;
+  private _tableTitle: string;
+  private _dataType: number;
+  private uiTables: Object;
 
   @ViewChild('shopDataTable', {static: false})
   shopDataTable: ShopDataTableComponent;
@@ -28,7 +27,7 @@ export class MainPageComponent implements OnInit {
   shopTypesDataTable: ShopTypesDataTableComponent;
 
   constructor(
-    @Inject(ConfigService) private configService: ConfigService,
+    private configService: ConfigService,
   ) {
   }
 
@@ -36,85 +35,97 @@ export class MainPageComponent implements OnInit {
     this.setConfiguration();
   }
 
+  initVewTable() {
+    this.uiTables = {
+      [tableTypes.SHOP_TABLE_TYPE]: this.shopDataTable,
+      [tableTypes.COUNTER_PARTIES_TABLE_TYPE]: this.counterPartiesDataTable,
+      [tableTypes.MANUFACTURE_TABLE_TYPE]: this.manufactureDataTable,
+      [tableTypes.SHOP_TYPES_TABLE_TYPE]: this.shopTypesDataTable
+    };
+  }
+
+  get searchString(): string {
+    return this._searchString;
+  }
+
+  set searchString(searchString: string) {
+    this._searchString = searchString;
+  }
+
+  get tableTitle(): string {
+    return this._tableTitle;
+  }
+
+  set tableTitle(tableTitle: string) {
+    this._tableTitle = tableTitle;
+  }
+
+  get dataType(): number {
+    return this._dataType;
+  }
+
+  set dataType(dataType: number) {
+    this._dataType = dataType;
+  }
+
   clearSearch(): void {
     this.searchString = '';
-    if (this.dataType === 1) {
-      this.shopDataTable.loadShopsData();
-    } else if (this.dataType === 2) {
-      this.counterPartiesDataTable.loadCounterPartiesData();
-    } else if (this.dataType === 3) {
-      this.manufactureDataTable.loadManufactureData();
-    } else if (this.dataType === 4) {
-      this.shopTypesDataTable.loadShopTypesData();
-    }
+    this.uiTables[this.dataType]
+      .loadTableData();
   }
 
   onSearched(tableSearch: HTMLInputElement): void {
-    if (this.dataType === 1) {
-      this.shopDataTable.dataSearch(tableSearch.value);
-    } else if (this.dataType === 2) {
-      this.counterPartiesDataTable.dataSearch(tableSearch.value);
-    } else if (this.dataType === 3) {
-      this.manufactureDataTable.dataSearch(tableSearch.value);
-    } else if (this.dataType === 4) {
-      this.shopTypesDataTable.dataSearch(tableSearch.value);
-    }
+    this.uiTables[this.dataType]
+      .dataSearch(tableSearch.value);
   }
 
   setConfiguration(): void {
-
-    this.tableTypes = {
-      SHOP_TABLE_TYPE: {
-        userId: 1,
-        tableTitle: 'Торговые точки',
-        dataType: 1,
-        activeChecked:false,
-        nonActiveChecked: false
-      },
-      COUNTER_PARTIES_TABLE_TYPE: {
-        userId: 1,
-        tableTitle: 'Контрагенты',
-        dataType: 2,
-        activeChecked:false,
-        nonActiveChecked: false
-      },
-      MANUFACTURE_TABLE_TYPE: {
-        userId: 1,
-        tableTitle: 'Производители',
-        dataType: 3,
-        activeChecked:false,
-        nonActiveChecked: false
-      },
-      SHOP_TYPES_TABLE_TYPE: {
-        userId: 1,
-        tableTitle: 'Типы ТТ',
-        dataType: 4,
-        activeChecked:false,
-        nonActiveChecked: false
-      },
-    };
-
     this.configService
-      .fetchAppSettings()
+      .fetchAppSettingsByType()
       .subscribe((data) => {
-        Object.assign(this, this.tableTypes.SHOP_TABLE_TYPE);
-        console.log('');
-    });
+        Object.assign(this, data);
+        setTimeout(() => {
+          this.initVewTable();
+        }, 500);
+      });
   }
 
   shopsToggle() {
-    Object.assign(this, this.tableTypes.SHOP_TABLE_TYPE);
+    this.configService
+      .fetchAppSettingsByType(tableTypes.SHOP_TABLE_TYPE)
+      .subscribe((data) => {
+        Object.assign(this, data);
+      });
   }
 
   counterPartiesToggle() {
-    Object.assign(this, this.tableTypes.COUNTER_PARTIES_TABLE_TYPE);
+    this.configService
+      .fetchAppSettingsByType(tableTypes.COUNTER_PARTIES_TABLE_TYPE)
+      .subscribe((data) => {
+        Object.assign(this, data);
+      });
   }
 
   manufactireToggle() {
-    Object.assign(this, this.tableTypes.MANUFACTURE_TABLE_TYPE);
+    this.configService
+      .fetchAppSettingsByType(tableTypes.MANUFACTURE_TABLE_TYPE)
+      .subscribe((data) => {
+        Object.assign(this, data);
+      });
   }
 
   shopTypesToggle() {
-    Object.assign(this, this.tableTypes.SHOP_TYPES_TABLE_TYPE);
+    this.configService
+      .fetchAppSettingsByType(tableTypes.SHOP_TYPES_TABLE_TYPE)
+      .subscribe((data) => {
+        Object.assign(this, data);
+      });
   }
+}
+
+enum tableTypes {
+  SHOP_TABLE_TYPE = 1,
+  COUNTER_PARTIES_TABLE_TYPE,
+  MANUFACTURE_TABLE_TYPE,
+  SHOP_TYPES_TABLE_TYPE
 }

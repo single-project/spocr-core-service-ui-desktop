@@ -172,7 +172,7 @@ export class ManufactureDataTableComponent implements OnInit {
     this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
-  loadManufactureData(options = {}, updatePageInfo = true): void {
+  loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.manufactureService.fetchManufacturesData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -213,7 +213,7 @@ export class ManufactureDataTableComponent implements OnInit {
         }
       });
 
-    this.loadManufactureData(params, true);
+    this.loadTableData(params, true);
   }
 
   showServerErrorToast() {

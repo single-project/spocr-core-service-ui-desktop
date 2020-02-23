@@ -5,7 +5,7 @@ import {ManufactureService} from '../../../../core/services/manufacture.service'
 import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from "rxjs/operators";
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-shop-types-data-table',
@@ -223,7 +223,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     });
   }
 
-  loadShopTypesData(options = {}, updatePageInfo = true): void {
+  loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.shopTypesService.fetchShopTypesData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -270,7 +270,7 @@ export class ShopTypesDataTableComponent implements OnInit {
         }
       });
 
-    this.loadShopTypesData(params, true);
+    this.loadTableData(params, true);
 
   }
 

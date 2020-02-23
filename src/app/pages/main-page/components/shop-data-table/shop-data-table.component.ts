@@ -1,6 +1,5 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ShopModel} from '../../../../core/models/shop.model';
-import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {ShopsService} from '../../../../core/services/shops.service';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
@@ -18,26 +17,27 @@ import {ShopColumnModel} from '../../../../core/models/shop-column.model';
 })
 export class ShopDataTableComponent implements OnInit {
 
-  private dataItems: ShopModel[];
-  private loading: boolean;
-  private counterPartiesList = [];
-  private shopTypesList = [];
-  private searchItems = [];
-  private sortField: string;
-  private sortOrder: number;
+  private _dataItems: ShopModel[];
+  private _loading: boolean;
+  private _counterPartiesList = [];
+  private _shopTypesList = [];
+  private _searchItems = [];
+  private _sortField: string;
+  private _sortOrder: number;
 
-  private displayShopEditDialog: boolean;
-  private selectedShop: ShopModel;
-  private isNewShop: boolean;
-  private shop: any = {};
-  private totalElements: number;
-  private numberOfElements: number;
-  private isFilterShown: boolean;
+  private _displayShopEditDialog: boolean;
+  private _selectedShop: ShopModel;
+  private _isNewShop: boolean;
+  private _shop: any = {};
+  private _totalElements: number;
+  private _numberOfElements: number;
+  private _isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
 
-  private cols: ShopColumnModel[];
-  private selectedCols: ShopColumnModel[];
+  private _cols: ShopColumnModel[];
+  private _selectedCols: ShopColumnModel[];
+
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
@@ -48,6 +48,134 @@ export class ShopDataTableComponent implements OnInit {
     private shopTypesService: ShopTypesService,
     private mService: MessageService,
   ) {
+  }
+
+  set sortField(sortField: string) {
+    this._sortField = sortField;
+  }
+
+  get sortField(): string {
+    return this._sortField;
+  }
+
+  get cols(): ShopColumnModel[] {
+    return this._cols;
+  }
+
+  set cols(value: ShopColumnModel[]) {
+    this._cols = value;
+  }
+
+  get selectedCols(): ShopColumnModel[] {
+    return this._selectedCols;
+  }
+
+  set selectedCols(value: ShopColumnModel[]) {
+    this._selectedCols = value;
+  }
+
+  get isFilterShown(): boolean {
+    return this._isFilterShown;
+  }
+
+  set isFilterShown(value: boolean) {
+    this._isFilterShown = value;
+  }
+
+  get searchItems(): any[] {
+    return this._searchItems;
+  }
+
+  set searchItems(value: any[]) {
+    this._searchItems = value;
+  }
+
+  get dataItems(): ShopModel[] {
+    return this._dataItems;
+  }
+
+  set dataItems(value: ShopModel[]) {
+    this._dataItems = value;
+  }
+
+  get loading(): boolean {
+    return this._loading;
+  }
+
+  set loading(value: boolean) {
+    this._loading = value;
+  }
+
+  get shopTypesList(): any[] {
+    return this._shopTypesList;
+  }
+
+  set shopTypesList(value: any[]) {
+    this._shopTypesList = value;
+  }
+
+  get counterPartiesList(): any[] {
+    return this._counterPartiesList;
+  }
+
+  set counterPartiesList(value: any[]) {
+    this._counterPartiesList = value;
+  }
+
+  get displayShopEditDialog(): boolean {
+    return this._displayShopEditDialog;
+  }
+
+  set displayShopEditDialog(value: boolean) {
+    this._displayShopEditDialog = value;
+  }
+
+  get shop(): any {
+    return this._shop;
+  }
+
+  set shop(value: any) {
+    this._shop = value;
+  }
+
+  get selectedShop(): ShopModel {
+    return this._selectedShop;
+  }
+
+  set selectedShop(value: ShopModel) {
+    this._selectedShop = value;
+  }
+
+  get sortOrder(): number {
+    return this._sortOrder;
+  }
+
+  set sortOrder(value: number) {
+    this._sortOrder = value;
+  }
+
+  get totalElements(): number {
+    return this._totalElements;
+  }
+
+  set totalElements(value: number) {
+    this._totalElements = value;
+  }
+
+  get numberOfElements(): number {
+    return this._numberOfElements;
+  }
+
+  set numberOfElements(value: number) {
+    this._numberOfElements = value;
+  }
+
+  get isNewShop(): boolean {
+    return this._isNewShop;
+  }
+
+  set isNewShop(value: boolean) {
+    this._isNewShop = value;
   }
 
   ngOnInit() {
@@ -143,7 +271,6 @@ export class ShopDataTableComponent implements OnInit {
   }
 
 
-
   showServerErrorToast() {
     this.mService.clear();
     this.mService.add({
@@ -183,7 +310,7 @@ export class ShopDataTableComponent implements OnInit {
     this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
-  loadShopsData(options = {}, updatePageInfo = true) {
+  loadTableData(options = {}, updatePageInfo = true) {
     return this.shopService.fetchShopData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = data.content;
@@ -230,12 +357,12 @@ export class ShopDataTableComponent implements OnInit {
         }
       });
 
-    this.loadShopsData(params, true);
+    this.loadTableData(params, true);
 
   }
 
   dataSearch(searchString: string) {
-    this.loadShopsData({q: searchString});
+    this.loadTableData({q: searchString});
   }
 
   cleanFilter(sdt: Table, index: number, fieldId: string, matchMode: string) {

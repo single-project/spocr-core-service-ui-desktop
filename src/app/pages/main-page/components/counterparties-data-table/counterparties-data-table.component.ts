@@ -162,7 +162,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
-  loadCounterPartiesData(options = {}, updatePageInfo = true): void {
+  loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.counterPartiesService.fetchCounterPartiesData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -202,7 +202,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
         }
       });
 
-    this.loadCounterPartiesData(params, true);
+    this.loadTableData(params, true);
   }
 
   dataSearch(searchString: string) {

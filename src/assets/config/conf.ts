@@ -5,6 +5,7 @@ export class Conf {
   private _COUNTERPARTIES_URL = '/api/counterparties';
   private _MANUFACTURES_URL = '/api/manufactures';
   private _SHOP_TYPES_URL = '/api/shoptypes';
+  private _APP_SETTINGS_URL = '/api/app/settings';
 
 
   get BASE_URL(): string {
@@ -29,5 +30,9 @@ export class Conf {
 
   get SHOP_TYPES_URL(): string {
     return this._SHOP_TYPES_URL;
+  }
+
+  get APP_SETTINGS_URL(): string {
+    return this._APP_SETTINGS_URL;
   }
 }
