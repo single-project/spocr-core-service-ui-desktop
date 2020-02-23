@@ -1,6 +1,9 @@
-<div style="margin-top: 10%" class="p-grid">
-  <div style="text-align: center" class="p-lg-6 p-lg-offset-3 p-sm-offset-0 p-sm-12">
-    <img style="max-width: 350px" src="../../../assets/img/ekc_logo@2x.png">
+<div style="margin-top: 10%"
+     class="p-grid">
+  <div style="text-align: center"
+       class="p-lg-6 p-lg-offset-3 p-sm-offset-0 p-sm-12">
+    <img style="max-width: 350px"
+         src="../../../assets/img/ekc_logo@2x.png">
   </div>
   <div class="p-lg-6 p-lg-offset-3 p-sm-offset-0 p-sm-12">
     <p-card>
@@ -10,23 +13,41 @@
       <div class="ui-g ui-fluid">
         <div class="ui-g-12">
           <div class="ui-inputgroup">
-            <input [(ngModel)]="username" size="32" type="text" placeholder="Логин" pInputText>
+            <input [(ngModel)]="username"
+                   size="32"
+                   type="text"
+                   placeholder="Логин"
+                   pInputText>
           </div>
         </div>
         <div class="ui-g-12">
           <div class="ui-inputgroup">
-            <input (keydown.enter)="onAuthClick()" [(ngModel)]="password" size="32" type="password" placeholder="Пароль"
+            <input (keydown.enter)="onAuthClick()"
+                   [(ngModel)]="password"
+                   size="32"
+                   type="password"
+                   placeholder="Пароль"
                    pInputText>
           </div>
-          <p-messages [(value)]="msgs"></p-messages>
+          <p-messages [(value)]="msgs">
+          </p-messages>
         </div>
-
       </div>
       <p-footer>
-        <button (click)="onAuthClick()" pButton class="ui-button-success" type="button" label="Войти" icon="pi pi-check"
-                style="margin-right: .25em"></button>
-        <button pButton class="ui-button-secondary" type="button" label="Отмена" icon="pi pi-times"
-                style="margin-right: .25em"></button>
+        <button (click)="onAuthClick()"
+                pButton class="ui-button-success"
+                type="button"
+                label="Войти"
+                icon="pi pi-check"
+                style="margin-right: .25em">
+        </button>
+        <button pButton
+                class="ui-button-secondary"
+                type="button"
+                label="Отмена"
+                icon="pi pi-times"
+                style="margin-right: .25em">
+        </button>
       </p-footer>
     </p-card>
   </div>
