@@ -5,6 +5,7 @@ import {ManufactureDataTableComponent} from './components/manufacture-data-table
 import {ShopTypesDataTableComponent} from './components/shop-types-data-table/shop-types-data-table.component';
 
 import {ConfigService} from '../../core/services/config.service';
+import {AppTableTypes} from '../../core/models/app-tabe-types.enum';
 
 @Component({
   selector: 'app-main-page',
@@ -37,10 +38,10 @@ export class MainPageComponent implements OnInit {
 
   initVewTable() {
     this.uiTables = {
-      [tableTypes.SHOP_TABLE_TYPE]: this.shopDataTable,
-      [tableTypes.COUNTER_PARTIES_TABLE_TYPE]: this.counterPartiesDataTable,
-      [tableTypes.MANUFACTURE_TABLE_TYPE]: this.manufactureDataTable,
-      [tableTypes.SHOP_TYPES_TABLE_TYPE]: this.shopTypesDataTable
+      [AppTableTypes.SHOP_TABLE_TYPE]: this.shopDataTable,
+      [AppTableTypes.COUNTER_PARTIES_TABLE_TYPE]: this.counterPartiesDataTable,
+      [AppTableTypes.MANUFACTURE_TABLE_TYPE]: this.manufactureDataTable,
+      [AppTableTypes.SHOP_TYPES_TABLE_TYPE]: this.shopTypesDataTable
     };
   }
 
@@ -92,7 +93,7 @@ export class MainPageComponent implements OnInit {
 
   shopsToggle() {
     this.configService
-      .fetchAppSettingsByType(tableTypes.SHOP_TABLE_TYPE)
+      .fetchAppSettingsByType(AppTableTypes.SHOP_TABLE_TYPE)
       .subscribe((data) => {
         Object.assign(this, data);
       });
@@ -100,7 +101,7 @@ export class MainPageComponent implements OnInit {
 
   counterPartiesToggle() {
     this.configService
-      .fetchAppSettingsByType(tableTypes.COUNTER_PARTIES_TABLE_TYPE)
+      .fetchAppSettingsByType(AppTableTypes.COUNTER_PARTIES_TABLE_TYPE)
       .subscribe((data) => {
         Object.assign(this, data);
       });
@@ -108,7 +109,7 @@ export class MainPageComponent implements OnInit {
 
   manufactireToggle() {
     this.configService
-      .fetchAppSettingsByType(tableTypes.MANUFACTURE_TABLE_TYPE)
+      .fetchAppSettingsByType(AppTableTypes.MANUFACTURE_TABLE_TYPE)
       .subscribe((data) => {
         Object.assign(this, data);
       });
@@ -116,16 +117,9 @@ export class MainPageComponent implements OnInit {
 
   shopTypesToggle() {
     this.configService
-      .fetchAppSettingsByType(tableTypes.SHOP_TYPES_TABLE_TYPE)
+      .fetchAppSettingsByType(AppTableTypes.SHOP_TYPES_TABLE_TYPE)
       .subscribe((data) => {
         Object.assign(this, data);
       });
   }
-}
-
-enum tableTypes {
-  SHOP_TABLE_TYPE = 1,
-  COUNTER_PARTIES_TABLE_TYPE,
-  MANUFACTURE_TABLE_TYPE,
-  SHOP_TYPES_TABLE_TYPE
 }

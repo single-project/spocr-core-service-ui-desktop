@@ -9,6 +9,8 @@ import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ShopColumnModel} from '../../../../core/models/shop-column.model';
+import {ConfigService} from '../../../../core/services/config.service';
+import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 
 @Component({
   selector: 'app-shop-data-table',
@@ -40,15 +42,6 @@ export class ShopDataTableComponent implements OnInit {
 
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
-
-  constructor(
-    private shopService: ShopsService,
-    private search: SearchService,
-    private counterPartiesService: CounterpartiesService,
-    private shopTypesService: ShopTypesService,
-    private mService: MessageService,
-  ) {
-  }
 
   set sortField(sortField: string) {
     this._sortField = sortField;
@@ -178,6 +171,16 @@ export class ShopDataTableComponent implements OnInit {
     this._isNewShop = value;
   }
 
+  constructor(
+    private shopService: ShopsService,
+    private search: SearchService,
+    private counterPartiesService: CounterpartiesService,
+    private shopTypesService: ShopTypesService,
+    private mService: MessageService,
+    private configService: ConfigService,
+  ) {
+  }
+
   ngOnInit() {
     this.loading = true;
     this.loadShopsTableHeaders();
@@ -270,7 +273,6 @@ export class ShopDataTableComponent implements OnInit {
     console.dir(this.selectedCols);
   }
 
-
   showServerErrorToast() {
     this.mService.clear();
     this.mService.add({
@@ -292,22 +294,16 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   loadShopsTableHeaders() {
-    const tableHeaders = {
-      columns: [
-        {field: 'id', header: 'ID'},
-        {field: 'name', header: 'Имя'},
-        {field: 'counterparty', header: 'Контрагент'},
-        {field: 'active', header: 'Активный'},
-      ],
-      sortField: 'name',
-      sortOrder: 'asc'
-    };
+    this.configService
+      .fetchTableHeader(AppTableTypes.SHOP_TABLE_TYPE)
+      .subscribe((data) => {
 
-
-    this.cols = tableHeaders.columns;
-    this.selectedCols = this.cols;
-    this.sortField = tableHeaders.sortField;
-    this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
+        this.cols = data.columns;
+        this.selectedCols = data.columns;
+        this.sortField = data.sortField;
+        this.sortOrder = data.sortOrder === 'asc' ? 1 : -1;
+        console.log(data);
+      });
   }
 
   loadTableData(options = {}, updatePageInfo = true) {

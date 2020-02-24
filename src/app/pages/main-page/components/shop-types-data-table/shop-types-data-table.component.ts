@@ -29,6 +29,9 @@ export class ShopTypesDataTableComponent implements OnInit {
   private _sortField: string;
   private _sortOrder: number;
 
+  cols: any[];
+  selectedCols: any[];
+
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
@@ -143,9 +146,6 @@ export class ShopTypesDataTableComponent implements OnInit {
     private search: SearchService,
   ) {
   }
-
-  cols: any[];
-  selectedCols: any[];
 
   ngOnInit() {
     this.loading = true;
@@ -390,7 +390,6 @@ export class ShopTypesDataTableComponent implements OnInit {
       sortField: 'name',
       sortOrder: 'asc'
     };
-
 
     this.cols = tableHeaders.columns;
     this.selectedCols = this.cols;

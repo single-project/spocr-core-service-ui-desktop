@@ -38,6 +38,19 @@ export class ConfigService {
     );
   }
 
+  fetchTableHeader(dataType: number = 1) {
+    return this.fetchAppSettings().pipe(
+      map((data: any) => {
+        let resObj = data.availableTables.find(o => o.id === dataType);
+        return {
+          columns: [... resObj.columns],
+          sortField: resObj.sortField,
+          sortOrder: resObj.sortOrder,
+        };
+      }),
+    );
+  }
+
   clearCache() {
     this.appConfigs = null;
   }
