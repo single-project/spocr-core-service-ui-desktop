@@ -15,7 +15,7 @@ export class ShopsService {
   ) {
   }
 
-  fetchShopData(options = {}): Observable<any> {
+  fetchData(options = {}): Observable<any> {
     return this.http.get(
       this.shopUrl,
       {
@@ -23,11 +23,11 @@ export class ShopsService {
       });
   }
 
-  editShop(updateData: {}, id: number): Observable<any> {
+  editItem(updateData: {}, id: number): Observable<any> {
     return this.http.patch(`${this.shopUrl}/${id}`, updateData)
   }
 
-  newShop(shopData: {}): Observable<any> {
+  newItem(shopData: {}): Observable<any> {
     return this.http.post(this.shopUrl, shopData);
   }
 

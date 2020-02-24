@@ -18,13 +18,13 @@ export class MainPageComponent implements OnInit {
   private _dataType: number;
   private uiTables: Object;
 
-  @ViewChild('shopDataTable', {static: false})
+  @ViewChild('shopDataTable')
   shopDataTable: ShopDataTableComponent;
-  @ViewChild('counterPartiesDataTable', {static: false})
+  @ViewChild('counterPartiesDataTable')
   counterPartiesDataTable: CounterpartiesDataTableComponent;
-  @ViewChild('manufactureDataTable', {static: false})
+  @ViewChild('manufactureDataTable')
   manufactureDataTable: ManufactureDataTableComponent;
-  @ViewChild('shopTypesDataTable', {static: false})
+  @ViewChild('shopTypesDataTable')
   shopTypesDataTable: ShopTypesDataTableComponent;
 
   constructor(

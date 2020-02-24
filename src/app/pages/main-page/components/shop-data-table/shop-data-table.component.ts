@@ -8,64 +8,30 @@ import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {ShopColumnModel} from '../../../../core/models/shop-column.model';
 import {ConfigService} from '../../../../core/services/config.service';
-import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
+import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 
 @Component({
   selector: 'app-shop-data-table',
   templateUrl: './shop-data-table.component.html',
   styleUrls: ['./shop-data-table.component.scss']
 })
-export class ShopDataTableComponent implements OnInit {
-
-  private _dataItems: ShopModel[];
-  private _loading: boolean;
+export class ShopDataTableComponent extends AppDataTableModel implements OnInit {
   private _counterPartiesList = [];
   private _shopTypesList = [];
   private _searchItems = [];
-  private _sortField: string;
-  private _sortOrder: number;
 
   private _displayShopEditDialog: boolean;
   private _selectedShop: ShopModel;
   private _isNewShop: boolean;
   private _shop: any = {};
-  private _totalElements: number;
-  private _numberOfElements: number;
   private _isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
 
-  private _cols: ShopColumnModel[];
-  private _selectedCols: ShopColumnModel[];
-
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
-  set sortField(sortField: string) {
-    this._sortField = sortField;
-  }
-
-  get sortField(): string {
-    return this._sortField;
-  }
-
-  get cols(): ShopColumnModel[] {
-    return this._cols;
-  }
-
-  set cols(value: ShopColumnModel[]) {
-    this._cols = value;
-  }
-
-  get selectedCols(): ShopColumnModel[] {
-    return this._selectedCols;
-  }
-
-  set selectedCols(value: ShopColumnModel[]) {
-    this._selectedCols = value;
-  }
 
   get isFilterShown(): boolean {
     return this._isFilterShown;
@@ -81,22 +47,6 @@ export class ShopDataTableComponent implements OnInit {
 
   set searchItems(value: any[]) {
     this._searchItems = value;
-  }
-
-  get dataItems(): ShopModel[] {
-    return this._dataItems;
-  }
-
-  set dataItems(value: ShopModel[]) {
-    this._dataItems = value;
-  }
-
-  get loading(): boolean {
-    return this._loading;
-  }
-
-  set loading(value: boolean) {
-    this._loading = value;
   }
 
   get shopTypesList(): any[] {
@@ -139,30 +89,6 @@ export class ShopDataTableComponent implements OnInit {
     this._selectedShop = value;
   }
 
-  get sortOrder(): number {
-    return this._sortOrder;
-  }
-
-  set sortOrder(value: number) {
-    this._sortOrder = value;
-  }
-
-  get totalElements(): number {
-    return this._totalElements;
-  }
-
-  set totalElements(value: number) {
-    this._totalElements = value;
-  }
-
-  get numberOfElements(): number {
-    return this._numberOfElements;
-  }
-
-  set numberOfElements(value: number) {
-    this._numberOfElements = value;
-  }
-
   get isNewShop(): boolean {
     return this._isNewShop;
   }
@@ -172,13 +98,16 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   constructor(
-    private shopService: ShopsService,
+    shopService: ShopsService,
     private search: SearchService,
     private counterPartiesService: CounterpartiesService,
     private shopTypesService: ShopTypesService,
     private mService: MessageService,
-    private configService: ConfigService,
+    configService: ConfigService,
   ) {
+    super(
+      configService,
+      shopService);
   }
 
   ngOnInit() {
@@ -195,7 +124,7 @@ export class ShopDataTableComponent implements OnInit {
       switchMap(({params, fieldName}) =>
         this.fetchFilterData(params, fieldName)
           .pipe(
-            map((data) => {
+            map((data: any) => {
               let arrayTemp: Array<Object>;
               if (fieldName === 'active') {
                 arrayTemp = [...new Set(data.content.map(
@@ -224,7 +153,7 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   fetchFilterData(params = {}, fieldName = '') {
-    let dataService$ = this.shopService.fetchShopData(params);
+    let dataService$ = this.tableDataService.fetchData(params);
 
     if (fieldName === 'counterparty') {
       dataService$ = this.counterPartiesService.fetchCounterPartiesData(params);
@@ -291,32 +220,6 @@ export class ShopDataTableComponent implements OnInit {
       severity: 'success',
       summary: 'Данные успешно сохранены'
     });
-  }
-
-  loadShopsTableHeaders() {
-    this.configService
-      .fetchTableHeader(AppTableTypes.SHOP_TABLE_TYPE)
-      .subscribe((data) => {
-
-        this.cols = data.columns;
-        this.selectedCols = data.columns;
-        this.sortField = data.sortField;
-        this.sortOrder = data.sortOrder === 'asc' ? 1 : -1;
-        console.log(data);
-      });
-  }
-
-  loadTableData(options = {}, updatePageInfo = true) {
-    return this.shopService.fetchShopData(options)
-      .subscribe((data: ReferenceResponseModel) => {
-        this.dataItems = data.content;
-
-        if (updatePageInfo) {
-          this.totalElements = data.totalElements;
-          this.numberOfElements = data.numberOfElements;
-        }
-        this.loading = false;
-      });
   }
 
   loadShopDataLazy(event: LazyLoadEvent) {
@@ -407,7 +310,7 @@ export class ShopDataTableComponent implements OnInit {
   savedShopNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopService.newShop(e).subscribe((data) => {
+    this.tableDataService.newItem(e).subscribe((data) => {
       this.dataItems = [...this.dataItems, data];
       this.showSuccessSavingMessage()
     }, error => {
@@ -419,7 +322,7 @@ export class ShopDataTableComponent implements OnInit {
     console.dir(e.types);
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopService.editShop(e, e.id).subscribe((data) => {
+    this.tableDataService.editItem(e, e.id).subscribe((data) => {
       this.dataItems[idx] = {...data['content']};
       this.showSuccessSavingMessage()
     }, error => {
