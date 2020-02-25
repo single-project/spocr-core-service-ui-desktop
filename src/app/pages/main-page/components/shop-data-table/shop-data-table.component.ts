@@ -6,8 +6,6 @@ import {CounterpartiesService} from '../../../../core/services/counterparties.se
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
-import {debounceTime, map, switchMap} from 'rxjs/operators';
-import {Observable, Subject} from 'rxjs';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 
@@ -19,35 +17,14 @@ import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 export class ShopDataTableComponent extends AppDataTableModel implements OnInit {
   private _counterPartiesList = [];
   private _shopTypesList = [];
-  private _searchItems = [];
 
   private _displayShopEditDialog: boolean;
   private _selectedShop: ShopModel;
   private _isNewShop: boolean;
   private _shop: any = {};
-  private _isFilterShown: boolean;
-  private columnFilters$: Observable<any>;
-  private columnFilterSubj$ = new Subject();
 
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
-
-
-  get isFilterShown(): boolean {
-    return this._isFilterShown;
-  }
-
-  set isFilterShown(value: boolean) {
-    this._isFilterShown = value;
-  }
-
-  get searchItems(): any[] {
-    return this._searchItems;
-  }
-
-  set searchItems(value: any[]) {
-    this._searchItems = value;
-  }
 
   get shopTypesList(): any[] {
     return this._shopTypesList;
@@ -113,50 +90,20 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
   ngOnInit() {
     this.loading = true;
     this.loadShopsTableHeaders();
-    this.initColumnFilter();
+    this.initColumnFilter(() => {
+      return []
+    });
     this.counterPartiesListSelect();
     this.shopTypeSelect();
   }
 
-  initColumnFilter() {
-    this.columnFilters$ = this.columnFilterSubj$.pipe(
-      debounceTime(1000),
-      switchMap(({params, fieldName}) =>
-        this.fetchFilterData(params, fieldName)
-          .pipe(
-            map((data: any) => {
-              let arrayTemp: Array<Object>;
-              if (fieldName === 'active') {
-                arrayTemp = [...new Set(data.content.map(
-                  dataObj => dataObj.active))]
-                  .map((val) => ({
-                    id: -1,
-                    name: val ? 'Да' : 'Нет'
-                  }));
-              } else {
-                arrayTemp = data.content.map(dataObj => (
-                  {
-                    id: dataObj.id,
-                    name: fieldName === 'counterparty' ? dataObj.name : dataObj[fieldName]
-                  }
-                ));
-              }
-
-              return arrayTemp;
-            }),
-          )),
-    );
-
-    this.columnFilters$.subscribe((data) => {
-      this.searchItems = [...data];
-    });
-  }
 
   fetchFilterData(params = {}, fieldName = '') {
     let dataService$ = this.tableDataService.fetchData(params);
 
     if (fieldName === 'counterparty') {
-      dataService$ = this.counterPartiesService.fetchCounterPartiesData(params);
+      dataService$ = this.counterPartiesService
+        .fetchCounterPartiesData(params);
     }
 
     return dataService$;
@@ -222,18 +169,7 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
     });
   }
 
-  loadShopDataLazy(event: LazyLoadEvent) {
-    this.loading = true;
-    let params = {};
-
-    if (typeof event.first === 'number' && event.rows) {
-      params['page'] = event.first / event.rows;
-    }
-
-    if (event.sortField) {
-      params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
-    }
-
+  addCustomParamAtr(params: Object, event: LazyLoadEvent) {
     Object.entries(event.filters).forEach(
       ([key, filterObj]) => {
 
@@ -255,9 +191,6 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
           params[key] = filterObj.value.name;
         }
       });
-
-    this.loadTableData(params, true);
-
   }
 
   dataSearch(searchString: string) {
@@ -275,6 +208,15 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
   filterSearch(event, fieldName: string) {
     let propName = 'q';
     let propValue = event.query;
+    let action$ = (data: any) => {
+      return data.content.map(dataObj => (
+        {
+          id: dataObj.id,
+          name: fieldName === 'counterparty' ?
+            dataObj.name : dataObj[fieldName]
+        }
+      ))
+    };
 
     if (fieldName === 'active') {
       propName = 'active';
@@ -283,11 +225,21 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
       } else if (event.query.toLowerCase() === 'нет') {
         propValue = false;
       }
+
+      action$ = (data: any) => {
+        return [...new Set(data.content.map(
+          dataObj => dataObj.active))]
+          .map((val) => ({
+            id: -1,
+            name: val ? 'Да' : 'Нет'
+          }))
+      };
     }
 
     this.columnFilterSubj$.next({
       params: {[propName]: propValue},
-      fieldName
+      fieldName,
+      action$
     });
   }
 
@@ -310,12 +262,13 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
   savedShopNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.tableDataService.newItem(e).subscribe((data) => {
-      this.dataItems = [...this.dataItems, data];
-      this.showSuccessSavingMessage()
-    }, error => {
-      this.showServerErrorToast();
-    });
+    this.tableDataService.newItem(e)
+      .subscribe((data) => {
+        this.dataItems = [...this.dataItems, data];
+        this.showSuccessSavingMessage()
+      }, error => {
+        this.showServerErrorToast();
+      });
   }
 
   savedShopEdited(e) {

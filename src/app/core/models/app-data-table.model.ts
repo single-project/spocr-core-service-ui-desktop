@@ -1,8 +1,11 @@
 import {ConfigService} from '../services/config.service';
 import {AppTableTypes} from './app-tabe-types.enum';
 import {ReferenceResponseModel} from './reference-response.model';
+import {debounceTime, map, switchMap} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {LazyLoadEvent} from 'primeng';
 
-export class AppDataTableModel implements AppDataTableModelI {
+export abstract class AppDataTableModel implements AppDataTableModelI {
 
   private _loading: boolean;
 
@@ -13,8 +16,21 @@ export class AppDataTableModel implements AppDataTableModelI {
 
   private _cols: Object[];
   private _selectedCols: Object[];
+  private _isFilterShown: boolean;
 
   private _dataItems: Object[];
+
+  private columnFilters$: Observable<any>;
+  protected columnFilterSubj$ = new Subject();
+  private searchItems = [];
+
+  get isFilterShown(): boolean {
+    return this._isFilterShown;
+  }
+
+  set isFilterShown(value: boolean) {
+    this._isFilterShown = value;
+  }
 
   get sortField(): string {
     return this._sortField;
@@ -80,7 +96,7 @@ export class AppDataTableModel implements AppDataTableModelI {
     this._loading = value;
   }
 
-  constructor(
+  protected constructor(
     protected configService: ConfigService,
     protected tableDataService: any,
   ) {
@@ -110,10 +126,67 @@ export class AppDataTableModel implements AppDataTableModelI {
         this.loading = false;
       });
   }
+
+  initColumnFilter(
+    dataTransformer: (data: any) => Object[]): void {
+    this.columnFilters$ = this.columnFilterSubj$.pipe(
+      debounceTime(1000),
+      switchMap(({params, fieldName, action$}) =>
+        this.fetchFilterData(params, fieldName)
+          .pipe(
+            map(action$),
+          )),
+    );
+
+    this.columnFilters$.subscribe((data) => {
+      this.searchItems = [...data];
+    });
+  }
+
+  abstract fetchFilterData(
+    params: Object, fieldName: string): Observable<any>;
+
+  loadTableDataLazy(event: LazyLoadEvent) {
+    this.loading = true;
+    let params = {};
+
+    this.addPageParamAtr(params, event);
+    this.addCustomParamAtr(params, event);
+
+    this.loadTableData(params, true);
+
+  }
+
+  abstract addCustomParamAtr(params: Object, event: LazyLoadEvent): void;
+
+  addPageParamAtr(params = {}, event: LazyLoadEvent): void {
+    if (typeof event.first === 'number' && event.rows) {
+      params['page'] = event.first / event.rows;
+    }
+
+    if (event.sortField) {
+      params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+    }
+  };
+
 }
 
 interface AppDataTableModelI {
-  loadShopsTableHeaders();
 
-  loadTableData(options: Object, updatePageInfo: boolean);
+  initColumnFilter(dataTransformer: (data: any) => Object[]): void;
+
+  fetchFilterData(
+    params: Object, fieldName: string): Observable<any>;
+
+  loadShopsTableHeaders(): void;
+
+  loadTableData(
+    options: Object, updatePageInfo: boolean): void;
+
+  loadTableDataLazy(event: LazyLoadEvent): void;
+
+  addPageParamAtr(params: Object, event: LazyLoadEvent): void;
+
+  addCustomParamAtr(params: Object, event: LazyLoadEvent): void;
+
 }
