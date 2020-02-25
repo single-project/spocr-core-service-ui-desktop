@@ -12,25 +12,17 @@ import {map, tap} from "rxjs/operators";
   styleUrls: ['./dadata-party.component.scss']
 })
 export class DadataPartyComponent implements OnInit, OnChanges {
-  @Input() currentParty: CounterpartyModel;
-  @Output() onPartySuggest = new EventEmitter<PartySuggestion>();
-  @Output() onInnClear = new EventEmitter<any>();
+  @Input() parentForm: FormGroup;
+
 
   private results: any;
   private suggestions: PartySuggestion[];
-  private suggetionForParent: any;
-  private partyForm: FormGroup;
   private selectedItem: string;
 
   constructor(
-    @Inject(FormBuilder) private fb: FormBuilder,
     @Inject(DadataService) private dadata: DadataService
   ) {
-    this.partyForm = fb.group({
-      'partyInput': [''],
 
-
-    });
   }
 
   ngOnInit() {
@@ -39,16 +31,19 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.currentParty.legalRekv) {
-      this.partyForm.patchValue({'partyInput': this.currentParty.legalRekv.inn});
-      this.suggetionForParent = this.currentParty.suggestion;
-    } else {
-      this.partyForm.reset();
-    }
+
   }
 
-  select(e: any) {
-    this.suggetionForParent = this.suggestions.filter(s => s.data.inn === e['data']['inn']);
+  select(e: PartySuggestion) {
+    this.parentForm.patchValue({
+      legalRekv: {
+        shortName: e.value,
+        fullName: e.unrestricted_value,
+        inn: e.data.inn,
+        ogrn: e.data.ogrn,
+        kpp: e.data.kpp
+      }
+    })
   }
 
   find(e: any) {
@@ -57,15 +52,10 @@ export class DadataPartyComponent implements OnInit, OnChanges {
     ).subscribe(v => this.results = v)
   }
 
-  onPartySave() {
-    this.onPartySuggest.emit(this.suggetionForParent[0]);
-    this.suggestionReset();
-  }
 
   onPartyClean() {
     this.suggestionReset();
-    this.partyForm.reset();
-    this.onInnClear.emit();
+    this.parentForm.get('legalRekv').reset();
   }
 
   suggestionReset(): void {

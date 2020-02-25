@@ -48,45 +48,48 @@
           </div>
           <div class="ui-g-8">
             <app-dadata-party
-              [currentParty]="counterparty"
-              (onPartySuggest)="onPartyRequisitesSaved($event)">
+              [parentForm]="counterPartyForm"
+            >
 
             </app-dadata-party>
           </div>
         </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label>НАИМ.</label>
+        <ng-container formGroupName="legalRekv">
+          <div  class="ui-g-12">
+            <div class="ui-g-4">
+              <label>НАИМ.</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="shortName">
+            </div>
+            <div class="ui-g-4">
+              <label>НАИМ.(ПОЛНОЕ)</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="fullName">
+            </div>
+            <div class="ui-g-4">
+              <label>ИНН</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="inn">
+            </div>
+            <div class="ui-g-4">
+              <label>ОГРН/ОГРНИП</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="ogrn">
+            </div>
+            <div class="ui-g-4">
+              <label>КПП</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="kpp">
+            </div>
           </div>
-          <div class="ui-g-8">
-            <input pInputText  formControlName="shortName">
-          </div>
-          <div class="ui-g-4">
-            <label>НАИМ.(ПОЛНОЕ)</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText  formControlName="fullName">
-          </div>
-          <div class="ui-g-4">
-            <label>ИНН</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText  formControlName="inn">
-          </div>
-          <div class="ui-g-4">
-            <label>ОГРН/ОГРНИП</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText  formControlName="ogrn">
-          </div>
-          <div class="ui-g-4">
-            <label>КПП</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText  formControlName="kpp">
-          </div>
-        </div>
+        </ng-container>
       </div>
+
     </p-tabPanel>
   </p-tabView>
   <p-footer>
