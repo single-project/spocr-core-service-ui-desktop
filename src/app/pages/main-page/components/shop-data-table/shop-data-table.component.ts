@@ -1,6 +1,4 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {ShopModel} from '../../../../core/models/shop.model';
-import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {ShopsService} from '../../../../core/services/shops.service';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
@@ -10,6 +8,8 @@ import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ShopColumnModel} from '../../../../core/models/shop-column.model';
+import {ShopDialogComponent} from "../shop-dialog/shop-dialog.component";
+import {ShopModel} from '../../../../core/models/global-reference.model';
 
 @Component({
   selector: 'app-shop-data-table',
@@ -28,7 +28,6 @@ export class ShopDataTableComponent implements OnInit {
 
   private displayShopEditDialog: boolean;
   private selectedShop: ShopModel;
-  private isNewShop: boolean;
   private shop: any = {};
   private totalElements: number;
   private numberOfElements: number;
@@ -40,6 +39,8 @@ export class ShopDataTableComponent implements OnInit {
   private selectedCols: ShopColumnModel[];
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
+  @ViewChild('shopDialogComponent', {static: false}) shopDialogComponent: ShopDialogComponent;
+
 
   constructor(
     private shopService: ShopsService,
@@ -48,6 +49,7 @@ export class ShopDataTableComponent implements OnInit {
     private shopTypesService: ShopTypesService,
     private mService: MessageService,
   ) {
+    this.displayShopEditDialog = false;
   }
 
   ngOnInit() {
@@ -103,45 +105,38 @@ export class ShopDataTableComponent implements OnInit {
   }
 
   onRowSelect(e) {
-    this.isNewShop = false;
-    this.shop = this.cloneEntity(e.data);
+
+    this.shop = e.data;
+    this.shopDialogComponent._display = true;
     console.log(this.shop);
-    this.displayShopEditDialog = true;
+
   }
 
-  cloneEntity(e: any) {
-    let entity = {};
-    for (let prop in e) {
-      entity[prop] = e[prop];
-    }
-    return entity;
-  }
 
-  onShopEditSave(e) {
-    this.savedShopEdited(e);
-    this.displayShopEditDialog = false;
-    this.shop = null;
-  }
-
-  onNewShopSave(e) {
-    this.savedShopNew(e);
-  }
+  // onShopEditSave(e) {
+  //   this.savedShopEdited(e);
+  //   this.shopDialogComponent._display = false;
+  //   this.shop = null;
+  // }
+  //
+  // onNewShopSave(e) {
+  //   this.savedShopNew(e);
+  // }
 
   onCloseShopDialog(e) {
-    this.displayShopEditDialog = e;
+    this.shopDialogComponent._display = false;
     this.shop = null;
   }
 
   onShopCreate() {
-    this.isNewShop = true;
+
     this.shop = {active: true};
-    this.displayShopEditDialog = true;
+    this.shopDialogComponent._display = true;
   }
 
   columnsChange() {
     console.dir(this.selectedCols);
   }
-
 
 
   showServerErrorToast() {
@@ -281,26 +276,40 @@ export class ShopDataTableComponent implements OnInit {
       });
   }
 
-  savedShopNew(e) {
+  shopSavedFromDialog(e: ShopModel): void {
+    console.log('event fired');
+    console.dir(e);
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
-
-    this.shopService.newShop(e).subscribe((data) => {
-      this.dataItems = [...this.dataItems, data];
+    console.log('IDX' + idx);
+    if (idx !== -1) {
+      this.dataItems[idx] = {...e};
       this.showSuccessSavingMessage()
-    }, error => {
-      this.showServerErrorToast();
-    });
+    } else {
+      this.dataItems = [...this.dataItems, e];
+    }
+
   }
 
-  savedShopEdited(e) {
-    console.dir(e.types);
-    let idx = this.dataItems.findIndex((i) => i.id === e.id);
-
-    this.shopService.editShop(e, e.id).subscribe((data) => {
-      this.dataItems[idx] = {...data['content']};
-      this.showSuccessSavingMessage()
-    }, error => {
-      this.showServerErrorToast();
-    })
-  }
+  // savedShopNew(e) {
+  //   let idx = this.dataItems.findIndex((i) => i.id === e.id);
+  //
+  //   this.shopService.newShop(e).subscribe((data) => {
+  //     this.dataItems = [...this.dataItems, data];
+  //     this.showSuccessSavingMessage()
+  //   }, error => {
+  //     this.showServerErrorToast();
+  //   });
+  // }
+  //
+  // savedShopEdited(e) {
+  //   console.dir(e.types);
+  //   let idx = this.dataItems.findIndex((i) => i.id === e.id);
+  //
+  //   this.shopService.editShop(e, e.id).subscribe((data) => {
+  //     this.dataItems[idx] = {...data['content']};
+  //     this.showSuccessSavingMessage()
+  //   }, error => {
+  //     this.showServerErrorToast();
+  //   })
+  // }
 }

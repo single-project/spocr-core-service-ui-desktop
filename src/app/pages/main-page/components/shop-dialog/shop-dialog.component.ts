@@ -1,7 +1,19 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
-import {ShopCounterparty, ShopModel, ShopType} from "../../../../core/models/shop.model";
+import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import {ShopTypesService} from '../../../../core/services/shop-types.service';
+import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
+import {ShopdepartsService} from '../../../../core/services/shopdeparts.service';
+import {ShopspecializationsService} from '../../../../core/services/shopspecializations.service';
+import {map, tap} from 'rxjs/operators';
+import {ShopsService} from '../../../../core/services/shops.service';
+import {
+  CounterpartyModel,
+  SalesChannelModel,
+  ShopModel,
+  ShopTypeModel
+} from '../../../../core/models/global-reference.model';
 
 
 @Component({
@@ -11,26 +23,33 @@ import {ShopCounterparty, ShopModel, ShopType} from "../../../../core/models/sho
 })
 export class ShopDialogComponent implements OnInit, OnChanges {
   @Input() shop: ShopModel;
-  @Input() display: boolean;
-  @Input() counterpartiesList: ShopCounterparty[];
-  @Input() shopTypesList: ShopType[];
-  @Input() isNew: boolean;
-  @Output() onEditedShopSave = new EventEmitter<any>();
-  @Output() onNewShopSaved = new EventEmitter<any>();
-  @Output() onShopTypeSaved = new EventEmitter<any>();
-  @Output() onCounterpartySelection = new EventEmitter<any>();
-  @Output() onShopTypeSelection = new EventEmitter<any>();
-  @Output() onCloseDialog = new EventEmitter<boolean>();
+  @Output() onShopSaved = new EventEmitter<ShopModel>();
+  public counterpartiesList: any[] = [];
+  public shopTypesList: ShopTypeModel[] = [];
+  public salesChannelsList: { name: string, id: number }[] = [];
+  public _display = false;
   private shopFrom: FormGroup;
+  private isNew = false;
 
 
   constructor(
     @Inject(FormBuilder) private fb: FormBuilder,
+    @Inject(CounterpartiesService) private counterpartiesSevice: CounterpartiesService,
+    @Inject(ShopTypesService) private shopTypeService: ShopTypesService,
+    @Inject(SaleschannelsService) private salesChanelService: SaleschannelsService,
+    @Inject(ShopdepartsService) private shopdepartsService: ShopdepartsService,
+    @Inject(ShopspecializationsService) private shopSpecializationsService: ShopspecializationsService,
+    @Inject(ShopsService) private shopService: ShopsService
   ) {
     this.shopFrom = this.buildShopForm();
+
+
   }
 
   ngOnInit() {
+    this.loadCounterpartiesList();
+    this.loadShopTypesList();
+    this.loadSalesChannels();
 
 
   }
@@ -38,6 +57,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
 
   }
+
 
   shopSaved() {
 
@@ -47,15 +67,18 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     if (!this.isNew) {
 
       if (this.shopFrom.dirty) {
-        this.onEditedShopSave.emit(this.shopFrom.value);
+        this.shopService.editShop(this.shopFrom.value, this.shop.id).pipe(
+          tap(s => this.onShopSaved.emit(s))
+        ).subscribe();
       } else this.closeDialog();
 
 
     } else {
 
       this.shopFrom.removeControl('updatedFields');
-
-      this.onNewShopSaved.emit(this.shopFrom.value);
+      this.shopService.newShop(this.shopFrom.value).pipe(
+        tap(s => this.onShopSaved.emit(s))
+      ).subscribe();
     }
     this.closeDialog();
   }
@@ -63,7 +86,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   closeDialog() {
     this.shopFrom.reset();
-    this.onCloseDialog.emit(false);
+    this._display = false;
 
   }
 
@@ -90,8 +113,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     return this.fb.group({
       id: null,
       name: ['', Validators.required],
-      shopTypes: [[<ShopType>{}], Validators.required],
-      counterparty: [<ShopCounterparty>{}, Validators.required],
+      shopTypes: [[<ShopTypeModel>{}], Validators.required],
+      counterparty: [<CounterpartyModel>{}, Validators.required],
+      salesChannels: [[]],
       active: true,
       address: this.fb.group({
         id: null,
@@ -108,13 +132,50 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     });
   }
 
+  loadCounterpartiesList(): void {
+    this.counterpartiesSevice.fetchCounterPartiesData().pipe(
+      map(p => p.content),
+    ).subscribe(party => {
+      this.counterpartiesList = party
+    });
+  }
+
+  loadShopTypesList(): void {
+    this.shopTypeService.fetchShopTypesData().pipe(
+      map(tp => tp.content),
+      map(tp => tp.map(t => {
+        return {id: t.id, name: `${t.name} / ${t.manufacturer.name}`}
+      }))
+    ).subscribe(type => {
+      this.shopTypesList = type
+      console.dir(type);
+    });
+  }
+
+  loadSalesChannels(): void {
+    this.salesChanelService.fetchAllSalesChannels().pipe(
+      map(sc => sc.content),
+      map((sc: SalesChannelModel[]) => sc.map(s => {
+        return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}
+      }))
+    ).subscribe(channels => this.salesChannelsList = channels)
+  }
+
   afterShow() {
+
+    if (Object.keys(this.shop).length <= 1) {
+      this.isNew = true;
+    } else {
+      this.isNew = false;
+    }
+
     if (!this.isNew) {
       this.initAfterShowFormValues([
         {id: this.shop.id},
         {name: this.shop.name},
         {shopTypes: this.shop.shopTypes},
         {counterparty: this.shop.counterparty},
+        {salesChannels: this.shop.salesChannels},
         {active: this.shop.active},
         {
           address: {
@@ -132,6 +193,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
         },
       ]);
 
+
     } else {
       this.shopFrom.reset();
     }
@@ -139,4 +201,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
   }
 
+  optionLabelMaker(e) {
+    console.dir(e)
+  }
 }

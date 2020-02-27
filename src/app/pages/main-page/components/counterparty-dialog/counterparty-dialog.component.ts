@@ -1,9 +1,7 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {CounterpartyModel, PartyLegalRekv, PartyPaymentDetails} from "../../../../core/models/counterparty.model";
-import {DadataConfig} from "@kolkov/ngx-dadata";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {PartySuggestion} from "../../../../core/models/suggestion-party.model";
-import {version} from "punycode";
+import {CounterpartyModel} from '../../../../core/models/global-reference.model';
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -13,13 +11,13 @@ import {version} from "punycode";
 export class CounterpartyDialogComponent implements OnInit, OnChanges {
   @Input() counterparty: CounterpartyModel;
   @Input() display: boolean;
-  @Input() isNew: boolean;
-  @Input() dadataConfig: DadataConfig;
   @Output() onEditedCounterpartySave = new EventEmitter<any>();
   @Output() onNewCounterpartySaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newCounterparty: CounterpartyModel = <CounterpartyModel>{};
   private partyRequisitesSuggestion: PartySuggestion;
+  private isNew = false;
+  public _display = false;
   counterPartyForm: FormGroup;
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
@@ -39,35 +37,11 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   counterpartySaved() {
 
     if (this.isNew) {
-      this.newCounterparty.name = this.counterPartyForm.get('counterName').value;
-      this.newCounterparty.active = this.counterPartyForm.get('counterActive').value;
-      this.newCounterparty.suggestion = this.partyRequisitesSuggestion;
-      this.newCounterparty.legalRekv = {
-        shortName: this.partyRequisitesSuggestion.value,
-        fullName: this.partyRequisitesSuggestion.unrestricted_value,
-        inn: this.partyRequisitesSuggestion.data.inn,
-        kpp: this.partyRequisitesSuggestion.data.kpp,
-        ogrn: this.partyRequisitesSuggestion.data.ogrn,
-        ogrnDate: this.partyRequisitesSuggestion.data.ogrn_date,
-        okpo: this.partyRequisitesSuggestion.data.okpo
-      };
-      this.onNewCounterpartySaved.emit(this.newCounterparty);
+      this.counterPartyForm.removeControl('updatedFields');
+      this.counterPartyForm.removeControl('legalRekv.innSug');
     } else {
-      this.newCounterparty.name = this.counterPartyForm.get('counterName').value;
-      this.newCounterparty.active = this.counterPartyForm.get('counterActive').value;
-      this.newCounterparty.suggestion = this.partyRequisitesSuggestion;
-      this.newCounterparty.id = this.counterparty.id;
-      this.newCounterparty.version = this.counterparty.version;
-      this.newCounterparty.legalRekv = {
-        shortName: this.partyRequisitesSuggestion.value,
-        fullName: this.partyRequisitesSuggestion.unrestricted_value,
-        inn: this.partyRequisitesSuggestion.data.inn,
-        kpp: this.partyRequisitesSuggestion.data.kpp,
-        ogrn: this.partyRequisitesSuggestion.data.ogrn,
-        ogrnDate: this.partyRequisitesSuggestion.data.ogrn_date,
-        okpo: this.partyRequisitesSuggestion.data.okpo
-      };
-      this.onEditedCounterpartySave.emit(this.newCounterparty);
+
+
     }
 
     this.onCloseDialog.emit(false);
@@ -88,57 +62,98 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   }
 
 
-
   counterpartyBuildForm(): FormGroup {
     return this.fb.group({
       id: null,
       version: null,
       active: true,
       name: ['', Validators.required],
-      legalType: null,
+      legalType: this.fb.group({
+        id: null,
+        version: null,
+        active: true,
+        name: '',
+        opfShort: '',
+        opfFull: '',
+        opfCode: '',
+        opfType: '',
+      }),
       legalRekv: this.fb.group({
-        shortName: '',
-        fullName: '',
-        inn: '',
-        ogrn: '',
-        kpp: ''
+        shortName: [{value: '', disabled: true}],
+        fullName: [{value: '', disabled: true}],
+        inn: [{value: '', disabled: true}],
+        ogrn: [{value: '', disabled: true}],
+        kpp: [{value: '', disabled: true}],
+        innSug: ''
       }),
       paymentDetails: this.fb.group({
+        id: null,
+        version: null,
+        active: true,
+        paymentAccount: '',
+        correspondingAccount: '',
+        bic: '',
+        bank: '',
 
       }),
       suggestion: null,
+      updatedFields: []
     });
   }
 
   afterShow(): void {
+    if (Object.keys(this.counterparty).length <= 1) {
+      this.isNew = true;
+    }
     if (!this.isNew) {
       this.initPartyFormValues([
+        {id: this.counterparty.id},
+        {version: this.counterparty.version},
         {name: this.counterparty.name},
         {active: this.counterparty.active},
-        {shortName: this.counterparty.legalRekv.shortName},
-        {fullName: this.counterparty.legalRekv.fullName},
-        {inn: this.counterparty.legalRekv.inn},
-        {ogrn: this.counterparty.legalRekv.ogrn},
-        {kpp: this.counterparty.legalRekv.kpp}
+        {
+          legalRekv: {
+            shortName: this.counterparty.legalRekv.shortName,
+            fullName: this.counterparty.legalRekv.fullName,
+            inn: this.counterparty.legalRekv.inn,
+            ogrn: this.counterparty.legalRekv.ogrn,
+            kpp: this.counterparty.legalRekv.kpp
+          },
+        },
+        {
+          legalType: {
+            id: this.counterparty.legalType.id,
+            version: this.counterparty.legalType.version,
+            active: this.counterparty.legalType.active,
+            name: this.counterparty.legalType.name,
+            opfShort: this.counterparty.legalType.opfShort,
+            opfFull: this.counterparty.legalType.opfFull,
+            opfCode: this.counterparty.legalType.opfCode,
+            opfType: this.counterparty.legalType.opfType,
+          }
+        },
+        {
+          paymentDetails: {
+            id: this.counterparty.paymentDetails.id,
+            version: this.counterparty.paymentDetails.version,
+            active: this.counterparty.paymentDetails.active,
+            paymentAccount: this.counterparty.paymentDetails.paymentAccount,
+            correspondingAccount: this.counterparty.paymentDetails.correspondingAccount,
+            bic: this.counterparty.paymentDetails.bic,
+            bank: this.counterparty.paymentDetails.bank,
+          }
+        },
+        {
+          suggestion: this.counterparty.suggestion
+        },
+
+
       ]);
     } else {
       this.counterPartyForm.reset();
     }
 
 
-  }
-
-  onPartyRequisitesSaved(e) {
-
-    this.partyRequisitesSuggestion = e;
-    console.dir(e);
-    this.initPartyFormValues([
-      {shortName: this.partyRequisitesSuggestion.value},
-      {fullName: this.partyRequisitesSuggestion.unrestricted_value},
-      {inn: this.partyRequisitesSuggestion.data.inn},
-      {ogrn: this.partyRequisitesSuggestion.data.ogrn},
-      {kpp: this.partyRequisitesSuggestion.data.kpp}
-    ])
   }
 
 
