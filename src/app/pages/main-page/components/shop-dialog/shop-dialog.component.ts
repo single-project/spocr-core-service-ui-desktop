@@ -67,7 +67,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     if (!this.isNew) {
 
       if (this.shopFrom.dirty) {
-        this.shopService.editShop(this.shopFrom.value, this.shop.id).pipe(
+        this.shopService.editItem(this.shopFrom.value, this.shop.id).pipe(
           tap(s => this.onShopSaved.emit(s))
         ).subscribe();
       } else this.closeDialog();
@@ -76,8 +76,8 @@ export class ShopDialogComponent implements OnInit, OnChanges {
     } else {
 
       this.shopFrom.removeControl('updatedFields');
-      this.shopService.newShop(this.shopFrom.value).pipe(
-        tap(s => this.onShopSaved.emit(s))
+      this.shopService.newItem(this.shopFrom.value).pipe(
+        tap((s: ShopModel) => this.onShopSaved.emit(s))
       ).subscribe();
     }
     this.closeDialog();

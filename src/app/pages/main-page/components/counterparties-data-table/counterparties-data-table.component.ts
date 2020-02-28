@@ -1,4 +1,4 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {CounterpartyModel} from '../../../../core/models/counterparty.model';
 import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
@@ -18,10 +18,7 @@ import {ShopModel} from '../../../../core/models/global-reference.model';
 export class CounterpartiesDataTableComponent implements OnInit {
   private _dataItems: CounterpartyModel [];
   private _loading: boolean;
-  private _daDataConfig: DadataConfig = {
-    apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
-    type: DadataType.party
-  };
+
 
   private _sortField: string;
   private _sortOrder: number;
@@ -131,13 +128,6 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this._isNewCounterparty = value;
   }
 
-  get daDataConfig(): DadataConfig {
-    return this._daDataConfig;
-  }
-
-  set daDataConfig(value: DadataConfig) {
-    this._daDataConfig = value;
-  }
 
   get selectedCounterparty(): CounterpartyModel {
     return this._selectedCounterparty;
