@@ -1,10 +1,8 @@
-import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-
+import {Component, Inject, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {DadataService} from "../../../core/services/dadata.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormGroup} from "@angular/forms";
 import {PartySuggestion} from "../../../core/models/suggestion-party.model";
-import {CounterpartyModel} from "../../../core/models/counterparty.model";
-import {map, tap} from "rxjs/operators";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-dadata-party',
@@ -15,9 +13,9 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   @Input() parentForm: FormGroup;
 
 
-  private results: any;
-  private suggestions: PartySuggestion[];
-  private selectedItem: string;
+  public results: any;
+  public suggestions: PartySuggestion[];
+  public selectedItem: string;
 
   constructor(
     @Inject(DadataService) private dadata: DadataService

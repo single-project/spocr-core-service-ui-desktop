@@ -1,7 +1,13 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {PartySuggestion} from "../../../../core/models/suggestion-party.model";
-import {CounterpartyModel} from '../../../../core/models/global-reference.model';
+import {CounterpartyModel, CounterpartyProperties} from '../../../../core/models/global-reference.model';
+import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import * as _ from 'lodash';
+
+enum FormLegalType {
+  PARTY,
+  PERSON
+}
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -10,18 +16,24 @@ import {CounterpartyModel} from '../../../../core/models/global-reference.model'
 })
 export class CounterpartyDialogComponent implements OnInit, OnChanges {
   @Input() counterparty: CounterpartyModel;
-  @Input() display: boolean;
-  @Output() onEditedCounterpartySave = new EventEmitter<any>();
-  @Output() onNewCounterpartySaved = new EventEmitter<any>();
-  @Output() onCloseDialog = new EventEmitter<boolean>();
-  private newCounterparty: CounterpartyModel = <CounterpartyModel>{};
-  private partyRequisitesSuggestion: PartySuggestion;
-  private isNew = false;
+  @Output() onCounterpartySaved = new EventEmitter<CounterpartyModel>();
   public _display = false;
-  counterPartyForm: FormGroup;
+  public counterPartyForm: FormGroup;
+  public generalLegalTypes = [
+    {id: 1, value: 'Юридическое лицо / ИП'},
+    {id: 2, value: 'Физическое лицо'}
+  ];
+  public selectedGeneralLegalType = [];
+  public formLegalType: FormLegalType;
 
-  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
+  private isNew = false;
+
+  constructor(
+    @Inject(FormBuilder) private fb: FormBuilder,
+    @Inject(CounterpartiesService) private counterpartyService: CounterpartiesService
+  ) {
     this.counterPartyForm = this.counterpartyBuildForm();
+
 
   }
 
@@ -34,33 +46,57 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
   }
 
+
   counterpartySaved() {
 
-    if (this.isNew) {
-      this.counterPartyForm.removeControl('updatedFields');
-      this.counterPartyForm.removeControl('legalRekv.innSug');
+    if (!this.counterPartyForm.dirty) {
+      this.closeDialog();
     } else {
+      this.counterPartyForm.patchValue({updatedFields: this.getUpdatedFields(this.counterPartyForm)});
+      if (this.isNew) {
+        this.counterPartyForm.removeControl('updatedFields');
+        this.counterPartyForm.removeControl('legalRekv.innSug');
+        this.saveCounterparty(this.counterPartyForm.value);
 
+      } else {
 
+        this.saveCounterparty(this.counterPartyForm.value);
+      }
     }
 
-    this.onCloseDialog.emit(false);
-
   }
 
+  saveCounterparty(party: CounterpartyModel): void {
+    if (this.isNew) {
+      this.counterpartyService.newCounterparty(party).subscribe(
+        savedParty => this.onCounterpartySaved.emit(savedParty)
+      )
+    }
+  }
+
+  getUpdatedFields(form: any) {
+    let dirtyValues = {};
+    Object.keys(form.controls).forEach(k => {
+      let currentControl = form.controls[k];
+      if (currentControl.dirty) {
+        dirtyValues[k] = currentControl.value;
+
+      }
+    });
+    return Object.keys(dirtyValues);
+  }
 
   closeDialog() {
-    this.onCloseDialog.emit(false);
     this.counterPartyForm.reset();
-  }
+    this._display = false;
 
+  }
 
   initPartyFormValues(fields: { [key: string]: any }[]): void {
     fields.forEach(field => {
       this.counterPartyForm.patchValue({...field});
     })
   }
-
 
   counterpartyBuildForm(): FormGroup {
     return this.fb.group({
@@ -70,13 +106,14 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
       name: ['', Validators.required],
       legalType: this.fb.group({
         id: null,
-        version: null,
-        active: true,
         name: '',
-        opfShort: '',
-        opfFull: '',
-        opfCode: '',
-        opfType: '',
+        ident: '',
+        properties: this.fb.group({
+          opfType: '',
+          opfShort: '',
+          opfFull: '',
+          opfCode: '',
+        })
       }),
       legalRekv: this.fb.group({
         shortName: [{value: '', disabled: true}],
@@ -105,7 +142,11 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
     if (Object.keys(this.counterparty).length <= 1) {
       this.isNew = true;
     }
+
     if (!this.isNew) {
+      if (!!this.counterparty.legalType.properties.opfType) {
+        this.formLegalType = FormLegalType.PARTY;
+      }
       this.initPartyFormValues([
         {id: this.counterparty.id},
         {version: this.counterparty.version},
@@ -123,13 +164,14 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
         {
           legalType: {
             id: this.counterparty.legalType.id,
-            version: this.counterparty.legalType.version,
-            active: this.counterparty.legalType.active,
             name: this.counterparty.legalType.name,
-            opfShort: this.counterparty.legalType.opfShort,
-            opfFull: this.counterparty.legalType.opfFull,
-            opfCode: this.counterparty.legalType.opfCode,
-            opfType: this.counterparty.legalType.opfType,
+            ident: this.counterparty.legalType.ident,
+            properties: {
+              opfType: this.counterparty.legalType.properties.opfType,
+              opfShort: this.counterparty.legalType.properties.opfShort,
+              opfFull: this.counterparty.legalType.properties.opfFull,
+              opfCode: this.counterparty.legalType.properties.opfCode,
+            }
           }
         },
         {

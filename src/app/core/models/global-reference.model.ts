@@ -117,18 +117,22 @@ export interface SalesChannelModel {
   manufacturer: ManufacturerModel;
 }
 
-export interface CounterpartyLegalType {
-  id: number;
-  version: number;
-  active: boolean;
-  name: string;
+
+export interface CounterpartyProperties {
+  opfType: string;
   opfShort: string;
   opfFull: string;
   opfCode: string;
-  opfType: string;
 }
 
-export interface CounterpartyLegalRekv {
+export interface LegalType {
+  id: number;
+  name: string;
+  ident: string;
+  properties: CounterpartyProperties;
+}
+
+export interface LegalRekv {
   shortName?: any;
   fullName?: any;
   inn?: any;
@@ -140,7 +144,7 @@ export interface CounterpartyLegalRekv {
   okonh?: any;
 }
 
-export interface CounterpartyPaymentDetails {
+export interface PaymentDetails {
   id: number;
   version: number;
   active: boolean;
@@ -150,17 +154,76 @@ export interface CounterpartyPaymentDetails {
   bank: string;
 }
 
+export interface CounterpartyStatus {
+  id: number;
+  name: string;
+  ident: string;
+  properties?: any;
+}
+
+export interface DocType {
+  id: number;
+  name: string;
+  ident: string;
+  properties?: any;
+}
+
+export interface Citizenship {
+  id: number;
+  name: string;
+  ident: string;
+  properties?: any;
+}
+
+export interface Gender {
+  id: number;
+  name: string;
+  ident: string;
+  properties?: any;
+}
+
+export interface PersonRekv {
+  id: number;
+  version: number;
+  active: boolean;
+  name: string;
+  lastName: string;
+  firstName?: any;
+  patronymic?: any;
+  birthDate: Date;
+  birthPlace?: any;
+  docType: DocType;
+  docSeriesNumber?: any;
+  inn?: any;
+  citizenship: Citizenship;
+  gender: Gender;
+  email?: any;
+  phones?: any;
+}
+
+export interface Owner {
+  id: number;
+  version: number;
+  active: boolean;
+  name: string;
+}
+
 export interface CounterpartyModel {
   id: number;
   version: number;
   active: boolean;
   name: string;
-  legalType: CounterpartyLegalType;
-  legalRekv: CounterpartyLegalRekv;
-  paymentDetails: CounterpartyPaymentDetails;
+  legalType: LegalType;
+  legalRekv: LegalRekv;
+  paymentDetails: PaymentDetails;
   suggestion?: any;
   parent?: any;
+  statuses: CounterpartyStatus[];
+  personRekv: PersonRekv;
+  owner: Owner;
 }
+
+
 
 export interface ShopModel {
   id: number;

@@ -102,11 +102,8 @@
 </p-table>
 
 <app-counterparty-dialog
-  (onNewCounterpartySaved)="onNewCounterpartySave($event)"
-  (onEditedCounterpartySave)="onCounterpartyEditSave($event)"
-  (onCloseDialog)="onCloseCounterpartyDialog($event)"
+  (onCounterpartySaved)="counterpartySavedFromDialog($event)"
   [counterparty]="counterparty"
-  [display]="displayCounterpartyEditDialog"
   #counterpartyDialogComponent>
 </app-counterparty-dialog>
 

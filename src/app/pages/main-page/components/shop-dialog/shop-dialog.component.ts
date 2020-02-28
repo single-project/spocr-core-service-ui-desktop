@@ -28,7 +28,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   public shopTypesList: ShopTypeModel[] = [];
   public salesChannelsList: { name: string, id: number }[] = [];
   public _display = false;
-  private shopFrom: FormGroup;
+  public shopFrom: FormGroup;
   private isNew = false;
 
 
@@ -85,8 +85,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
 
 
   closeDialog() {
-    this.shopFrom.reset();
     this._display = false;
+    this.shopFrom.reset();
+
 
   }
 

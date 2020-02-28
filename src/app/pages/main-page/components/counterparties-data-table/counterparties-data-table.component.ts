@@ -7,6 +7,8 @@ import {AutoComplete, LazyLoadEvent, MessageService, Table} from "primeng";
 import {SearchService} from '../../../../core/services/search.service';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
+import {CounterpartyDialogComponent} from '../counterparty-dialog/counterparty-dialog.component';
+import {ShopModel} from '../../../../core/models/global-reference.model';
 
 @Component({
   selector: 'app-counterparties-data-table',
@@ -37,6 +39,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   private _isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
+  @ViewChild('counterpartyDialogComponent', {static: false}) counterpartyDialogComponent: CounterpartyDialogComponent;
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
@@ -196,7 +199,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.isNewCounterparty = false;
     this.counterparty = this.cloneEntity(e.data);
     console.log(this.counterparty);
-    this.displayCounterpartyEditDialog = true;
+    this.counterpartyDialogComponent._display = true;
   }
 
   cloneEntity(e: any) {
@@ -209,7 +212,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
 
   onCounterpartyEditSave(e) {
     this.savedCounterPartyEdited(e);
-    this.displayCounterpartyEditDialog = false;
+    this.counterpartyDialogComponent._display = false;
     this.counterparty = null;
   }
 
@@ -225,7 +228,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   onCounterpartyCreate() {
     this.isNewCounterparty = true;
     this.counterparty = {active: true};
-    this.displayCounterpartyEditDialog = true;
+    this.counterpartyDialogComponent._display = true;
 
   }
 
@@ -266,7 +269,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
-  loadTableData(options = {}, updatePageInfo = true): void {
+  loadCounterPartiesData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.counterPartiesService.fetchCounterPartiesData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -306,7 +309,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
         }
       });
 
-    this.loadTableData(params, true);
+    this.loadCounterPartiesData(params, true);
   }
 
   dataSearch(searchString: string) {
@@ -365,6 +368,17 @@ export class CounterpartiesDataTableComponent implements OnInit {
         this.showServerErrorToast();
       }
     )
+  }
+
+  counterpartySavedFromDialog(e: CounterpartyModel): void {
+    let idx = this.dataItems.findIndex((i) => i.id === e.id);
+    console.log('IDX' + idx);
+    if (idx !== -1) {
+      this.dataItems[idx] = {...e};
+      this.showSuccessSavingMessage()
+    } else {
+      this.dataItems = [...this.dataItems, e];
+    }
   }
 }
 

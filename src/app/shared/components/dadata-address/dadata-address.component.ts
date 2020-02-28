@@ -13,9 +13,9 @@ import * as _ from 'lodash';
 export class DadataAddressComponent implements OnInit, OnChanges {
   @Input() parentForm: FormGroup;
 
-  private results: string[];
-  private suggestions: AddressSuggestion[];
-  private selectedItem: string;
+  public results: string[];
+  public suggestions: AddressSuggestion[];
+  public selectedItem: string;
 
   constructor(
     @Inject(DadataService) private dadata: DadataService,
