@@ -5,7 +5,7 @@ import {ManufactureService} from '../../../../core/services/manufacture.service'
 import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from "rxjs/operators";
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-shop-types-data-table',
@@ -13,23 +13,131 @@ import {Observable, Subject} from "rxjs";
   styleUrls: ['./shop-types-data-table.component.scss']
 })
 export class ShopTypesDataTableComponent implements OnInit {
-  private dataItems = [];
-  private loading: boolean;
-  private manufactureList = [];
-  private displayShopTypeEditDialog: boolean;
-  private selectedShopType;
-  private isNewShopType: boolean;
-  private shopType: any = {};
-  private searchItems = [];
-  private totalElements: number;
-  private numberOfElements: number;
-  private isFilterShown: boolean;
+  private _dataItems = [];
+  private _loading: boolean;
+  private _manufactureList = [];
+  private _displayShopTypeEditDialog: boolean;
+  private _selectedShopType;
+  private _isNewShopType: boolean;
+  private _shopType: any = {};
+  private _searchItems = [];
+  private _totalElements: number;
+  private _numberOfElements: number;
+  private _isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
-  private sortField: string;
-  private sortOrder: number;
+  private _sortField: string;
+  private _sortOrder: number;
+
+  cols: any[];
+  selectedCols: any[];
+
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
+
+  get searchItems(): any[] {
+    return this._searchItems;
+  }
+
+  set searchItems(value: any[]) {
+    this._searchItems = value;
+  }
+
+  get isFilterShown(): boolean {
+    return this._isFilterShown;
+  }
+
+  set isFilterShown(value: boolean) {
+    this._isFilterShown = value;
+  }
+
+  get dataItems(): any[] {
+    return this._dataItems;
+  }
+
+  set dataItems(value: any[]) {
+    this._dataItems = value;
+  }
+
+  get loading(): boolean {
+    return this._loading;
+  }
+
+  set loading(value: boolean) {
+    this._loading = value;
+  }
+
+  get numberOfElements(): number {
+    return this._numberOfElements;
+  }
+
+  set numberOfElements(value: number) {
+    this._numberOfElements = value;
+  }
+
+  get totalElements(): number {
+    return this._totalElements;
+  }
+
+  set totalElements(value: number) {
+    this._totalElements = value;
+  }
+
+  get sortField(): string {
+    return this._sortField;
+  }
+
+  set sortField(value: string) {
+    this._sortField = value;
+  }
+
+  get sortOrder(): number {
+    return this._sortOrder;
+  }
+
+  set sortOrder(value: number) {
+    this._sortOrder = value;
+  }
+
+  get shopType(): any {
+    return this._shopType;
+  }
+
+  set shopType(value: any) {
+    this._shopType = value;
+  }
+
+  get displayShopTypeEditDialog(): boolean {
+    return this._displayShopTypeEditDialog;
+  }
+
+  set displayShopTypeEditDialog(value: boolean) {
+    this._displayShopTypeEditDialog = value;
+  }
+
+  get manufactureList(): any[] {
+    return this._manufactureList;
+  }
+
+  set manufactureList(value: any[]) {
+    this._manufactureList = value;
+  }
+
+  get isNewShopType(): boolean {
+    return this._isNewShopType;
+  }
+
+  set isNewShopType(value: boolean) {
+    this._isNewShopType = value;
+  }
+
+  get selectedShopType() {
+    return this._selectedShopType;
+  }
+
+  set selectedShopType(value) {
+    this._selectedShopType = value;
+  }
 
   constructor(
     private shopTypesService: ShopTypesService,
@@ -38,9 +146,6 @@ export class ShopTypesDataTableComponent implements OnInit {
     private search: SearchService,
   ) {
   }
-
-  cols: any[];
-  selectedCols: any[];
 
   ngOnInit() {
     this.loading = true;
@@ -68,7 +173,7 @@ export class ShopTypesDataTableComponent implements OnInit {
                 arrayTemp = data.content.map(dataObj => {
                   return {
                     id: dataObj.id,
-                    name: fieldName === 'manufacturer'? dataObj.name: dataObj[fieldName]
+                    name: fieldName === 'manufacturer' ? dataObj.name : dataObj[fieldName]
                   };
                 });
               }
@@ -223,7 +328,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     });
   }
 
-  loadShopTypesData(options = {}, updatePageInfo = true): void {
+  loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.shopTypesService.fetchShopTypesData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -270,7 +375,7 @@ export class ShopTypesDataTableComponent implements OnInit {
         }
       });
 
-    this.loadShopTypesData(params, true);
+    this.loadTableData(params, true);
 
   }
 
@@ -285,7 +390,6 @@ export class ShopTypesDataTableComponent implements OnInit {
       sortField: 'name',
       sortOrder: 'asc'
     };
-
 
     this.cols = tableHeaders.columns;
     this.selectedCols = this.cols;

@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {MenuItem} from "primeng/api";
-import {AuthService} from "../../../core/services/auth.service";
-import {Router} from "@angular/router";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MenuItem} from 'primeng/api';
+import {AuthService} from '../../../core/services/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -10,14 +10,30 @@ import {Router} from "@angular/router";
 })
 export class NavbarComponent implements OnInit {
 
-  @Input() userId;
-  @Output() onShopsMenu = new EventEmitter<any>();
-  @Output() onCounterParties = new EventEmitter<any>();
-  @Output() onManufactureMenu = new EventEmitter<any>();
-  @Output() onShopTypsMenu = new EventEmitter<any>();
-  private menuItems: MenuItem[];
+  @Input()
+  userId;
+  @Output()
+  onShopsMenu = new EventEmitter<any>();
+  @Output()
+  onCounterParties = new EventEmitter<any>();
+  @Output()
+  onManufactureMenu = new EventEmitter<any>();
+  @Output()
+  onShopTypsMenu = new EventEmitter<any>();
 
-  constructor(@Inject(AuthService) private auth: AuthService, @Inject(Router) private router: Router) {
+  private _menuItems: MenuItem[];
+
+  get menuItems(): MenuItem[] {
+    return this._menuItems;
+  }
+
+  set menuItems(value: MenuItem[]) {
+    this._menuItems = value;
+  }
+
+  constructor(
+    private auth: AuthService,
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -54,6 +70,7 @@ export class NavbarComponent implements OnInit {
   onCounterparties(): void {
     this.onCounterParties.emit();
   }
+
   onManufacture(): void {
     this.onManufactureMenu.emit();
   }

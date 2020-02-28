@@ -5,22 +5,8 @@ export class Conf {
   private _COUNTERPARTIES_URL = '/api/counterparties';
   private _MANUFACTURES_URL = '/api/manufactures';
   private _SHOP_TYPES_URL = '/api/shoptypes';
-  private _SALES_CHANNELS_URL = '/api/saleschannels';
-  private _SHOP_DEPARTS_URL = '/api/shopdeparts';
-  private _SHOP_SPECIALIZATION_URL = '/api/shopspecializations';
+  private _APP_SETTINGS_URL = '/api/app/settings';
 
-
-  get SALES_CHANNELS_URL(): string {
-    return this._SALES_CHANNELS_URL;
-  }
-
-  get SHOP_DEPARTS_URL(): string {
-    return this._SHOP_DEPARTS_URL;
-  }
-
-  get SHOP_SPECIALIZATION_URL(): string {
-    return this._SHOP_SPECIALIZATION_URL;
-  }
 
   get BASE_URL(): string {
     return this._BASE_URL;
@@ -44,5 +30,9 @@ export class Conf {
 
   get SHOP_TYPES_URL(): string {
     return this._SHOP_TYPES_URL;
+  }
+
+  get APP_SETTINGS_URL(): string {
+    return this._APP_SETTINGS_URL;
   }
 }

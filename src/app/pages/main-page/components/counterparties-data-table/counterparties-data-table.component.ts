@@ -14,31 +14,135 @@ import {debounceTime, map, switchMap} from 'rxjs/operators';
   styleUrls: ['./counterparties-data-table.component.scss']
 })
 export class CounterpartiesDataTableComponent implements OnInit {
-  private dataItems: CounterpartyModel [];
-  private loading: boolean;
-  private daDataConfig: DadataConfig = {
+  private _dataItems: CounterpartyModel [];
+  private _loading: boolean;
+  private _daDataConfig: DadataConfig = {
     apiKey: `23c98edeae3d036484034a201a493bb418139a7c`,
     type: DadataType.party
   };
 
-  private sortField: string;
-  private sortOrder: number;
+  private _sortField: string;
+  private _sortOrder: number;
 
-  private displayCounterpartyEditDialog: boolean;
-  private selectedCounterparty: CounterpartyModel;
-  private isNewCounterparty: boolean;
-  private counterparty: any = {};
+  private _displayCounterpartyEditDialog: boolean;
+  private _selectedCounterparty: CounterpartyModel;
+  private _isNewCounterparty: boolean;
+  private _counterparty: any = {};
 
   cols: any[];
   selectedCols: any[];
-  private searchItems = [];
-  private totalElements: number;
-  private numberOfElements: number;
-  private isFilterShown: boolean;
+  private _searchItems = [];
+  private _totalElements: number;
+  private _numberOfElements: number;
+  private _isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
+
+  get searchItems(): any[] {
+    return this._searchItems;
+  }
+
+  set searchItems(value: any[]) {
+    this._searchItems = value;
+  }
+
+  get isFilterShown(): boolean {
+    return this._isFilterShown;
+  }
+
+  set isFilterShown(value: boolean) {
+    this._isFilterShown = value;
+  }
+
+  get loading(): boolean {
+    return this._loading;
+  }
+
+  set loading(value: boolean) {
+    this._loading = value;
+  }
+
+  get dataItems(): CounterpartyModel[] {
+    return this._dataItems;
+  }
+
+  set dataItems(value: CounterpartyModel[]) {
+    this._dataItems = value;
+  }
+
+  get numberOfElements(): number {
+    return this._numberOfElements;
+  }
+
+  set numberOfElements(value: number) {
+    this._numberOfElements = value;
+  }
+
+  get totalElements(): number {
+    return this._totalElements;
+  }
+
+  set totalElements(value: number) {
+    this._totalElements = value;
+  }
+
+  get sortField(): string {
+    return this._sortField;
+  }
+
+  set sortField(value: string) {
+    this._sortField = value;
+  }
+
+  get sortOrder(): number {
+    return this._sortOrder;
+  }
+
+  set sortOrder(value: number) {
+    this._sortOrder = value;
+  }
+
+  get counterparty(): any {
+    return this._counterparty;
+  }
+
+  set counterparty(value: any) {
+    this._counterparty = value;
+  }
+
+  get displayCounterpartyEditDialog(): boolean {
+    return this._displayCounterpartyEditDialog;
+  }
+
+  set displayCounterpartyEditDialog(value: boolean) {
+    this._displayCounterpartyEditDialog = value;
+  }
+
+  get isNewCounterparty(): boolean {
+    return this._isNewCounterparty;
+  }
+
+  set isNewCounterparty(value: boolean) {
+    this._isNewCounterparty = value;
+  }
+
+  get daDataConfig(): DadataConfig {
+    return this._daDataConfig;
+  }
+
+  set daDataConfig(value: DadataConfig) {
+    this._daDataConfig = value;
+  }
+
+  get selectedCounterparty(): CounterpartyModel {
+    return this._selectedCounterparty;
+  }
+
+  set selectedCounterparty(value: CounterpartyModel) {
+    this._selectedCounterparty = value;
+  }
 
   constructor(
     private counterPartiesService: CounterpartiesService,
@@ -162,7 +266,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
-  loadCounterPartiesData(options = {}, updatePageInfo = true): void {
+  loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.counterPartiesService.fetchCounterPartiesData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -202,7 +306,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
         }
       });
 
-    this.loadCounterPartiesData(params, true);
+    this.loadTableData(params, true);
   }
 
   dataSearch(searchString: string) {

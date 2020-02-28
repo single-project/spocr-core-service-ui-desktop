@@ -12,25 +12,123 @@ import {debounceTime, map, switchMap} from 'rxjs/operators';
   styleUrls: ['./manufacture-data-table.component.scss']
 })
 export class ManufactureDataTableComponent implements OnInit {
-  private dataItems = [];
-  private searchItems = [];
-  private loading: boolean;
-  private displayManufactureEditDialog: boolean;
-  private selectedManufacture: any;
-  private isNewManufacture: boolean;
-  private manufacture: any = {};
+
+  private _dataItems = [];
+  private _searchItems = [];
+  private _loading: boolean;
+  private _displayManufactureEditDialog: boolean;
+  private _selectedManufacture: any;
+  private _isNewManufacture: boolean;
+  private _manufacture: any = {};
 
   cols: any[];
   selectedCols: any[];
-  private totalElements: number;
-  private numberOfElements: number;
-  private isFilterShown: boolean;
+  private _totalElements: number;
+  private _numberOfElements: number;
+  private _isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
-  private sortField: string;
-  private sortOrder: number;
+  private _sortField: string;
+  private _sortOrder: number;
+
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
+
+  get searchItems(): any[] {
+    return this._searchItems;
+  }
+
+  set searchItems(value: any[]) {
+    this._searchItems = value;
+  }
+
+  get isFilterShown(): boolean {
+    return this._isFilterShown;
+  }
+
+  set isFilterShown(value: boolean) {
+    this._isFilterShown = value;
+  }
+
+  get loading(): boolean {
+    return this._loading;
+  }
+
+  set loading(value: boolean) {
+    this._loading = value;
+  }
+
+  get dataItems(): any[] {
+    return this._dataItems;
+  }
+
+  set dataItems(value: any[]) {
+    this._dataItems = value;
+  }
+
+  get numberOfElements(): number {
+    return this._numberOfElements;
+  }
+
+  set numberOfElements(value: number) {
+    this._numberOfElements = value;
+  }
+
+  get sortField(): string {
+    return this._sortField;
+  }
+
+  set sortField(value: string) {
+    this._sortField = value;
+  }
+
+  get totalElements(): number {
+    return this._totalElements;
+  }
+
+  set totalElements(value: number) {
+    this._totalElements = value;
+  }
+
+  get sortOrder(): number {
+    return this._sortOrder;
+  }
+
+  set sortOrder(value: number) {
+    this._sortOrder = value;
+  }
+
+  get manufacture(): any {
+    return this._manufacture;
+  }
+
+  set manufacture(value: any) {
+    this._manufacture = value;
+  }
+
+  get displayManufactureEditDialog(): boolean {
+    return this._displayManufactureEditDialog;
+  }
+
+  set displayManufactureEditDialog(value: boolean) {
+    this._displayManufactureEditDialog = value;
+  }
+
+  get isNewManufacture(): boolean {
+    return this._isNewManufacture;
+  }
+
+  set isNewManufacture(value: boolean) {
+    this._isNewManufacture = value;
+  }
+
+  get selectedManufacture(): any {
+    return this._selectedManufacture;
+  }
+
+  set selectedManufacture(value: any) {
+    this._selectedManufacture = value;
+  }
 
   constructor(
     private manufactureService: ManufactureService,
@@ -172,7 +270,7 @@ export class ManufactureDataTableComponent implements OnInit {
     this.sortOrder = tableHeaders.sortField === 'asc' ? -1 : 1;
   }
 
-  loadManufactureData(options = {}, updatePageInfo = true): void {
+  loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.manufactureService.fetchManufacturesData(options)
       .subscribe((data: ReferenceResponseModel) => {
@@ -213,7 +311,7 @@ export class ManufactureDataTableComponent implements OnInit {
         }
       });
 
-    this.loadManufactureData(params, true);
+    this.loadTableData(params, true);
   }
 
   showServerErrorToast() {

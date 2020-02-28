@@ -1,10 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {AuthService} from "../../core/services/auth.service";
-import {CookieService} from "ngx-cookie-service";
-import {AuthModel} from "../../core/models/auth.model";
-import {Router} from "@angular/router";
-import {Message} from "primeng";
-
+import {AuthService} from '../../core/services/auth.service';
+import {CookieService} from 'ngx-cookie-service';
+import {AuthModel} from '../../core/models/auth.model';
+import {Router} from '@angular/router';
+import {Message} from 'primeng';
 
 @Component({
   selector: 'app-auth-page',
@@ -12,12 +11,40 @@ import {Message} from "primeng";
   styleUrls: ['./auth-page.component.scss']
 })
 export class AuthPageComponent implements OnInit {
-  private username: string;
-  private password: string;
-  private authorized: boolean;
-  private msgs: Message[] = [];
 
-  constructor(@Inject(AuthService) private auth: AuthService, @Inject(CookieService) private cookies: CookieService, @Inject(Router) private router: Router) {
+  private _username: string;
+  private _password: string;
+  private authorized: boolean;
+  private _msgs: Message[] = [];
+
+  get msgs(): Message[] {
+    return this._msgs;
+  }
+
+  set msgs(value: Message[]) {
+    this._msgs = value;
+  }
+
+  get password(): string {
+    return this._password;
+  }
+
+  set password(value: string) {
+    this._password = value;
+  }
+
+  get username(): string {
+    return this._username;
+  }
+
+  set username(value: string) {
+    this._username = value;
+  }
+
+  constructor(
+    private auth: AuthService,
+    private cookies: CookieService,
+    private router: Router) {
   }
 
   ngOnInit() {
