@@ -22,8 +22,8 @@ import {
   styleUrls: ['./shop-dialog.component.scss']
 })
 export class ShopDialogComponent implements OnInit, OnChanges {
-  @Input() shop: ShopModel;
-  @Output() onShopSaved = new EventEmitter<ShopModel>();
+  @Input() public shop: ShopModel;
+  @Output() public onShopSaved = new EventEmitter<ShopModel>();
   public counterpartiesList: any[] = [];
   public shopTypesList: ShopTypeModel[] = [];
   public salesChannelsList: { name: string, id: number }[] = [];
@@ -179,16 +179,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
         {salesChannels: this.shop.salesChannels},
         {active: this.shop.active},
         {
-          address: {
-            id: this.shop.address.id,
-            version: this.shop.address.version,
-            active: this.shop.address.active,
-            address: this.shop.address.address,
-            comment: this.shop.address.comment,
-            suggestion: this.shop.address.suggestion,
-            latitude: this.shop.address.latitude,
-            longitude: this.shop.address.longitude
-          },
+          address: this.shop.address,
           version: this.shop.version,
           updatedFields: null
         },

@@ -360,7 +360,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     )
   }
 
-  counterpartySavedFromDialog(e: CounterpartyModel): void {
+  counterpartySavedFromDialog(e: any): void {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
     console.log('IDX' + idx);
     if (idx !== -1) {

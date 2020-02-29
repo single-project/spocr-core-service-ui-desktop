@@ -1,4 +1,5 @@
-<p-dialog (onShow)="afterShow()" header="Карточка контрагента"
+<p-dialog (onShow)="afterShow()"
+          header="Карточка контрагента"
           [(visible)]="_display"
           [closable]="true"
           closeOnEscape="true"
@@ -6,7 +7,24 @@
           [responsive]="true"
           [modal]="true"
           [style]="{width: '900px'}">
-  <p-tabView>
+
+  <div
+    class="ui-g ui-fluid"
+    *ngIf="formLegalType === 0">
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <label for="name">ВЫБЕРИТЕ ТИП КОНТРАГЕНТА</label>
+      </div>
+      <div class="ui-g-8">
+        <p-dropdown dataKey="id" appendTo="body" optionLabel="name" [options]="generalLegalTypes" [(ngModel)]="selectedGeneralLegalType"></p-dropdown>
+      </div>
+      <div class="ui-grid-col-8">
+        <p-message severity="error" text="Имя должно быть заполнено"
+                   *ngIf="!counterPartyForm.controls['name'].valid&&counterPartyForm.controls['name'].dirty"></p-message>
+      </div>
+    </div>
+  </div>
+  <p-tabView *ngIf="formLegalType === 1 || formLegalType === 2">
     <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
       <div
         [formGroup]="counterPartyForm"
@@ -37,7 +55,7 @@
 
       </div>
     </p-tabPanel>
-    <p-tabPanel  header="Реквизиты" leftIcon="fas fa-file-signature">
+    <p-tabPanel *ngIf="formLegalType === 1" header="Реквизиты" leftIcon="fas fa-file-signature">
       <div
         [formGroup]="counterPartyForm"
         class="ui-g ui-fluid"
@@ -55,7 +73,7 @@
           </div>
         </div>
         <ng-container formGroupName="legalRekv">
-          <div  class="ui-g-12">
+          <div class="ui-g-12">
             <div class="ui-g-4">
               <label>НАИМ.</label>
             </div>
@@ -91,7 +109,7 @@
       </div>
 
     </p-tabPanel>
-    <p-tabPanel header="Реквизиты" leftIcon="fas fa-file-signature">
+    <p-tabPanel *ngIf="formLegalType === 2" header="Реквизиты" leftIcon="fas fa-file-signature">
       <div
         [formGroup]="counterPartyForm"
         class="ui-g ui-fluid"
@@ -109,7 +127,7 @@
           </div>
         </div>
         <ng-container formGroupName="legalRekv">
-          <div  class="ui-g-12">
+          <div class="ui-g-12">
             <div class="ui-g-4">
               <label>НАИМ.</label>
             </div>
@@ -152,7 +170,7 @@
         *ngIf="counterparty">
 
         <ng-container formGroupName="paymentDetails">
-          <div  class="ui-g-12">
+          <div class="ui-g-12">
             <div class="ui-g-4">
               <label>Банк</label>
             </div>

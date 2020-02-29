@@ -1,12 +1,15 @@
 import {Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {CounterpartyModel, CounterpartyProperties} from '../../../../core/models/global-reference.model';
+import {CounterpartyModel} from '../../../../core/models/global-reference.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
-import * as _ from 'lodash';
+import {ConfigService} from '../../../../core/services/config.service';
+import {shareReplay, tap} from 'rxjs/operators';
 
 enum FormLegalType {
-  PARTY,
-  PERSON
+  NONE = 0,
+  PARTY = 1,
+  PERSON = 2,
+
 }
 
 @Component({
@@ -15,22 +18,19 @@ enum FormLegalType {
   styleUrls: ['./counterparty-dialog.component.scss']
 })
 export class CounterpartyDialogComponent implements OnInit, OnChanges {
-  @Input() counterparty: CounterpartyModel;
-  @Output() onCounterpartySaved = new EventEmitter<CounterpartyModel>();
+  @Input() public counterparty: CounterpartyModel;
+  @Output() public onCounterpartySaved = new EventEmitter<CounterpartyModel>();
   public _display = false;
   public counterPartyForm: FormGroup;
-  public generalLegalTypes = [
-    {id: 1, value: 'Юридическое лицо / ИП'},
-    {id: 2, value: 'Физическое лицо'}
-  ];
+  public generalLegalTypes = [];
   public selectedGeneralLegalType = [];
-  public formLegalType: FormLegalType;
-
-  private isNew = false;
+  public formLegalType = FormLegalType.NONE;
+  public isNew = false;
 
   constructor(
     @Inject(FormBuilder) private fb: FormBuilder,
-    @Inject(CounterpartiesService) private counterpartyService: CounterpartiesService
+    @Inject(CounterpartiesService) private counterpartyService: CounterpartiesService,
+    @Inject(ConfigService) private configService: ConfigService
   ) {
     this.counterPartyForm = this.counterpartyBuildForm();
 
@@ -39,6 +39,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
+    this.loadAvailableLegalTypes();
 
   }
 
@@ -46,6 +47,14 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
   }
 
+  loadAvailableLegalTypes(): void {
+    this.configService.fetchAppSettings().pipe(
+      shareReplay()
+    ).subscribe(c => {
+      this.generalLegalTypes = c['newLegalTypes'];
+
+    });
+  }
 
   counterpartySaved() {
 
@@ -53,9 +62,9 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
       this.closeDialog();
     } else {
       this.counterPartyForm.patchValue({updatedFields: this.getUpdatedFields(this.counterPartyForm)});
+      this.counterPartyForm.removeControl('legalRekv.innSug');
       if (this.isNew) {
         this.counterPartyForm.removeControl('updatedFields');
-        this.counterPartyForm.removeControl('legalRekv.innSug');
         this.saveCounterparty(this.counterPartyForm.value);
 
       } else {
@@ -88,14 +97,15 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
   closeDialog() {
     this.counterPartyForm.reset();
+    this.formLegalType = FormLegalType.NONE;
     this._display = false;
-
   }
 
   initPartyFormValues(fields: { [key: string]: any }[]): void {
     fields.forEach(field => {
       this.counterPartyForm.patchValue({...field});
-    })
+    });
+
   }
 
   counterpartyBuildForm(): FormGroup {
@@ -133,57 +143,97 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
         bank: '',
 
       }),
+      parent: null,
+      statuses: this.fb.group({
+        id: null,
+        name: '',
+        ident: '',
+        properties: null,
+      }),
+      personRekv: this.fb.group({
+        id: null,
+        version: null,
+        active: true,
+        name: '',
+        lastName: '',
+        firstName: '',
+        patronymic: '',
+        birthDate: null,
+        birthPlace: null,
+        docType: this.fb.group({
+          id: null,
+          name: '',
+          ident: '',
+          properties: null
+        }),
+        docSeriesNumber: null,
+        inn: null,
+        citizenship: this.fb.group({
+          id: null,
+          name: '',
+          ident: '',
+          properties: null
+        }),
+        gender: this.fb.group({
+          id: null,
+          name: '',
+          ident: '',
+          properties: null
+        }),
+        email: null,
+        phones: null
+      }),
+      owner: this.fb.group({
+        id: null,
+        version: null,
+        active: true,
+        name: '',
+      }),
       suggestion: null,
       updatedFields: []
     });
   }
 
   afterShow(): void {
+    console.log(`Counterparty obj ${Object.keys(this.counterparty).length}`);
     if (Object.keys(this.counterparty).length <= 1) {
       this.isNew = true;
+    } else {
+      this.isNew = false;
     }
 
     if (!this.isNew) {
       if (!!this.counterparty.legalType.properties.opfType) {
         this.formLegalType = FormLegalType.PARTY;
+      }else{
+        this.formLegalType = FormLegalType.NONE;
       }
       this.initPartyFormValues([
+
         {id: this.counterparty.id},
         {version: this.counterparty.version},
         {name: this.counterparty.name},
         {active: this.counterparty.active},
         {
-          legalRekv: {
-            shortName: this.counterparty.legalRekv.shortName,
-            fullName: this.counterparty.legalRekv.fullName,
-            inn: this.counterparty.legalRekv.inn,
-            ogrn: this.counterparty.legalRekv.ogrn,
-            kpp: this.counterparty.legalRekv.kpp
-          },
+          legalRekv: this.counterparty.legalRekv
         },
         {
-          legalType: {
-            id: this.counterparty.legalType.id,
-            name: this.counterparty.legalType.name,
-            ident: this.counterparty.legalType.ident,
-            properties: {
-              opfType: this.counterparty.legalType.properties.opfType,
-              opfShort: this.counterparty.legalType.properties.opfShort,
-              opfFull: this.counterparty.legalType.properties.opfFull,
-              opfCode: this.counterparty.legalType.properties.opfCode,
-            }
-          }
+          legalType: this.counterparty.legalType
         },
         {
-          paymentDetails: {
-            id: this.counterparty.paymentDetails.id,
-            version: this.counterparty.paymentDetails.version,
-            active: this.counterparty.paymentDetails.active,
-            paymentAccount: this.counterparty.paymentDetails.paymentAccount,
-            correspondingAccount: this.counterparty.paymentDetails.correspondingAccount,
-            bic: this.counterparty.paymentDetails.bic,
-            bank: this.counterparty.paymentDetails.bank,
-          }
+          paymentDetails: this.counterparty.paymentDetails
+        },
+        {
+          personRekv: this.counterparty.personRekv
+        },
+        // {
+        //   owner: this.counterparty.owner || null
+        // },
+        {
+          parent: this.counterparty.parent
+        },
+        {
+          statuses: this.counterparty.statuses
         },
         {
           suggestion: this.counterparty.suggestion
