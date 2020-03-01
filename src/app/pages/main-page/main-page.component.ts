@@ -33,7 +33,7 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setConfiguration();
+    this.setConfiguration(AppTableTypes.SHOP_TABLE_TYPE);
   }
 
   initVewTable() {
@@ -80,9 +80,9 @@ export class MainPageComponent implements OnInit {
       .dataSearch(tableSearch.value);
   }
 
-  setConfiguration(): void {
+  setConfiguration(dataType: number): void {
     this.configService
-      .fetchAppSettingsByType()
+      .fetchAppSettingsByType(dataType)
       .subscribe((data) => {
         Object.assign(this, data);
         setTimeout(() => {

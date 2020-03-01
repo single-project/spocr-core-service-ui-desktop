@@ -10,7 +10,7 @@
          [responsive]="true"
          selectionMode="single"
          [(selection)]="selectedShop"
-         (onRowSelect)="onRowSelect($event)"
+         (onRowSelect)="onRowSelect()"
          [sortField]="sortField"
          [sortOrder]="sortOrder"
          [scrollable]="true"
@@ -116,7 +116,6 @@
 </p-table>
 
 <app-shop-dialog (onShopSaved)="shopSavedFromDialog($event)"
-                 [shop]="shop"
+                 [shop]="selectedShop"
                   #shopDialogComponent>
-
 </app-shop-dialog>
