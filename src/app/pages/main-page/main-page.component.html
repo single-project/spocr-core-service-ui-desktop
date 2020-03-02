@@ -12,13 +12,13 @@
         </div>
         <div class="ui-g-8 ui-sm-12">
           <div class="ui-inputgroup">
-            <input  (keydown.enter)="onSearched(tableSearch)"
-                    [(ngModel)]="searchString"
-                    id="search" pInputText
-                    placeholder="Найти..."
-                    size="32"
-                    type="text"
-                    #tableSearch/>
+            <input (keydown.enter)="onSearched(tableSearch)"
+                   [(ngModel)]="searchString"
+                   id="search" pInputText
+                   placeholder="Найти..."
+                   size="32"
+                   type="text"
+                   #tableSearch/>
             <button (click)="onSearched(tableSearch)"
                     icon="pi pi-search" id="search-btn"
                     pButton
@@ -50,13 +50,19 @@
                                #shopTypesDataTable>
     </app-shop-types-data-table>
     <app-shop-departments-data-table *ngIf="dataType === 5"
-                               #shopDepartmentsDataTable>
+                                     #shopDepartmentsDataTable>
     </app-shop-departments-data-table>
     <app-sales-chanels-data-table *ngIf="dataType === 6"
                                   #salesChanelsDataTable>
     </app-sales-chanels-data-table>
+    <app-shop-specializations-data-table *ngIf="dataType === 7"
+                                         #shopSpecializationsDataTable>
+    </app-shop-specializations-data-table>
+    <app-contracts-data-table *ngIf="dataType === 8"
+                              #contractsDataTable>
+    </app-contracts-data-table>
 
-   </div>
+  </div>
   <p-toast [style]="{marginTop: '80px'}"
            key="tc"
            position="top-center">
