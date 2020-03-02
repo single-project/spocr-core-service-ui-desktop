@@ -24,7 +24,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   public counterPartyForm: FormGroup;
   public generalLegalTypes = [];
   public selectedGeneralLegalType = [];
-  public formLegalType = FormLegalType.NONE;
+  public formLegalType: FormLegalType;
   public isNew = false;
 
   constructor(
@@ -47,6 +47,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
   }
 
+
   loadAvailableLegalTypes(): void {
     this.configService.fetchAppSettings().pipe(
       shareReplay()
@@ -54,6 +55,15 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
       this.generalLegalTypes = c['newLegalTypes'];
 
     });
+  }
+
+  chooseLegalType() {
+    if (this.selectedGeneralLegalType['id'] === '2') {
+      this.formLegalType = FormLegalType.PARTY
+    } else if (this.selectedGeneralLegalType['id'] === '1') {
+      this.formLegalType = FormLegalType.PERSON
+    }
+    console.dir(this.selectedGeneralLegalType)
   }
 
   counterpartySaved() {
@@ -154,7 +164,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
         id: null,
         version: null,
         active: true,
-        name: '',
+        name: ['', Validators.required],
         lastName: '',
         firstName: '',
         patronymic: '',
@@ -180,8 +190,8 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
           ident: '',
           properties: null
         }),
-        email: null,
-        phones: null
+        email: [null, Validators.required],
+        phones: [null, Validators.required],
       }),
       owner: this.fb.group({
         id: null,
@@ -195,18 +205,20 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   }
 
   afterShow(): void {
-    console.log(`Counterparty obj ${Object.keys(this.counterparty).length}`);
     if (Object.keys(this.counterparty).length <= 1) {
       this.isNew = true;
     } else {
       this.isNew = false;
     }
+    if (this.isNew) {
+      this.formLegalType = FormLegalType.NONE;
+    }
 
     if (!this.isNew) {
       if (!!this.counterparty.legalType.properties.opfType) {
         this.formLegalType = FormLegalType.PARTY;
-      }else{
-        this.formLegalType = FormLegalType.NONE;
+      } else {
+        this.formLegalType = FormLegalType.PERSON;
       }
       this.initPartyFormValues([
 

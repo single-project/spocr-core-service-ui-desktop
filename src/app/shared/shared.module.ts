@@ -19,17 +19,19 @@ import {
   TabMenuModule,
   TabViewModule,
   ToastModule,
-  ToolbarModule
+  ToolbarModule,
+  CalendarModule
 } from 'primeng';
 import {ActiveTagsPipe} from './pipes/active-tags.pipe';
 import {NgxDadataModule} from '@kolkov/ngx-dadata';
 import {DadataAddressComponent} from './components/dadata-address/dadata-address.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {DadataPartyComponent} from './components/dadata-party/dadata-party.component';
+import { DadataFioComponent } from './components/dadata-fio/dadata-fio.component';
 
 
 @NgModule({
-  declarations: [ ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent ],
+  declarations: [ ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent ],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -54,7 +56,7 @@ import {DadataPartyComponent} from './components/dadata-party/dadata-party.compo
     AutoCompleteModule,
     ReactiveFormsModule,
     TabViewModule,
-
+    CalendarModule,
   ],
   exports: [
     ToolbarModule,
@@ -81,6 +83,8 @@ import {DadataPartyComponent} from './components/dadata-party/dadata-party.compo
     DadataAddressComponent,
     TabViewModule,
     DadataPartyComponent,
+    CalendarModule,
+    DadataFioComponent,
 
   ]
 })

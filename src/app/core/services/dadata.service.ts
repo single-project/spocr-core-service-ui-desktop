@@ -4,6 +4,7 @@ import {AddressSuggestion, AddressSuggestionRoot} from "../models/suggestion-add
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {PartySuggestion, PartySuggestionRoot} from "../models/suggestion-party.model";
+import {FioSuggestion, SuggestionFioRoot} from '../models/suggestion-fio.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,13 @@ export class DadataService {
     return this.http.post<PartySuggestionRoot>('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party', {
       'query': inn,
       'count': count
+    }).pipe(
+      map(data => data.suggestions)
+    )
+  }
+  fioSuggest(fio: string): Observable<FioSuggestion[]>{
+    return this.http.post<SuggestionFioRoot>('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', {
+       query: fio
     }).pipe(
       map(data => data.suggestions)
     )

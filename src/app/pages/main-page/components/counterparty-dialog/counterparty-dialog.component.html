@@ -16,12 +16,13 @@
         <label for="name">ВЫБЕРИТЕ ТИП КОНТРАГЕНТА</label>
       </div>
       <div class="ui-g-8">
-        <p-dropdown dataKey="id" appendTo="body" optionLabel="name" [options]="generalLegalTypes" [(ngModel)]="selectedGeneralLegalType"></p-dropdown>
+        <div class="ui-inputgroup">
+          <p-dropdown dataKey="id" appendTo="body" optionLabel="name" [options]="generalLegalTypes"
+                      [(ngModel)]="selectedGeneralLegalType"></p-dropdown>
+          <button pButton (click)="chooseLegalType()" type="button" icon="pi pi-check" class="ui-button-success"></button>
+        </div>
       </div>
-      <div class="ui-grid-col-8">
-        <p-message severity="error" text="Имя должно быть заполнено"
-                   *ngIf="!counterPartyForm.controls['name'].valid&&counterPartyForm.controls['name'].dirty"></p-message>
-      </div>
+
     </div>
   </div>
   <p-tabView *ngIf="formLegalType === 1 || formLegalType === 2">
@@ -114,19 +115,19 @@
         [formGroup]="counterPartyForm"
         class="ui-g ui-fluid"
         *ngIf="counterparty">
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label>Поиск по ИНН</label>
+        <ng-container formGroupName="personRekv">
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label>ФИО контрагента</label>
+            </div>
+            <div class="ui-g-8">
+              <app-dadata-fio
+                [parentForm]="counterPartyForm"
+              >
+              </app-dadata-fio>
+            </div>
           </div>
-          <div class="ui-g-8">
-            <app-dadata-party
-              [parentForm]="counterPartyForm"
-            >
 
-            </app-dadata-party>
-          </div>
-        </div>
-        <ng-container formGroupName="legalRekv">
           <div class="ui-g-12">
             <div class="ui-g-4">
               <label>НАИМ.</label>
