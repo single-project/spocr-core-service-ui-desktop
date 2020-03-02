@@ -15,7 +15,7 @@ import {AppTableTypes} from '../../core/models/app-tabe-types.enum';
 export class MainPageComponent implements OnInit {
   private _searchString: string;
   private _tableTitle: string;
-  private _dataType: number;
+  private _dataType: AppTableTypes;
   private uiTables: Object;
 
   @ViewChild('shopDataTable')
@@ -61,12 +61,12 @@ export class MainPageComponent implements OnInit {
     this._tableTitle = tableTitle;
   }
 
-  get dataType(): number {
+  get dataType(): AppTableTypes {
     return this._dataType;
   }
 
-  set dataType(dataType: number) {
-    this._dataType = dataType;
+  set dataType(value: AppTableTypes) {
+    this._dataType = value;
   }
 
   clearSearch(): void {

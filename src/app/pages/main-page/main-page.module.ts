@@ -17,6 +17,7 @@ import { ShopTypesDataTableComponent } from './components/shop-types-data-table/
 import {ReactiveFormsModule} from '@angular/forms';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import { ShopDepartmentsDataTableComponent } from './components/shop-departments-data-table/shop-departments-data-table.component';
+import { SalesChanelsDataTableComponent } from './components/sales-chanels-data-table/sales-chanels-data-table.component';
 
 
 
@@ -33,7 +34,8 @@ import { ShopDepartmentsDataTableComponent } from './components/shop-departments
     ManufactureDataTableComponent,
     CounterpartiesDataTableComponent,
     ShopTypesDataTableComponent,
-    ShopDepartmentsDataTableComponent
+    ShopDepartmentsDataTableComponent,
+    SalesChanelsDataTableComponent
   ],
   imports: [
     CommonModule,
