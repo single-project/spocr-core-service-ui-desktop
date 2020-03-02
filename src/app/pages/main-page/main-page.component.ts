@@ -68,33 +68,9 @@ export class MainPageComponent implements OnInit {
       });
   }
 
-  shopsToggle() {
+  switchTable(tableType: AppTableTypes) {
     this.configService
-      .fetchAppSettingsByType(AppTableTypes.SHOP_TABLE_TYPE)
-      .subscribe((data) => {
-        Object.assign(this, data);
-      });
-  }
-
-  counterPartiesToggle() {
-    this.configService
-      .fetchAppSettingsByType(AppTableTypes.COUNTER_PARTIES_TABLE_TYPE)
-      .subscribe((data) => {
-        Object.assign(this, data);
-      });
-  }
-
-  manufactireToggle() {
-    this.configService
-      .fetchAppSettingsByType(AppTableTypes.MANUFACTURE_TABLE_TYPE)
-      .subscribe((data) => {
-        Object.assign(this, data);
-      });
-  }
-
-  shopTypesToggle() {
-    this.configService
-      .fetchAppSettingsByType(AppTableTypes.SHOP_TYPES_TABLE_TYPE)
+      .fetchAppSettingsByType(tableType)
       .subscribe((data) => {
         Object.assign(this, data);
       });
