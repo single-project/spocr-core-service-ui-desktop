@@ -38,30 +38,29 @@
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
     <app-shop-data-table *ngIf="dataType === 1"
-                         #shopDataTable>
+                         #appDataTable>
     </app-shop-data-table>
     <app-counterparties-data-table *ngIf="dataType === 2"
-                                   #counterPartiesDataTable>
+                                   #appDataTable>
     </app-counterparties-data-table>
     <app-manufacture-data-table *ngIf="dataType === 3"
-                                #manufactureDataTable>
+                                #appDataTable>
     </app-manufacture-data-table>
     <app-shop-types-data-table *ngIf="dataType === 4"
-                               #shopTypesDataTable>
+                               #appDataTable>
     </app-shop-types-data-table>
     <app-shop-departments-data-table *ngIf="dataType === 5"
-                                     #shopDepartmentsDataTable>
+                                     #appDataTable>
     </app-shop-departments-data-table>
     <app-sales-chanels-data-table *ngIf="dataType === 6"
-                                  #salesChanelsDataTable>
+                                  #appDataTable>
     </app-sales-chanels-data-table>
     <app-shop-specializations-data-table *ngIf="dataType === 7"
-                                         #shopSpecializationsDataTable>
+                                         #appDataTable>
     </app-shop-specializations-data-table>
     <app-contracts-data-table *ngIf="dataType === 8"
-                              #contractsDataTable>
+                              #appDataTable>
     </app-contracts-data-table>
-
   </div>
   <p-toast [style]="{marginTop: '80px'}"
            key="tc"
