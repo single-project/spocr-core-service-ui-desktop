@@ -17,7 +17,12 @@
       </div>
       <div class="ui-g-8">
         <div class="ui-inputgroup">
-          <p-dropdown dataKey="id" appendTo="body" optionLabel="name" [options]="generalLegalTypes"
+          <p-dropdown
+            dataKey="id"
+            appendTo="body"
+            optionLabel="name"
+            [options]="generalLegalTypes"
+            placeholder="Выберите тип контрагента"
                       [(ngModel)]="selectedGeneralLegalType"></p-dropdown>
           <button pButton (click)="chooseLegalType()" type="button" icon="pi pi-check" class="ui-button-success"></button>
         </div>
@@ -127,37 +132,63 @@
               </app-dadata-fio>
             </div>
           </div>
-
           <div class="ui-g-12">
             <div class="ui-g-4">
-              <label>НАИМ.</label>
+              <label>ДАТА РОЖД.</label>
             </div>
             <div class="ui-g-8">
-              <input pInputText formControlName="shortName">
+              <p-calendar appendTo="body" formControlName="birthDate" [locale]="ruCalLocale"></p-calendar>
             </div>
             <div class="ui-g-4">
-              <label>НАИМ.(ПОЛНОЕ)</label>
+              <label>ТИП ДОКУМЕНТА</label>
+            </div>
+            <div class="ui-g-8" >
+              <p-dropdown
+                appendTo="body"
+                formGroupName="docType"
+                optionLabel="name"
+                dataKey="id"
+                [options]="docTypes"
+                placeholder="Выберите тип документа"
+              ></p-dropdown>
+            </div>
+            <div class="ui-g-4">
+              <label>СЕРИЯ И НОМЕР</label>
+            </div>
+            <div class="ui-g-8" >
+              <input pInputText formControlName="docSeriesNumber">
+            </div>
+            <div class="ui-g-4">
+              <label>Гражданство</label>
             </div>
             <div class="ui-g-8">
-              <input pInputText formControlName="fullName">
+              <p-dropdown
+                appendTo="body"
+                formGroupName="citizenship"
+                optionLabel="name"
+                dataKey="id"
+                [options]="citizenships"
+                placeholder="Выберите гражданство"
+              ></p-dropdown>
+            </div>
+            <div class="ui-g-4">
+              <label>ПОЛ</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown
+                appendTo="body"
+                formGroupName="gender"
+                optionLabel="name"
+                dataKey="id"
+                [options]="genders"
+                placeholder="Выберите пол"
+              ></p-dropdown>
             </div>
             <div class="ui-g-4">
               <label>ИНН</label>
             </div>
-            <div class="ui-g-8">
+            <div class="ui-g-8" >
               <input pInputText formControlName="inn">
-            </div>
-            <div class="ui-g-4">
-              <label>ОГРН/ОГРНИП</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="ogrn">
-            </div>
-            <div class="ui-g-4">
-              <label>КПП</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="kpp">
             </div>
           </div>
         </ng-container>

@@ -14,12 +14,23 @@ export class DadataService {
   constructor(@Inject(HttpClient) private http: HttpClient) {
   }
 
-  addressSuggest(address: string, count = 10): Observable<AddressSuggestion[]> {
+  addressSuggestion(address: string, count = 10): Observable<AddressSuggestion[]> {
     return this.http.post<AddressSuggestionRoot>(`https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address`, {
       'query': address,
       'count': count,
       'from_bound': {"value": "city"},
       'to_bound': {"value": "house"},
+    }).pipe(
+      map(data => data.suggestions)
+    )
+  }
+
+  birthPlaceSuggestion(address: string, count = 10): Observable<AddressSuggestion[]>{
+    return this.http.post<AddressSuggestionRoot>(`https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address`, {
+      'query': address,
+      'count': count,
+      'from_bound': {"value": "country"},
+      'to_bound': {"value": "city"},
     }).pipe(
       map(data => data.suggestions)
     )

@@ -4,6 +4,8 @@ import {CounterpartyModel} from '../../../../core/models/global-reference.model'
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ConfigService} from '../../../../core/services/config.service';
 import {shareReplay, tap} from 'rxjs/operators';
+import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
+import {forkJoin} from 'rxjs';
 
 enum FormLegalType {
   NONE = 0,
@@ -11,6 +13,7 @@ enum FormLegalType {
   PERSON = 2,
 
 }
+
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -26,11 +29,27 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   public selectedGeneralLegalType = [];
   public formLegalType: FormLegalType;
   public isNew = false;
+  public citizenships = [];
+  public genders = [];
+  public docTypes = [];
+  public ruCalLocale = {
+    firstDayOfWeek: 1,
+    dayNames: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение"],
+    dayNamesShort: ["Пнд", "Втр", "Срд", "Чтв", "Птн", "Сбт", "Вск"],
+    dayNamesMin: ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"],
+    monthNames: [ "Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь" ],
+    monthNamesShort: [ "Янв", "Фев", "Мар", "Апр", "Май", "Июн","Июл", "Авг", "Сен", "Окт", "Ноя", "Дек" ],
+    today: 'Сегодня',
+    clear: 'Очист.',
+    dateFormat: 'mm/dd/yy',
+    weekHeader: 'Нед'
+  };
 
   constructor(
     @Inject(FormBuilder) private fb: FormBuilder,
     @Inject(CounterpartiesService) private counterpartyService: CounterpartiesService,
-    @Inject(ConfigService) private configService: ConfigService
+    @Inject(ConfigService) private configService: ConfigService,
+    @Inject(PersonalRekvService) private personalService: PersonalRekvService,
   ) {
     this.counterPartyForm = this.counterpartyBuildForm();
 
@@ -40,6 +59,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   ngOnInit() {
 
     this.loadAvailableLegalTypes();
+    this.loadAvailablePersonalData();
 
   }
 
@@ -55,6 +75,22 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
       this.generalLegalTypes = c['newLegalTypes'];
 
     });
+  }
+
+  loadAvailablePersonalData(): void{
+      forkJoin([
+        this.personalService.fetchCitizenship(),
+        this.personalService.fetchDocTypes(),
+        this.personalService.fetchGender()])
+        .subscribe(data => {
+          this.citizenships = data[0]['content'];
+
+          this.docTypes = data[1]['content'];
+
+          this.genders = data[2]['content'];
+
+        })
+
   }
 
   chooseLegalType() {
@@ -190,8 +226,8 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
           ident: '',
           properties: null
         }),
-        email: [null, Validators.required],
-        phones: [null, Validators.required],
+        email: null,
+        phones: null,
       }),
       owner: this.fb.group({
         id: null,

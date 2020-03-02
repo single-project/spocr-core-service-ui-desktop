@@ -39,7 +39,7 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   }
 
   find(e) {
-    this.dadata.addressSuggest(e.query).pipe(
+    this.dadata.addressSuggestion(e.query).pipe(
       tap(su => this.suggestions = su),
       map(su => su.map(s => s.value)),
     ).subscribe(v => this.results = v)
