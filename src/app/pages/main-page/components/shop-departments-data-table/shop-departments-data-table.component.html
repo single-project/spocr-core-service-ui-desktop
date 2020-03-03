@@ -97,10 +97,7 @@
           [ngSwitch]="col.field"
           style="text-align: center">
         <ng-container *ngSwitchDefault>
-          {{dataItem[col.field]}}
-        </ng-container>
-        <ng-container *ngSwitchCase="'counterparty'">
-          {{dataItem[col.field]['name']}}
+          {{ getFieldValue(dataItem[col.field]) }}
         </ng-container>
         <span *ngSwitchCase="'active'"
               [ngClass]="dataItem[col.field] ? 'ekc-table-span-active': 'ekc-table-span-passive'">

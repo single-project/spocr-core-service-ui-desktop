@@ -1,4 +1,4 @@
-import {Component, Injector, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
@@ -17,7 +17,6 @@ export class ShopSpecializationsDataTableComponent extends AppDataTableModel imp
 
   constructor(
     messageService: MessageService,
-    injector: Injector,
     configService: ConfigService,
     shopspecializationsService: ShopspecializationsService) {
     super(messageService,

@@ -1,4 +1,4 @@
-import {Component, Injector, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ShopdepartsService} from '../../../../core/services/shopdeparts.service';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
@@ -17,7 +17,6 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel impleme
 
   constructor(
     messageService: MessageService,
-    injector: Injector,
     configService: ConfigService,
     shopDepartsService: ShopdepartsService) {
     super(messageService,
