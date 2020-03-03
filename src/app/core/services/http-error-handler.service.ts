@@ -1,17 +1,26 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, throwError} from "rxjs";
+import {catchError} from "rxjs/operators";
+import {Router} from "@angular/router";
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class HttpErrorHandlerService implements HttpInterceptor{
+export class HttpErrorHandlerService implements HttpInterceptor {
 
-  constructor() { }
+  constructor(@Inject(Router) private router: Router) {
+  }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    return new Observable<HttpEvent<any>>();
-
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(catchError(err => {
+      let error = err;
+      if (err.status === 0) {
+        error.status = 501;
+      }
+      console.log(JSON.stringify(err));
+      return throwError(error);
+    }));
   }
 }
