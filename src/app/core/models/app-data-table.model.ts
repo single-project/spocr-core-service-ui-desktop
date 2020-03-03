@@ -110,6 +110,10 @@ export abstract class AppDataTableModel {
       });
   }
 
+  getFieldValue(field: any): any {
+    return (typeof field === 'object') ? field.name : field;
+  }
+
   /**
    *
    *
