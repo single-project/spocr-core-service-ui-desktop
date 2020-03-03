@@ -5,6 +5,7 @@ import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {AutoComplete, LazyLoadEvent, Table} from 'primeng';
 import {QueryList, ViewChildren} from '@angular/core';
+import {MessageService} from 'primeng/api';
 
 export abstract class AppDataTableModel {
 
@@ -31,20 +32,37 @@ export abstract class AppDataTableModel {
   private tableFilters: QueryList<AutoComplete>;
 
   protected constructor(
+    protected messageService: MessageService,
     protected configService: ConfigService,
     protected tableDataService: any,
   ) {
   }
 
   onRowSelect(): void {
-
+    this.messageService.clear();
+    this.messageService.add({
+      key: 'tr',
+      severity: 'error',
+      summary: 'Данная функция еще не реализована!'
+    });
   }
 
-  columnsChange(): void{
-
+  columnsChange(): void {
+    this.messageService.clear();
+    this.messageService.add({
+      key: 'tr',
+      severity: 'error',
+      summary: 'Данная функция еще не реализована!'
+    });
   }
 
   onItemCreate(): void {
+    this.messageService.clear();
+    this.messageService.add({
+      key: 'tr',
+      severity: 'error',
+      summary: 'Данная функция еще не реализована!'
+    });
   }
 
   /**

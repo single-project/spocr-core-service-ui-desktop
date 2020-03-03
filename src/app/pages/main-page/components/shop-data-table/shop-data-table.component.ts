@@ -23,6 +23,7 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
   shopDialogComponent: ShopDialogComponent;
 
   constructor(
+    messageService: MessageService,
     shopService: ShopsService,
     private search: SearchService,
     private counterPartiesService: CounterpartiesService,
@@ -31,6 +32,7 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
     configService: ConfigService,
   ) {
     super(
+      messageService,
       configService,
       shopService);
   }
