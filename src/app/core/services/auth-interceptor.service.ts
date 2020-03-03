@@ -10,12 +10,11 @@ import {
 import {Observable} from "rxjs";
 import {CookieService} from "ngx-cookie-service";
 import {tap} from "rxjs/operators";
-import {Router} from "@angular/router";
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(@Inject(CookieService) private cookie: CookieService, @Inject(Router) private router: Router) {
+  constructor(@Inject(CookieService) private cookie: CookieService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -31,22 +30,7 @@ export class AuthInterceptorService implements HttpInterceptor {
       headers: req.headers.set('Authorization', token),
 
     });
-    return next.handle(authReq).pipe(
-      tap(
-        event => {
-          if (event instanceof HttpResponse) console.log('Server response')
-        },
-        err => {
-          if (err instanceof HttpErrorResponse) {
-            if (err.status == 401) {
-              console.log('Unauthorized');
-              this.router.navigate(['/', 'signin']);
-
-            }
-          }
-        }
-      )
-    )
+    return next.handle(authReq);
   }
 
 }

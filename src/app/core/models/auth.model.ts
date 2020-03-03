@@ -1,5 +1,8 @@
+import {RoleModel} from "./role.model";
+
 export interface AuthModel {
-  username: string;
   token: string;
-  tokenTTL: string;
+  username: string;
+  roles: RoleModel[];
+  expiredAt: Date;
 }

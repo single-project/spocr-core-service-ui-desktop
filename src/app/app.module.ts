@@ -10,7 +10,8 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthInterceptorService} from './core/services/auth-interceptor.service';
-import {MessageService} from 'primeng';
+import {MessageService, ToastModule} from 'primeng';
+import {HttpErrorHandlerService} from "./core/services/http-error-handler.service";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import {MessageService} from 'primeng';
     CoreModule,
     PagesModule,
     LayoutModule,
-
+    ToastModule
   ],
   providers: [
     CookieService,
@@ -34,6 +35,11 @@ import {MessageService} from 'primeng';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorHandlerService,
       multi: true
     }],
 

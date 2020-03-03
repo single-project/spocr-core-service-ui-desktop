@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {IdNameModel} from "../../../../core/models/id-name.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 
