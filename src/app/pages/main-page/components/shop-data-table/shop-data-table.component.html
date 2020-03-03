@@ -9,7 +9,7 @@
          [loading]="loading"
          [responsive]="true"
          selectionMode="single"
-         [(selection)]="selectedShop"
+         [(selection)]="selectedItem"
          (onRowSelect)="onRowSelect()"
          [sortField]="sortField"
          [sortOrder]="sortOrder"
@@ -28,7 +28,7 @@
                      defaultLabel="Выбрать колонки">
       </p-multiSelect>
 
-      <button (click)="onShopCreate()"
+      <button (click)="onItemCreate()"
               style="margin-left: 1em; top: -10px"
               type="button"
               class="ui-button-success"
@@ -116,6 +116,6 @@
 </p-table>
 
 <app-shop-dialog (onShopSaved)="shopSavedFromDialog($event)"
-                 [shop]="selectedShop"
+                 [shop]="selectedItem"
                   #shopDialogComponent>
 </app-shop-dialog>

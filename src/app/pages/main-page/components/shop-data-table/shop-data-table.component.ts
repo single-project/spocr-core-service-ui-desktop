@@ -3,7 +3,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ShopsService} from '../../../../core/services/shops.service';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
-import {LazyLoadEvent, MessageService} from 'primeng';
+import {MessageService} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
@@ -17,7 +17,7 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
   styleUrls: ['./shop-data-table.component.scss']
 })
 export class ShopDataTableComponent extends AppDataTableModel implements OnInit {
-  selectedShop: ShopModel;
+  selectedItem: ShopModel;
 
   @ViewChild('shopDialogComponent', {static: false})
   shopDialogComponent: ShopDialogComponent;
@@ -57,7 +57,7 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
     this.shopDialogComponent._display = true;
   }
 
-  onShopCreate() {
+  onItemCreate() {
     this.shopDialogComponent._display = true;
   }
 

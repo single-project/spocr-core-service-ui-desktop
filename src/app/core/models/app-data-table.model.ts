@@ -36,6 +36,17 @@ export abstract class AppDataTableModel {
   ) {
   }
 
+  onRowSelect(): void {
+
+  }
+
+  columnsChange(): void{
+
+  }
+
+  onItemCreate(): void {
+  }
+
   /**
    *
    * Загружает заголовки таблиц с сервера согласно типа таблицы.
@@ -44,7 +55,7 @@ export abstract class AppDataTableModel {
    */
   loadShopsTableHeaders(headerType: AppTableTypes) {
     this.configService
-      .fetchTableHeader(AppTableTypes.SHOP_TABLE_TYPE)
+      .fetchTableHeader(headerType)
       .subscribe((data) => {
 
         this.cols = data.columns;
