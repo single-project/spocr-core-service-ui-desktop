@@ -9,6 +9,7 @@ export class Conf {
   private _SALES_CHANNELS_URL = '/api/saleschannels';
   private _SHOP_DEPARTS_URL = '/api/shopdeparts';
   private _SHOP_SPECIALIZATION_URL = '/api/shopspecializations';
+  private _CONTRACTS_URL = '/api/contracts';
 
 
   get SALES_CHANNELS_URL(): string {
@@ -49,5 +50,9 @@ export class Conf {
 
   get APP_SETTINGS_URL(): string {
     return this._APP_SETTINGS_URL;
+  }
+
+  get CONTRACTS_URL(): string {
+    return this._CONTRACTS_URL;
   }
 }
