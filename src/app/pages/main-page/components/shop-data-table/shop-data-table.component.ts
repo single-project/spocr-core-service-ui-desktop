@@ -60,7 +60,7 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
 
     if (fieldName === 'counterparty') {
       dataService$ = this.counterPartiesService
-        .fetchCounterPartiesData(params);
+        .fetchCounterpartiesData(params);
     }
 
     return dataService$;

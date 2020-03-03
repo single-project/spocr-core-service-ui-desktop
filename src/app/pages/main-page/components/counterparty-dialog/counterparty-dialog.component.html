@@ -51,10 +51,36 @@
 
         <div class="ui-g-12">
           <div class="ui-g-4">
-            <label for="acive">АКТИВНЫЙ</label>
+            <label>АКТИВНЫЙ</label>
           </div>
           <div class="ui-g-8">
-            <p-checkbox id="acive" [binary]="true" formControlName="active"></p-checkbox>
+            <p-checkbox  [binary]="true" formControlName="active"></p-checkbox>
+          </div>
+          <div class="ui-g-4">
+            <label>ГОЛОВНАЯ ОРГ.</label>
+          </div>
+          <div class="ui-g-8">
+            <p-dropdown
+              appendTo="body"
+              formControlName="parent"
+              optionLabel="name"
+              dataKey="id"
+              [options]="parentsList"
+              placeholder="Выберите головную организацию"
+            ></p-dropdown>
+          </div>
+          <div class="ui-g-4">
+            <label>СТАТУС</label>
+          </div>
+          <div class="ui-g-8">
+            <p-multiSelect
+              appendTo="body"
+              formControlName="statuses"
+              optionLabel="name"
+              dataKey="id"
+              [options]="statusesList"
+              defaultLabel="Выберите статус"
+            ></p-multiSelect>
           </div>
         </div>
 
@@ -137,7 +163,13 @@
               <label>ДАТА РОЖД.</label>
             </div>
             <div class="ui-g-8">
-              <p-calendar appendTo="body" formControlName="birthDate" [locale]="ruCalLocale"></p-calendar>
+              <p-calendar
+                appendTo="body"
+                formControlName="birthDate"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1924:2100"
+                [locale]="ruCalLocale"></p-calendar>
             </div>
             <div class="ui-g-4">
               <label>ТИП ДОКУМЕНТА</label>
@@ -189,6 +221,18 @@
             </div>
             <div class="ui-g-8" >
               <input pInputText formControlName="inn">
+            </div>
+            <div class="ui-g-4">
+              <label>ТЕЛЕФОН:</label>
+            </div>
+            <div class="ui-g-8" >
+              <p-inputMask mask="+7(999) 999-9999" placeholder="+7(999) 999-9999" formControlName="phones" ></p-inputMask>
+            </div>
+            <div class="ui-g-4">
+              <label>E-MAIL:</label>
+            </div>
+            <div class="ui-g-8" >
+              <input pInputText formControlName="email">
             </div>
           </div>
         </ng-container>

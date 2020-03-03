@@ -14,12 +14,16 @@ export class CounterpartiesService {
   constructor(@Inject(HttpClient) private http: HttpClient) {
   }
 
-  fetchCounterPartiesData(options = {}): Observable<any> {
+  fetchCounterpartiesData(options = {}): Observable<any> {
     return this.http.get(
       this.counterpartiesURL,
       {
         params: {...options}
       });
+  }
+
+  fetchCounterpartiesStatuses(): Observable<any>{
+    return this.http.get(this.config.BASE_URL+this.config.CP_STATUSES_URL);
   }
 
   editCounterparty(updateData: {}, id: number):any {

@@ -154,7 +154,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
-        this.counterPartiesService.fetchCounterPartiesData(params)
+        this.counterPartiesService.fetchCounterpartiesData(params)
           .pipe(
             map((data) => {
               let arrayTemp: Array<Object>;
@@ -261,7 +261,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
 
   loadCounterPartiesData(options = {}, updatePageInfo = true): void {
     this.loading = true;
-    this.counterPartiesService.fetchCounterPartiesData(options)
+    this.counterPartiesService.fetchCounterpartiesData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = [...data.content];
 

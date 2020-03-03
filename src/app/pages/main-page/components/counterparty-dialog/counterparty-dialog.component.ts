@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CounterpartyModel} from '../../../../core/models/global-reference.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ConfigService} from '../../../../core/services/config.service';
-import {shareReplay, tap} from 'rxjs/operators';
+import {map, shareReplay, tap} from 'rxjs/operators';
 import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
 import {forkJoin} from 'rxjs';
 
@@ -29,6 +29,8 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   public selectedGeneralLegalType = [];
   public formLegalType: FormLegalType;
   public isNew = false;
+  public parentsList = [];
+  public statusesList =[];
   public citizenships = [];
   public genders = [];
   public docTypes = [];
@@ -41,7 +43,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
     monthNamesShort: [ "Янв", "Фев", "Мар", "Апр", "Май", "Июн","Июл", "Авг", "Сен", "Окт", "Ноя", "Дек" ],
     today: 'Сегодня',
     clear: 'Очист.',
-    dateFormat: 'mm/dd/yy',
+    dateFormat: 'dd.mm.yy',
     weekHeader: 'Нед'
   };
 
@@ -59,6 +61,8 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   ngOnInit() {
 
     this.loadAvailableLegalTypes();
+    this.loadCounterpartiesList();
+    this.loadStatusesList();
     this.loadAvailablePersonalData();
 
   }
@@ -73,7 +77,6 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
       shareReplay()
     ).subscribe(c => {
       this.generalLegalTypes = c['newLegalTypes'];
-
     });
   }
 
@@ -91,6 +94,22 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
         })
 
+  }
+
+  loadCounterpartiesList(): void {
+    this.counterpartyService.fetchCounterpartiesData().pipe(
+      map(p => p.content),
+    ).subscribe(party => {
+      this.parentsList = party
+    });
+  }
+
+  loadStatusesList(): void{
+    this.counterpartyService.fetchCounterpartiesStatuses()
+      .pipe(map(s => s['content']))
+      .subscribe(s => {
+        this.statusesList = s;
+      })
   }
 
   chooseLegalType() {
@@ -160,6 +179,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
       version: null,
       active: true,
       name: ['', Validators.required],
+
       legalType: this.fb.group({
         id: null,
         name: '',
@@ -177,6 +197,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
         inn: [{value: '', disabled: true}],
         ogrn: [{value: '', disabled: true}],
         kpp: [{value: '', disabled: true}],
+
         innSug: ''
       }),
       paymentDetails: this.fb.group({
@@ -190,12 +211,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
       }),
       parent: null,
-      statuses: this.fb.group({
-        id: null,
-        name: '',
-        ident: '',
-        properties: null,
-      }),
+      statuses: [],
       personRekv: this.fb.group({
         id: null,
         version: null,
@@ -206,14 +222,9 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
         patronymic: '',
         birthDate: null,
         birthPlace: null,
-        docType: this.fb.group({
-          id: null,
-          name: '',
-          ident: '',
-          properties: null
-        }),
+        docType: this.fb.group([]),
         docSeriesNumber: null,
-        inn: null,
+        inn: [null, Validators.compose([Validators.maxLength(12), Validators.minLength(12)])],
         citizenship: this.fb.group({
           id: null,
           name: '',
@@ -226,8 +237,8 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
           ident: '',
           properties: null
         }),
-        email: null,
-        phones: null,
+        email: [null, Validators.email],
+        phones: [null, ],
       }),
       owner: this.fb.group({
         id: null,
@@ -236,6 +247,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
         name: '',
       }),
       suggestion: null,
+
       updatedFields: []
     });
   }

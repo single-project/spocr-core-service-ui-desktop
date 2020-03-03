@@ -134,7 +134,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadCounterpartiesList(): void {
-    this.counterpartiesSevice.fetchCounterPartiesData().pipe(
+    this.counterpartiesSevice.fetchCounterpartiesData().pipe(
       map(p => p.content),
     ).subscribe(party => {
       this.counterpartiesList = party

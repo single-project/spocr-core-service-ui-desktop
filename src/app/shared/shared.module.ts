@@ -20,7 +20,7 @@ import {
   TabViewModule,
   ToastModule,
   ToolbarModule,
-  CalendarModule
+  CalendarModule, InputMaskModule
 } from 'primeng';
 import {ActiveTagsPipe} from './pipes/active-tags.pipe';
 import {NgxDadataModule} from '@kolkov/ngx-dadata';
@@ -57,6 +57,7 @@ import { DadataFioComponent } from './components/dadata-fio/dadata-fio.component
     ReactiveFormsModule,
     TabViewModule,
     CalendarModule,
+    InputMaskModule,
   ],
   exports: [
     ToolbarModule,
@@ -85,6 +86,7 @@ import { DadataFioComponent } from './components/dadata-fio/dadata-fio.component
     DadataPartyComponent,
     CalendarModule,
     DadataFioComponent,
+    InputMaskModule,
 
   ]
 })
