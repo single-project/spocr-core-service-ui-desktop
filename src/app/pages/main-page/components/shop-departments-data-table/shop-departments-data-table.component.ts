@@ -4,7 +4,7 @@ import {ConfigService} from '../../../../core/services/config.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {Observable} from 'rxjs';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
-import {MessageService} from "primeng";
+import {MessageService} from 'primeng';
 
 @Component({
   selector: 'app-shop-departments-data-table',
