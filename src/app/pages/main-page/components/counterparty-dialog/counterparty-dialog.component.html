@@ -48,7 +48,6 @@
                        *ngIf="!counterPartyForm.controls['name'].valid&&counterPartyForm.controls['name'].dirty"></p-message>
           </div>
         </div>
-
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label for="acive">АКТИВНЫЙ</label>
@@ -115,7 +114,10 @@
       </div>
 
     </p-tabPanel>
-    <p-tabPanel *ngIf="formLegalType === 2" header="Реквизиты" leftIcon="fas fa-file-signature">
+    <p-tabPanel
+      *ngIf="formLegalType === 2"
+      header="Реквизиты"
+      leftIcon="fas fa-file-signature">
       <div
         [formGroup]="counterPartyForm"
         class="ui-g ui-fluid"
@@ -137,7 +139,10 @@
               <label>ДАТА РОЖД.</label>
             </div>
             <div class="ui-g-8">
-              <p-calendar appendTo="body" formControlName="birthDate" [locale]="ruCalLocale"></p-calendar>
+              <p-calendar
+                appendTo="body"
+                formControlName="birthDate"
+                [locale]="ruCalLocale"></p-calendar>
             </div>
             <div class="ui-g-4">
               <label>ТИП ДОКУМЕНТА</label>
@@ -236,7 +241,9 @@
   <p-footer>
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
 
-      <button [disabled]="counterPartyForm.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check"
+      <button [disabled]="counterPartyForm.invalid"
+              type="button" class="ui-button-success"
+              pButton icon="fa fa-check"
               (click)="counterpartySaved()"
               label="Сохранить"></button>
       <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"

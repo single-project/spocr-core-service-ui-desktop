@@ -11,7 +11,6 @@ enum FormLegalType {
   NONE = 0,
   PARTY = 1,
   PERSON = 2,
-
 }
 
 
@@ -135,7 +134,6 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
       let currentControl = form.controls[k];
       if (currentControl.dirty) {
         dirtyValues[k] = currentControl.value;
-
       }
     });
     return Object.keys(dirtyValues);
