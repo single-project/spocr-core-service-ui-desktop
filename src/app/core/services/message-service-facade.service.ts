@@ -6,9 +6,10 @@ import {MessageService} from "primeng";
 })
 export class MessageServiceFacadeService {
 
-  //TODO: put it to assets/resources
-  private messagesMap = new Map();
+  private DEFAULT_FRAME_KEY: string =  "main-toast";
 
+  //TODO: put it to assets/resources or assets/i18
+  private messagesMap = new Map();
 
   constructor(@Inject(MessageService) private messageService: MessageService) {
     //401
@@ -23,32 +24,52 @@ export class MessageServiceFacadeService {
 
 
   public showWrnMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
-    this.showMsg(messageKey, 'error', this.getMessage(messageKey, summary), details);
+    this.showMsg({
+      frameKey: frameKey,
+      severity: "warning",
+      messageKey: messageKey,
+      summary: summary,
+      details: details
+    });
   }
 
   public showErrMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
-    this.showMsg(messageKey, 'error', this.getMessage(messageKey, summary), details);
+    this.showMsg({
+      frameKey: frameKey,
+      severity: "error",
+      messageKey: messageKey,
+      summary: summary,
+      details: details
+    });
   }
 
   public showScsMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
-    this.showMsg(messageKey, 'success', this.getMessage(messageKey, summary), details);
+    this.showMsg({
+      frameKey: frameKey,
+      severity: "success",
+      messageKey: messageKey,
+      summary: summary,
+      details: details
+    });
   }
 
   public showInfMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
-    this.showMsg(messageKey, 'info', this.getMessage(messageKey, summary), details);
+    this.showMsg({
+      frameKey: frameKey,
+      severity: "info",
+      messageKey: messageKey,
+      summary: summary,
+      details: details
+    });
   }
 
-  private showMsg(key: string, severity: string, summary: string, details?: string, frameKey?: string) {
-    if (frameKey === undefined) {
-      frameKey = "main-toast";
-    }
-
+  private showMsg(params: any) {
     this.messageService.add({
-      key: frameKey,
+      key: this.getFrameKey(params.frameKey),
       sticky: true,
-      severity: severity,
-      summary: summary,
-      detail: details
+      severity: params.severity,
+      summary: this.getMessage(params.messageKey, params.summary),
+      detail: params.details
     });
   }
 
@@ -60,5 +81,9 @@ export class MessageServiceFacadeService {
     } else {
       return key;
     }
+  }
+
+  private getFrameKey(frameKey?: string) {
+    return frameKey === undefined?this.DEFAULT_FRAME_KEY:frameKey;
   }
 }
