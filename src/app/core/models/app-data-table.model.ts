@@ -24,7 +24,7 @@ export abstract class AppDataTableModel {
 
   private columnFilters$: Observable<any>;
   protected columnFilterSubj$ = new Subject();
-  private searchItems = [];
+  searchItems = [];
   private colFilterFormatter = new TableColFilterFormatterBuilder();
   protected tableReqParamBuilder = new TableRequestParamBuilder();
 

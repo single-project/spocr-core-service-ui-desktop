@@ -14,7 +14,7 @@ export class ManufactureDialogComponent implements OnInit {
   @Output() onNewManufactureSaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newManufacture = {};
-  private manForm: FormGroup;
+  manForm: FormGroup;
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
     this.manForm = this.fb.group({

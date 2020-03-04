@@ -16,7 +16,7 @@ export class ShopTypeDialogComponent implements OnInit {
   @Output() onNewShopTypeSaved = new EventEmitter<any>();
   @Output() onCloseDialog = new EventEmitter<boolean>();
   private newShopType = {};
-  private shopTypeForm: FormGroup;
+  shopTypeForm: FormGroup;
 
 
   constructor(@Inject(FormBuilder) private fb: FormBuilder) {
