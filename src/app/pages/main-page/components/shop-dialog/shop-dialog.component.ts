@@ -154,7 +154,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadSalesChannels(): void {
-    this.salesChanelService.fetchAllSalesChannels().pipe(
+    this.salesChanelService.fetchData().pipe(
       map(sc => sc.content),
       map((sc: SalesChannelModel[]) => sc.map(s => {
         return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}

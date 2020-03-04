@@ -1,4 +1,4 @@
-<p-table #sdt
+<p-table #dt
          [columns]="selectedCols"
          [value]="dataItems"
          [lazy]="true"
@@ -73,8 +73,8 @@
         <div>
           <p-autoComplete [suggestions]="searchItems"
                           field="name"
-                          (onSelect)="sdt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="sdt.filter({id: -1, name: $event.target.value}, col.field, 'contains');searchItems = []"
+                          (onSelect)="dt.filter($event, col.field, 'contains')"
+                          (keydown.enter)="dt.filter({id: -1, name: $event.target.value}, col.field, 'contains');searchItems = []"
                           (completeMethod)="filterSearch($event, col.field)"
                           appendTo="body">
           </p-autoComplete>
@@ -82,7 +82,7 @@
                   type="button"
                   icon="pi pi-times"
                   class="ui-button-secondary"
-                  (click)="cleanFilter(sdt, i, col.field, 'contains')">
+                  (click)="cleanFilter(dt, i, col.field, 'contains')">
           </button>
         </div>
       </th>
@@ -97,10 +97,7 @@
           [ngSwitch]="col.field"
           style="text-align: center">
         <ng-container *ngSwitchDefault>
-          {{dataItem[col.field]}}
-        </ng-container>
-        <ng-container *ngSwitchCase="'counterparty'">
-          {{dataItem[col.field]['name']}}
+          {{ getFieldValue(dataItem[col.field]) }}
         </ng-container>
         <span *ngSwitchCase="'active'"
               [ngClass]="dataItem[col.field] ? 'ekc-table-span-active': 'ekc-table-span-passive'">
@@ -114,8 +111,3 @@
     Всего {{dataItems?.length}} объектов
   </ng-template>
 </p-table>
-
-<app-shop-dialog (onShopSaved)="shopSavedFromDialog($event)"
-                 [shop]="selectedItem"
-                  #shopDialogComponent>
-</app-shop-dialog>

@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MenuItem} from 'primeng/api';
 import {AuthService} from '../../../core/services/auth.service';
 import {Router} from '@angular/router';
+import {AppTableTypes} from '../../../core/models/app-tabe-types.enum';
 
 @Component({
   selector: 'app-navbar',
@@ -13,13 +14,7 @@ export class NavbarComponent implements OnInit {
   @Input()
   userId;
   @Output()
-  onShopsMenu = new EventEmitter<any>();
-  @Output()
-  onCounterParties = new EventEmitter<any>();
-  @Output()
-  onManufactureMenu = new EventEmitter<any>();
-  @Output()
-  onShopTypsMenu = new EventEmitter<any>();
+  onSwitchTable = new EventEmitter<any>();
 
   private _menuItems: MenuItem[];
 
@@ -40,10 +35,46 @@ export class NavbarComponent implements OnInit {
     this.menuItems = [{
       label: 'Справочники',
       items: [
-        {label: 'Торговые точки', icon: 'pi pi-fw pi-folder-open', command: () => this.onShops()},
-        {label: 'Контрагенты', icon: 'pi pi-fw pi-folder-open', command: () => this.onCounterparties()},
-        {label: 'Производители', icon: 'pi pi-fw pi-folder-open', command: () => this.onManufacture()},
-        {label: 'Типы ТТ', icon: 'pi pi-fw pi-folder-open', command: () => this.onShopTypes()},
+        {
+          label: 'Торговые точки',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.SHOP_TABLE_TYPE)
+        },
+        {
+          label: 'Контрагенты',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.COUNTER_PARTIES_TABLE_TYPE)
+        },
+        {
+          label: 'Производители',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.MANUFACTURE_TABLE_TYPE)
+        },
+        {
+          label: 'Типы ТТ',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.SHOP_TYPES_TABLE_TYPE)
+        },
+        {
+          label: 'Отделы магазина',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.SHOP_DEPARTMENTS_TABLE_TYPE)
+        },
+        {
+          label: 'Каналы продаж',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.SALES_CHANELS_TABLE_TYPE)
+        },
+        {
+          label: 'Специализация магазинов',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.SHOP_SPECIALIZATIONS_TABLE_TYPE)
+        },
+        {
+          label: 'Договоры',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.CONTRACTS_TABLE_TYPE)
+        },
       ]
     },
       {
@@ -63,21 +94,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/', 'profile']);
   }
 
-  onShops(): void {
-    this.onShopsMenu.emit();
+  switchTable(tableType: AppTableTypes): void {
+    this.onSwitchTable.emit(tableType);
   }
-
-  onCounterparties(): void {
-    this.onCounterParties.emit();
-  }
-
-  onManufacture(): void {
-    this.onManufactureMenu.emit();
-  }
-
-  onShopTypes(): void {
-    this.onShopTypsMenu.emit();
-  }
-
-
 }

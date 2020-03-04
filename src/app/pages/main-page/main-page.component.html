@@ -1,7 +1,4 @@
-<app-navbar (onCounterParties)="counterPartiesToggle()"
-            (onShopTypsMenu)="shopTypesToggle()"
-            (onShopsMenu)="shopsToggle()"
-            (onManufactureMenu)="manufactireToggle()">
+<app-navbar (onSwitchTable)="switchTable($event)">
 </app-navbar>
 <div class="p-grid">
   <div class="ekc-content-container p-lg-12 p-sm-12">
@@ -12,13 +9,13 @@
         </div>
         <div class="ui-g-8 ui-sm-12">
           <div class="ui-inputgroup">
-            <input  (keydown.enter)="onSearched(tableSearch)"
-                    [(ngModel)]="searchString"
-                    id="search" pInputText
-                    placeholder="Найти..."
-                    size="32"
-                    type="text"
-                    #tableSearch/>
+            <input (keydown.enter)="onSearched(tableSearch)"
+                   [(ngModel)]="searchString"
+                   id="search" pInputText
+                   placeholder="Найти..."
+                   size="32"
+                   type="text"
+                   #tableSearch/>
             <button (click)="onSearched(tableSearch)"
                     icon="pi pi-search" id="search-btn"
                     pButton
@@ -38,21 +35,37 @@
   </div>
   <div class="ekc-content-container p-lg-12 p-sm-12">
     <app-shop-data-table *ngIf="dataType === 1"
-                         #shopDataTable>
+                         #appDataTable>
     </app-shop-data-table>
     <app-counterparties-data-table *ngIf="dataType === 2"
-                                   #counterPartiesDataTable>
+                                   #appDataTable>
     </app-counterparties-data-table>
     <app-manufacture-data-table *ngIf="dataType === 3"
-                                #manufactureDataTable>
+                                #appDataTable>
     </app-manufacture-data-table>
     <app-shop-types-data-table *ngIf="dataType === 4"
-                               #shopTypesDataTable>
+                               #appDataTable>
     </app-shop-types-data-table>
-   </div>
+    <app-shop-departments-data-table *ngIf="dataType === 5"
+                                     #appDataTable>
+    </app-shop-departments-data-table>
+    <app-sales-chanels-data-table *ngIf="dataType === 6"
+                                  #appDataTable>
+    </app-sales-chanels-data-table>
+    <app-shop-specializations-data-table *ngIf="dataType === 7"
+                                         #appDataTable>
+    </app-shop-specializations-data-table>
+    <app-contracts-data-table *ngIf="dataType === 8"
+                              #appDataTable>
+    </app-contracts-data-table>
+  </div>
   <p-toast [style]="{marginTop: '80px'}"
            key="tc"
            position="top-center">
+  </p-toast>
+  <p-toast [style]="{marginTop: '80px'}"
+           key="tr"
+           position="top-right">
   </p-toast>
   <p-toast [baseZIndex]="5000"
            [modal]="true"

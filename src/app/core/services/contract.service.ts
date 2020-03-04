@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Conf} from '../../../assets/config/conf';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -6,10 +6,9 @@ import {Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ShopspecializationsService {
-
+export class ContractService {
   private config = new Conf();
-  private srvUrl: string = this.config.BASE_URL + this.config.SHOP_SPECIALIZATION_URL;
+  private srvUrl: string = this.config.BASE_URL + this.config.CONTRACTS_URL;
 
   constructor(
     private http: HttpClient) {
@@ -30,5 +29,4 @@ export class ShopspecializationsService {
   newItem(shopData: {}): Observable<any> {
     return this.http.post(this.srvUrl, shopData);
   }
-
 }

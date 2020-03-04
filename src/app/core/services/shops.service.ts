@@ -11,7 +11,8 @@ export class ShopsService {
   private config = new Conf();
   private shopUrl: string = this.config.BASE_URL + this.config.SHOP_URL;
 
-  constructor(@Inject(HttpClient) private http: HttpClient,
+  constructor(
+    private http: HttpClient,
   ) {
   }
 
@@ -34,6 +35,4 @@ export class ShopsService {
   shopTypeAdd(typeData: [], id: number): any {
     return this.http.put(`${this.shopUrl}/${id}`, typeData);
   }
-
-
 }

@@ -4,7 +4,6 @@ export class Conf {
   private _BASE_URL = 'http://84.201.159.119:8112/spocr';
   private _AUTH_URL = '/auth/signin';
 
-
   private _APP_SETTINGS_URL = '/api/app/settings';
 
   // Shop entity urls
@@ -29,6 +28,7 @@ export class Conf {
   get GENDER_URL(): string {
     return this._GENDER_URL;
   }
+  private _CONTRACTS_URL = '/api/contracts';
 
   get CP_STATUSES_URL(): string {
     return this._CP_STATUSES_URL;
@@ -80,5 +80,9 @@ export class Conf {
 
   get APP_SETTINGS_URL(): string {
     return this._APP_SETTINGS_URL;
+  }
+
+  get CONTRACTS_URL(): string {
+    return this._CONTRACTS_URL;
   }
 }

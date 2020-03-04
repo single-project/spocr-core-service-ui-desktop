@@ -1,9 +1,4 @@
-import {Component, ViewChild, OnInit} from '@angular/core';
-import {ShopDataTableComponent} from './components/shop-data-table/shop-data-table.component';
-import {CounterpartiesDataTableComponent} from './components/counterparties-data-table/counterparties-data-table.component';
-import {ManufactureDataTableComponent} from './components/manufacture-data-table/manufacture-data-table.component';
-import {ShopTypesDataTableComponent} from './components/shop-types-data-table/shop-types-data-table.component';
-
+import {Component, OnInit, ViewChildren, QueryList} from '@angular/core';
 import {ConfigService} from '../../core/services/config.service';
 import {AppTableTypes} from '../../core/models/app-tabe-types.enum';
 
@@ -15,17 +10,9 @@ import {AppTableTypes} from '../../core/models/app-tabe-types.enum';
 export class MainPageComponent implements OnInit {
   private _searchString: string;
   private _tableTitle: string;
-  private _dataType: number;
-  private uiTables: Object;
+  private _dataType: AppTableTypes;
 
-  @ViewChild('shopDataTable')
-  shopDataTable: ShopDataTableComponent;
-  @ViewChild('counterPartiesDataTable')
-  counterPartiesDataTable: CounterpartiesDataTableComponent;
-  @ViewChild('manufactureDataTable')
-  manufactureDataTable: ManufactureDataTableComponent;
-  @ViewChild('shopTypesDataTable')
-  shopTypesDataTable: ShopTypesDataTableComponent;
+  @ViewChildren('appDataTable') appDataTable: QueryList<any>;
 
   constructor(
     private configService: ConfigService,
@@ -33,16 +20,7 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setConfiguration();
-  }
-
-  initVewTable() {
-    this.uiTables = {
-      [AppTableTypes.SHOP_TABLE_TYPE]: this.shopDataTable,
-      [AppTableTypes.COUNTER_PARTIES_TABLE_TYPE]: this.counterPartiesDataTable,
-      [AppTableTypes.MANUFACTURE_TABLE_TYPE]: this.manufactureDataTable,
-      [AppTableTypes.SHOP_TYPES_TABLE_TYPE]: this.shopTypesDataTable
-    };
+    this.setConfiguration(AppTableTypes.SHOP_TABLE_TYPE);
   }
 
   get searchString(): string {
@@ -61,63 +39,38 @@ export class MainPageComponent implements OnInit {
     this._tableTitle = tableTitle;
   }
 
-  get dataType(): number {
+  get dataType(): AppTableTypes {
     return this._dataType;
   }
 
-  set dataType(dataType: number) {
-    this._dataType = dataType;
+  set dataType(value: AppTableTypes) {
+    this._dataType = value;
   }
 
   clearSearch(): void {
     this.searchString = '';
-    this.uiTables[this.dataType]
-      .loadTableData();
+    this.appDataTable
+      .toArray()
+      .forEach((tableComp) => tableComp.loadTableData());
   }
 
   onSearched(tableSearch: HTMLInputElement): void {
-    this.uiTables[this.dataType]
-      .dataSearch(tableSearch.value);
+    this.appDataTable
+      .toArray()
+      .forEach((tableComp) => tableComp.dataSearch(tableSearch.value));
   }
 
-  setConfiguration(): void {
+  setConfiguration(dataType: number): void {
     this.configService
-      .fetchAppSettingsByType()
-      .subscribe((data) => {
-        Object.assign(this, data);
-        setTimeout(() => {
-          this.initVewTable();
-        }, 500);
-      });
-  }
-
-  shopsToggle() {
-    this.configService
-      .fetchAppSettingsByType(AppTableTypes.SHOP_TABLE_TYPE)
+      .fetchAppSettingsByType(dataType)
       .subscribe((data) => {
         Object.assign(this, data);
       });
   }
 
-  counterPartiesToggle() {
+  switchTable(tableType: AppTableTypes) {
     this.configService
-      .fetchAppSettingsByType(AppTableTypes.COUNTER_PARTIES_TABLE_TYPE)
-      .subscribe((data) => {
-        Object.assign(this, data);
-      });
-  }
-
-  manufactireToggle() {
-    this.configService
-      .fetchAppSettingsByType(AppTableTypes.MANUFACTURE_TABLE_TYPE)
-      .subscribe((data) => {
-        Object.assign(this, data);
-      });
-  }
-
-  shopTypesToggle() {
-    this.configService
-      .fetchAppSettingsByType(AppTableTypes.SHOP_TYPES_TABLE_TYPE)
+      .fetchAppSettingsByType(tableType)
       .subscribe((data) => {
         Object.assign(this, data);
       });

@@ -8,23 +8,27 @@ import {Observable} from 'rxjs';
 })
 export class SaleschannelsService {
   private config = new Conf();
-  private salesChanURL = this.config.BASE_URL + this.config.SALES_CHANNELS_URL;
+  private srvUrl = this.config.BASE_URL + this.config.SALES_CHANNELS_URL;
 
   constructor(
     @Inject(HttpClient) private http: HttpClient
   ) {
   }
 
-  fetchAllSalesChannels(): Observable<any> {
-    return this.http.get(this.salesChanURL);
+  fetchData(options = {}): Observable<any> {
+    return this.http.get(
+      this.srvUrl,
+      {
+        params: {...options}
+      });
   }
 
-  editSalesChannel(id: number, options = {}): Observable<any> {
-    return this.http.patch(`${this.salesChanURL}/${id}`, {...options});
+  editItem(updateData: {}, id: number): Observable<any> {
+    return this.http.patch(`${this.srvUrl}/${id}`, updateData)
   }
 
-  newSalesChannel(options = {}): Observable<any>{
-    return this.http.post(this.salesChanURL, {...options});
+  newItem(shopData: {}): Observable<any> {
+    return this.http.post(this.srvUrl, shopData);
   }
 
 }

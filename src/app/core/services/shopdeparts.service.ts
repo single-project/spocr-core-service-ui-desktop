@@ -8,18 +8,29 @@ import {Conf} from '../../../assets/config/conf';
 })
 export class ShopdepartsService {
   private config = new Conf();
-  constructor(@Inject(HttpClient) private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  fetchShopDeparts(): Observable<any>{
-    return this.http.get(this.config.BASE_URL+this.config.SHOP_DEPARTS_URL)
+
+  private srvUrl: string = this.config.BASE_URL + this.config.SHOP_DEPARTS_URL;
+
+
+
+  fetchData(options = {}): Observable<any> {
+    return this.http.get(
+      this.srvUrl,
+      {
+        params: {...options}
+      });
   }
 
-  newShopDepart(options ={}): Observable<any>{
-    return this.http.post(this.config.BASE_URL+this.config.SHOP_DEPARTS_URL, {...options})
+  editItem(updateData: {}, id: number): Observable<any> {
+    return this.http.patch(`${this.srvUrl}/${id}`, updateData)
   }
 
-  editShopDepart(id: number, options ={}): Observable<any>{
-    return this.http.patch(this.config.BASE_URL+this.config.SHOP_DEPARTS_URL+id, {...options})
+  newItem(shopData: {}): Observable<any> {
+    return this.http.post(this.srvUrl, shopData);
   }
+
+
 
 }
