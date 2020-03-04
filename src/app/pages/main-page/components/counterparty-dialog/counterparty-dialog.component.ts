@@ -208,7 +208,6 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
         correspondingAccount: '',
         bic: '',
         bank: '',
-
       }),
       parent: null,
       statuses: [],

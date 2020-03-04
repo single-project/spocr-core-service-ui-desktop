@@ -15,8 +15,7 @@ import {HttpErrorHandlerService} from "./core/services/http-error-handler.servic
 
 @NgModule({
   declarations: [
-    AppComponent,
-
+    AppComponent
 
   ],
   imports: [
