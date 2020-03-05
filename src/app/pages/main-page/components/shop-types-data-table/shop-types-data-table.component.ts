@@ -189,10 +189,10 @@ export class ShopTypesDataTableComponent implements OnInit {
   }
 
   fetchFilterData(params = {}, fieldName = '') {
-    let dataService$ = this.shopTypesService.fetchShopTypesData(params);
+    let dataService$ = this.shopTypesService.fetchData(params);
 
     if (fieldName === 'manufacturer') {
-      dataService$ = this.manufactureService.fetchManufacturesData(params);
+      dataService$ = this.manufactureService.fetchData(params);
     }
 
     return dataService$;
@@ -309,7 +309,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     console.dir;
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopTypesService.editShopType(e, e.id).subscribe((data) => {
+    this.shopTypesService.editItem(e, e.id).subscribe((data) => {
       this.dataItems[idx] = {...this.shopTypesSingleTransformHelper(data)};
       this.showSuccessSavingMessage();
     }, error => {
@@ -320,7 +320,7 @@ export class ShopTypesDataTableComponent implements OnInit {
   shopTypeNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopTypesService.newShopType(e).subscribe((data) => {
+    this.shopTypesService.newItem(e).subscribe((data) => {
       this.dataItems = [...this.dataItems, this.shopTypesSingleTransformHelper(data)];
       this.showSuccessSavingMessage();
     }, error => {
@@ -330,7 +330,7 @@ export class ShopTypesDataTableComponent implements OnInit {
 
   loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
-    this.shopTypesService.fetchShopTypesData(options)
+    this.shopTypesService.fetchData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = data.content;
 
@@ -398,7 +398,7 @@ export class ShopTypesDataTableComponent implements OnInit {
   }
 
   manufactureListLoad() {
-    this.manufactureService.fetchManufacturesData()
+    this.manufactureService.fetchData()
       .subscribe((data: ReferenceResponseModel) => {
         this.manufactureList = [...data.content];
       });

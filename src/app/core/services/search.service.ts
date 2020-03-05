@@ -9,7 +9,7 @@ import {Observable} from "rxjs";
 export class SearchService {
 
   private config = new Conf();
-  constructor(@Inject(HttpClient) private http: HttpClient) { }
+  constructor( private http: HttpClient) { }
 
   shopSearch(searchString: string): Observable<any>{
     const searchURL = this.config.BASE_URL + this.config.SHOP_URL;

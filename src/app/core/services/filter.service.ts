@@ -12,7 +12,7 @@ export class FilterService {
   private manufactureURL = this.config.BASE_URL + this.config.MANUFACTURES_URL;
   private counterpartiesURL = this.config.BASE_URL + this.config.COUNTERPARTIES_URL;
 
-  constructor(@Inject(HttpClient) private http: HttpClient) {
+  constructor( private http: HttpClient) {
   }
 
   activeFilter(dataSet: number, active: boolean): any {

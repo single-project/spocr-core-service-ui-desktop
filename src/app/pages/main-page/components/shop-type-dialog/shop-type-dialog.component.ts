@@ -19,7 +19,7 @@ export class ShopTypeDialogComponent implements OnInit {
   shopTypeForm: FormGroup;
 
 
-  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
+  constructor( private fb: FormBuilder) {
     this.shopTypeForm = this.fb.group({
       'shopTypeName': ['', Validators.required],
       'shopTypeActive': [true],

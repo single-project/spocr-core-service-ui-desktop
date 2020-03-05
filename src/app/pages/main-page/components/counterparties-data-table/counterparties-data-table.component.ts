@@ -1,6 +1,4 @@
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {CounterpartyModel} from '../../../../core/models/counterparty.model';
-import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {AutoComplete, LazyLoadEvent, MessageService, Table} from "primeng";
@@ -8,7 +6,8 @@ import {SearchService} from '../../../../core/services/search.service';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {CounterpartyDialogComponent} from '../counterparty-dialog/counterparty-dialog.component';
-import {ShopModel} from '../../../../core/models/global-reference.model';
+import {CounterpartyModel} from '../../../../core/models/global-reference.model';
+
 
 @Component({
   selector: 'app-counterparties-data-table',
@@ -154,7 +153,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
-        this.counterPartiesService.fetchCounterpartiesData(params)
+        this.counterPartiesService.fetchData(params)
           .pipe(
             map((data) => {
               let arrayTemp: Array<Object>;
@@ -261,7 +260,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
 
   loadCounterPartiesData(options = {}, updatePageInfo = true): void {
     this.loading = true;
-    this.counterPartiesService.fetchCounterpartiesData(options)
+    this.counterPartiesService.fetchData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = [...data.content];
 
@@ -338,7 +337,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   savedCounterPartyNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.counterPartiesService.newCounterparty(e).subscribe(data => {
+    this.counterPartiesService.newItem(e).subscribe(data => {
       this.dataItems = [...this.dataItems, data];
       this.showSuccessSavingMessage();
     }, error => {
@@ -349,7 +348,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   savedCounterPartyEdited(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.counterPartiesService.editCounterparty(e, e.id).subscribe(
+    this.counterPartiesService.editItem(e, e.id).subscribe(
       (data) => {
         this.dataItems[idx] = {...data};
         this.showSuccessSavingMessage();

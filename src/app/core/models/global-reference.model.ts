@@ -108,8 +108,7 @@ export interface ShopTypeModel {
   manufacturer: ManufacturerModel;
 }
 
-
-export interface SalesChannelModel {
+export interface ShopAdditionalEntity {
   id: number;
   version: number;
   active: boolean;
@@ -117,6 +116,9 @@ export interface SalesChannelModel {
   manufacturer: ManufacturerModel;
 }
 
+export interface SalesChannelModel extends ShopAdditionalEntity {}
+
+export interface ShopSpecializationModel extends ShopAdditionalEntity{}
 
 export interface CounterpartyProperties {
   opfType: string;

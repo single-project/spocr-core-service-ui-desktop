@@ -9,7 +9,7 @@ import {Conf} from '../../../assets/config/conf';
 export class PersonalRekvService {
 
   private config = new Conf();
-  constructor(@Inject(HttpClient) private http: HttpClient) { }
+  constructor( private http: HttpClient) { }
 
   fetchDocTypes(): Observable<any>{
     return this.http.get(this.config.BASE_URL+this.config.DOC_TYPES_URL);

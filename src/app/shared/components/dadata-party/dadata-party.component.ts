@@ -18,7 +18,7 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   public selectedItem: string;
 
   constructor(
-    @Inject(DadataService) private dadata: DadataService
+     private dadata: DadataService
   ) {
 
   }

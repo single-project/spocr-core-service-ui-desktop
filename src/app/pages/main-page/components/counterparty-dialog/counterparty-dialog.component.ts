@@ -48,10 +48,10 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   };
 
   constructor(
-    @Inject(FormBuilder) private fb: FormBuilder,
-    @Inject(CounterpartiesService) private counterpartyService: CounterpartiesService,
-    @Inject(ConfigService) private configService: ConfigService,
-    @Inject(PersonalRekvService) private personalService: PersonalRekvService,
+     private fb: FormBuilder,
+     private counterpartyService: CounterpartiesService,
+     private configService: ConfigService,
+     private personalService: PersonalRekvService,
   ) {
     this.counterPartyForm = this.counterpartyBuildForm();
 
@@ -97,7 +97,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
   }
 
   loadCounterpartiesList(): void {
-    this.counterpartyService.fetchCounterpartiesData().pipe(
+    this.counterpartyService.fetchData().pipe(
       map(p => p.content),
     ).subscribe(party => {
       this.parentsList = party
@@ -142,7 +142,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
 
   saveCounterparty(party: CounterpartyModel): void {
     if (this.isNew) {
-      this.counterpartyService.newCounterparty(party).subscribe(
+      this.counterpartyService.newItem(party).subscribe(
         savedParty => this.onCounterpartySaved.emit(savedParty)
       )
     }

@@ -147,7 +147,7 @@ export class ManufactureDataTableComponent implements OnInit {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
-        this.manufactureService.fetchManufacturesData(params)
+        this.manufactureService.fetchData(params)
           .pipe(
             map((data) => {
               let arrayTemp: Array<Object>;
@@ -272,7 +272,7 @@ export class ManufactureDataTableComponent implements OnInit {
 
   loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
-    this.manufactureService.fetchManufacturesData(options)
+    this.manufactureService.fetchData(options)
       .subscribe((data: ReferenceResponseModel) => {
         this.dataItems = data.content;
 
@@ -332,7 +332,7 @@ export class ManufactureDataTableComponent implements OnInit {
 
   savedManufactureEdited(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
-    this.manufactureService.editManufacture(e, e.id).subscribe(data => {
+    this.manufactureService.editItem(e, e.id).subscribe(data => {
       this.dataItems[idx] = {...data};
       this.showSuccessSavingMessage();
     }, error => {
@@ -342,7 +342,7 @@ export class ManufactureDataTableComponent implements OnInit {
 
   savedManufactureNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
-    this.manufactureService.newManufacture(e).subscribe(data => {
+    this.manufactureService.newItem(e).subscribe(data => {
       this.dataItems = [...this.dataItems, data];
       this.showSuccessSavingMessage();
     }, error => {

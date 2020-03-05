@@ -2,18 +2,16 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Conf} from '../../../assets/config/conf';
+import {GlobalItemServiceModel} from '../models/global-item-service.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ShopTypesService {
+export class ShopTypesService extends GlobalItemServiceModel{
   private config = new Conf();
   private shopTypesURL: string = this.config.BASE_URL + this.config.SHOP_TYPES_URL;
 
-  constructor(@Inject(HttpClient) private http: HttpClient) {
-  }
-
-  fetchShopTypesData(options = {}): Observable<any> {
+  fetchData(options = {}): Observable<any> {
     return this.http.get(
       this.shopTypesURL,
       {
@@ -21,11 +19,11 @@ export class ShopTypesService {
       });
   }
 
-  editShopType(updateData: {}, id: number): Observable<any> {
+  editItem(updateData: {}, id: number): Observable<any> {
     return this.http.patch(`${this.shopTypesURL}/${id}`, updateData)
   }
 
-  newShopType(shopData: {}): Observable<any> {
+  newItem(shopData: {}): Observable<any> {
     return this.http.post(this.shopTypesURL, shopData);
   }
 

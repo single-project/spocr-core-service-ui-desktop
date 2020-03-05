@@ -11,7 +11,7 @@ export class MessageServiceFacadeService {
   //TODO: put it to assets/resources or assets/i18
   private messagesMap = new Map();
 
-  constructor(@Inject(MessageService) private messageService: MessageService) {
+  constructor( private messageService: MessageService) {
     //401
     this.messagesMap.set("401", "Неправильное имя или пароль");
 

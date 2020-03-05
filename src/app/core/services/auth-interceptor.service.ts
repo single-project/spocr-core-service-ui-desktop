@@ -14,7 +14,7 @@ import {tap} from "rxjs/operators";
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(@Inject(CookieService) private cookie: CookieService) {
+  constructor( private cookie: CookieService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
