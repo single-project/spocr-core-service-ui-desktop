@@ -186,7 +186,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     let dataService$ = this.shopTypesService.get(params);
 
     if (fieldName === 'manufacturer') {
-      dataService$ = this.manufactureService.fetchData(params);
+      dataService$ = this.manufactureService.get(params);
     }
 
     return dataService$;
@@ -393,7 +393,7 @@ export class ShopTypesDataTableComponent implements OnInit {
   }
 
   manufactureListLoad() {
-    this.manufactureService.fetchData()
+    this.manufactureService.get()
       .subscribe((data: ReferenceResponseModel<ManufacturerModel>) => {
         this.manufactureList = [...data.content];
       });

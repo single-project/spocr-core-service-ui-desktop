@@ -15,7 +15,7 @@ export class BaseIdentifiedEntity extends IdentifiedEntity {
   }
 }
 
-export class ShopClassifier extends BaseIdentifiedEntity {
+export class ShopClassifierModel extends BaseIdentifiedEntity {
   name?: string;
   manufacturer?: ManufacturerModel;
 
@@ -179,11 +179,11 @@ export interface PaymentDetails {
   bank: string;
 }
 
-export interface CounterpartyStatus {
-  id: number;
-  name: string;
-  ident: string;
-  properties?: any;
+export class CounterpartyStatus extends EnumerationEntity{
+
+  constructor(id: number, name: string, ident: string, properties: any) {
+    super(id, name, ident, properties);
+  }
 }
 
 export class DocType extends EnumerationEntity {
@@ -240,37 +240,35 @@ export interface CounterpartyModel extends BaseIdentifiedEntity {
 }
 
 
-export class Contract extends BaseIdentifiedEntity {
+export class ContractModel extends BaseIdentifiedEntity {
 
   constructor(id: number, version: number, active: boolean) {
     super(id, version, active);
   }
 }
 
-export class ShopSpecializationModel extends ShopClassifier {
+export class ShopSpecializationModel extends ShopClassifierModel {
 
   constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
     super(id, version, active, name, manufacturer);
   }
 }
 
-export class ShopTypeModel extends ShopClassifier {
+export class ShopTypeModel extends ShopClassifierModel {
 
   constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
     super(id, version, active, name, manufacturer);
   }
 }
 
-export class SalesChannelModel extends ShopClassifier {
-
+export class SalesChannelModel extends ShopClassifierModel {
 
   constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
     super(id, version, active, name, manufacturer);
   }
 }
 
-export class ShopDepartModel extends ShopClassifier {
-
+export class ShopDepartModel extends ShopClassifierModel {
 
   constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
     super(id, version, active, name, manufacturer);

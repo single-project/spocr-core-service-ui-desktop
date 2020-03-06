@@ -6,6 +6,7 @@ import {Observable, Subject} from 'rxjs';
 import {AutoComplete, LazyLoadEvent, Table} from 'primeng';
 import {QueryList, ViewChildren} from '@angular/core';
 import {MessageService} from 'primeng/api';
+import {IdentifiedEntityService} from "../services/identified-entity.service";
 
 export abstract class AppDataTableModel<T> {
 
@@ -34,7 +35,7 @@ export abstract class AppDataTableModel<T> {
   protected constructor(
     protected messageService: MessageService,
     protected configService: ConfigService,
-    protected tableDataService: any,
+    protected tableDataService: IdentifiedEntityService<T>,
   ) {
   }
 
@@ -98,7 +99,7 @@ export abstract class AppDataTableModel<T> {
   }
 
   loadTableData(options = {}, updatePageInfo = true) {
-    return this.tableDataService.fetchData(options)
+    return this.tableDataService.get(options)
       .subscribe((data: ReferenceResponseModel<T>) => {
         this.dataItems = data.content;
 

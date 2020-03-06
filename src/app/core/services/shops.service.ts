@@ -1,34 +1,31 @@
-import {Inject, Injectable} from '@angular/core';
-import {Conf} from "../../../assets/config/conf";
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {GlobalItemServiceModel} from '../models/global-item-service.model';
+import {IdentifiedEntityService} from "./identified-entity.service";
+import {ShopModel} from "../models/global-reference.model";
+import {ConfigService} from "./config.service";
+import {AppTableTypes} from "../models/app-tabe-types.enum";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ShopsService extends GlobalItemServiceModel{
+export class ShopsService extends IdentifiedEntityService<ShopModel> {
 
-  private config = new Conf();
-  private shopUrl: string = this.config.BASE_URL + this.config.SHOP_URL;
-
-  fetchData(options = {}): Observable<any> {
-    return this.http.get(
-      this.shopUrl,
-      {
-        params: {...options}
-      });
+  constructor(private configService: ConfigService, private http: HttpClient) {
+    super(configService, http);
   }
 
-  editItem(updateData: {}, id: number): Observable<any> {
-    return this.http.patch(`${this.shopUrl}/${id}`, updateData)
+  getConfig(configService: ConfigService) {
+    configService.fetchDataTypeEndpointURL(AppTableTypes.SHOP_TABLE_TYPE).subscribe(d => this.config.url = d.url)
   }
 
-  newItem(shopData: {}): Observable<any> {
-    return this.http.post(this.shopUrl, shopData);
+
+  editItem(updateData: ShopModel, id: number): Observable<any> {
+    return this.patch(updateData);
   }
 
-  shopTypeAdd(typeData: [], id: number): any {
-    return this.http.put(`${this.shopUrl}/${id}`, typeData);
+  newItem(shopData: ShopModel): Observable<any> {
+    return this.post(shopData)
   }
+
 }

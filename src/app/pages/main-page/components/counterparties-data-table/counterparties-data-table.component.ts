@@ -153,7 +153,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
-        this.counterPartiesService.fetchData(params)
+        this.counterPartiesService.get(params)
           .pipe(
             map((data) => {
               let arrayTemp: Array<Object>;
@@ -260,7 +260,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
 
   loadCounterPartiesData(options = {}, updatePageInfo = true): void {
     this.loading = true;
-    this.counterPartiesService.fetchData(options)
+    this.counterPartiesService.get(options)
       .subscribe((data: ReferenceResponseModel<CounterpartyModel>) => {
         this.dataItems = [...data.content];
 
@@ -337,7 +337,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   savedCounterPartyNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.counterPartiesService.newItem(e).subscribe(data => {
+    this.counterPartiesService.post(e).subscribe(data => {
       this.dataItems = [...this.dataItems, data];
       this.showSuccessSavingMessage();
     }, error => {
@@ -348,7 +348,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   savedCounterPartyEdited(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.counterPartiesService.editItem(e, e.id).subscribe(
+    this.counterPartiesService.patch(e).subscribe(
       (data) => {
         this.dataItems[idx] = {...data};
         this.showSuccessSavingMessage();

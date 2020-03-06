@@ -46,11 +46,10 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
   }
 
   fetchFilterData(params = {}, fieldName = '') {
-    let dataService$ = this.tableDataService.fetchData(params);
+    let dataService$ = this.tableDataService.get(params);
 
     if (fieldName === 'counterparty') {
-      dataService$ = this.counterPartiesService
-        .fetchData(params);
+      dataService$ = this.counterPartiesService.get(params);
     }
     return dataService$;
   }

@@ -1,37 +1,31 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Conf} from '../../../assets/config/conf';
-import {Observable} from "rxjs";
-import {GlobalItemServiceModel} from '../models/global-item-service.model';
+import {Observable, of} from "rxjs";
+import {IdentifiedEntityService} from "./identified-entity.service";
+import {CounterpartyModel} from "../models/global-reference.model";
+import {ConfigService} from "./config.service";
+import {AppTableTypes} from "../models/app-tabe-types.enum";
 
 @Injectable({
   providedIn: 'root'
 })
-export class CounterpartiesService extends GlobalItemServiceModel{
+export class CounterpartiesService extends IdentifiedEntityService<CounterpartyModel> {
 
-  private config = new Conf();
-  private counterpartiesURL = this.config.BASE_URL + this.config.COUNTERPARTIES_URL;
-
-
-  fetchData(options = {}): Observable<any> {
-    return this.http.get(
-      this.counterpartiesURL,
-      {
-        params: {...options}
-      });
+  constructor(private configService: ConfigService, private http: HttpClient) {
+    super(configService, http);
   }
 
-  fetchCounterpartiesStatuses(): Observable<any>{
-    return this.http.get(this.config.BASE_URL+this.config.CP_STATUSES_URL);
+  getConfig(configService: ConfigService) {
+    configService.fetchDataTypeEndpointURL(AppTableTypes.COUNTER_PARTIES_TABLE_TYPE).subscribe(d => this.config.url = d.url)
   }
 
-  editItem(updateData: {}, id: number):any {
 
-    return this.http.patch(`${this.counterpartiesURL}/${id}`, updateData)
+  fetchCounterpartiesStatuses(): Observable<any> {
+    return of({});
   }
 
   newItem(updateData: {}): Observable<any> {
-    return this.http.post(this.counterpartiesURL, updateData);
+    return of({});
   }
 
 }

@@ -3,28 +3,34 @@ import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {ReferenceResponseModel} from "../models/reference-response.model";
 import {ServiceConfig} from "../models/global-reference.model";
+import {ConfigService} from "./config.service";
 
 export abstract class IdentifiedEntityService<T extends IdentifiedEntity> implements IdentifiedEntityServiceI<T> {
 
-  protected constructor(private _params: ServiceConfig, private _http: HttpClient) {
+  protected config = {} as ServiceConfig;
 
+  protected constructor(private _configService: ConfigService, private _http: HttpClient) {
+    this.getConfig(_configService)
   }
+
+  abstract getConfig(configService: ConfigService);
 
   get(options = {}): Observable<ReferenceResponseModel<T>> {
     return this._http.get<ReferenceResponseModel<T>>(
-      this._params.url,
+      this.config.url,
       {
         params: {...options}
       });
   }
 
   patch(entity: T): Observable<T> {
-    return this._http.patch<T>(`${this._params.url}/${entity.id}`, entity)
+    return this._http.patch<T>(`${this.config.url}/${entity.id}`, entity)
   }
 
   post(entity: T): Observable<T> {
-    return this._http.post<T>(this._params.url, entity);
+    return this._http.post<T>(this.config.url, entity);
   }
+
 }
 
 interface IdentifiedEntityServiceI<T> {

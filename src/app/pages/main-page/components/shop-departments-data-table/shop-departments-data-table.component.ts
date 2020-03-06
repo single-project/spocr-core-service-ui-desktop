@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ShopdepartsService} from '../../../../core/services/shopdeparts.service';
+import {ShopDepartsService} from '../../../../core/services/shop-departs.service';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {Observable} from 'rxjs';
@@ -19,7 +19,7 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel<Identif
   constructor(
     messageService: MessageService,
     configService: ConfigService,
-    shopDepartsService: ShopdepartsService) {
+    shopDepartsService: ShopDepartsService) {
     super(messageService,
       configService,
       shopDepartsService);
@@ -35,6 +35,6 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel<Identif
   }
 
   fetchFilterData(params: Object, fieldName: string): Observable<any> {
-    return this.tableDataService.fetchData(params);
+    return this.tableDataService.get(params) ;
   }
 }

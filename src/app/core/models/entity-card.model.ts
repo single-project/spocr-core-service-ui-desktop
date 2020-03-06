@@ -23,6 +23,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
 
   abstract buildFormGroup(e: T);
 
+  //TODO: ранее требовалось создать форму, потом обновить значения их полей теперь не требуется - возможно метод не нужен
   abstract populateFormGroup(e: T);
 
   abstract instantiate(): T;

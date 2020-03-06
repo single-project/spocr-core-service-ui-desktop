@@ -3,9 +3,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
-import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
-import {ShopdepartsService} from '../../../../core/services/shopdeparts.service';
-import {ShopspecializationsService} from '../../../../core/services/shopspecializations.service';
+import {SalesChannelService} from '../../../../core/services/sales-channel.service';
+import {ShopDepartsService} from '../../../../core/services/shop-departs.service';
+import {ShopSpecializationsService} from '../../../../core/services/shop-specializations.service';
 import {map, tap} from 'rxjs/operators';
 import {ShopsService} from '../../../../core/services/shops.service';
 import {
@@ -37,9 +37,9 @@ export class ShopDialogComponent implements OnInit, OnChanges {
      private fb: FormBuilder,
      private counterpartiesSevice: CounterpartiesService,
      private shopTypeService: ShopTypesService,
-     private salesChanelService: SaleschannelsService,
-     private shopdepartsService: ShopdepartsService,
-     private shopSpecializationsService: ShopspecializationsService,
+     private salesChanelService: SalesChannelService,
+     private shopdepartsService: ShopDepartsService,
+     private shopSpecializationsService: ShopSpecializationsService,
      private shopService: ShopsService
   ) {
     this.shopFrom = this.buildShopForm();
@@ -135,7 +135,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadCounterpartiesList(): void {
-    this.counterpartiesSevice.fetchData().pipe(
+    this.counterpartiesSevice.get().pipe(
       map(p => p.content),
     ).subscribe(party => {
       this.counterpartiesList = party
@@ -155,7 +155,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadSalesChannels(): void {
-    this.salesChanelService.fetchData()
+    this.salesChanelService.get()
       .pipe(
       map(sc => sc.content),
       map((sc: SalesChannelModel[]) => sc.map(s => {
@@ -165,7 +165,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadShopSpecialization(): void{
-    this.shopSpecializationsService.fetchData()
+    this.shopSpecializationsService.get()
       .pipe(
         map(ss => ss.content),
         map((ss: ShopSpecializationModel[]) => ss.map(s => {
