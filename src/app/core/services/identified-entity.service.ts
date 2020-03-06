@@ -1,15 +1,20 @@
-import {Injectable} from '@angular/core';
+import {Injectable, InjectionToken, Injector} from '@angular/core';
 import {IdentifiedEntity} from "../models/identified.entity";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {ReferenceResponseModel} from "../models/reference-response.model";
+import {Conf} from "../../../assets/config/conf";
+import {publish} from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export abstract class IdentifiedEntityService<T extends IdentifiedEntity> implements IdentifiedEntityServiceI<T> {
 
-  protected constructor(public params: any, private _http: HttpClient) {
+  protected params = {} as Config;
+
+  protected constructor(private _http: HttpClient) {
+
   }
 
   get(options = {}): Observable<ReferenceResponseModel<T>> {
@@ -36,4 +41,8 @@ interface IdentifiedEntityServiceI<T> {
   post(entity: T): Observable<T>;
 
   patch(entity: T): Observable<T>;
+}
+
+export interface Config {
+  url: string;
 }
