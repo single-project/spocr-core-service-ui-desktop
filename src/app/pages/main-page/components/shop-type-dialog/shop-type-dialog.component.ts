@@ -45,7 +45,7 @@ export class ShopTypeDialogComponent extends EntityCardModel<ShopTypeModel> {
   }
 
   ngOnInit() {
-    this.manufacturerService.fetchManufacturesData().subscribe(page => this.manufactureList = page.content);
+    this.manufacturerService.fetchData().subscribe(page => this.manufactureList = page.content);
   }
 
   instantiate(): ShopTypeModel {
