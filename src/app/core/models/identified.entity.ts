@@ -1,3 +1,8 @@
 export abstract class IdentifiedEntity {
-  id: number;
+  id?: number;
+
+
+  constructor(id: number) {
+    this.id = id;
+  }
 }

@@ -186,7 +186,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     let dataService$ = this.shopTypesService.get(params);
 
     if (fieldName === 'manufacturer') {
-      dataService$ = this.manufactureService.fetchManufacturesData(params);
+      dataService$ = this.manufactureService.fetchData(params);
     }
 
     return dataService$;

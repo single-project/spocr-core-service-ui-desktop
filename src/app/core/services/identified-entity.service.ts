@@ -3,14 +3,13 @@ import {IdentifiedEntity} from "../models/identified.entity";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {ReferenceResponseModel} from "../models/reference-response.model";
-import {MessageServiceFacadeService} from "./message-service-facade.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export abstract class IdentifiedEntityService<T extends IdentifiedEntity> implements IdentifiedEntityServiceI<T> {
 
-  protected constructor(private params, private _http: HttpClient) {
+  protected constructor(public params: any, private _http: HttpClient) {
   }
 
   get(options = {}): Observable<ReferenceResponseModel<T>> {

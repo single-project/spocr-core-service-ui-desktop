@@ -261,7 +261,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   loadCounterPartiesData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.counterPartiesService.fetchData(options)
-      .subscribe((data: ReferenceResponseModel) => {
+      .subscribe((data: ReferenceResponseModel<CounterpartyModel>) => {
         this.dataItems = [...data.content];
 
         if (updatePageInfo) {
@@ -302,7 +302,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   }
 
   dataSearch(searchString: string) {
-    this.search.counterpartiesSearch(searchString).subscribe((data: ReferenceResponseModel) => {
+    this.search.counterpartiesSearch(searchString).subscribe((data: ReferenceResponseModel<CounterpartyModel>) => {
       this.dataItems = data.content;
     });
   }

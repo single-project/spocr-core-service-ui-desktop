@@ -11,8 +11,7 @@ import {ShopsService} from '../../../../core/services/shops.service';
 import {
   CounterpartyModel,
   SalesChannelModel,
-  ShopModel, ShopSpecializationModel,
-  ShopTypeModel
+  ShopModel, ShopSpecializationModel, ShopTypeModel
 } from '../../../../core/models/global-reference.model';
 
 

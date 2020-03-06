@@ -1,9 +1,38 @@
 import {IdentifiedEntity} from "./identified.entity";
 
 export class BaseIdentifiedEntity extends IdentifiedEntity {
-  id: number;
-  version: number;
-  active: boolean;
+  version?: number;
+  active?: boolean;
+
+  constructor(id: number, version: number, active: boolean) {
+    super(id);
+    this.version = version;
+    this.active = active;
+  }
+}
+
+export class ShopClassifier extends BaseIdentifiedEntity {
+  name?: string;
+  manufacturer?: ManufacturerModel;
+
+  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
+    super(id, version, active);
+    this.name = name;
+    this.manufacturer = manufacturer;
+  }
+}
+
+export class EnumerationEntity extends IdentifiedEntity {
+  name?: string;
+  ident?: string;
+  properties?: any;
+
+  constructor(id: number, name: string, ident: string, properties: any) {
+    super(id);
+    this.name = name;
+    this.ident = ident;
+    this.properties = properties;
+  }
 }
 
 export interface AddressSuggestionModel {
@@ -101,27 +130,13 @@ export interface AddressModel {
   longitude?: any;
 }
 
-export interface ManufacturerModel {
-  id: number;
-  version: number;
-  active: boolean;
-  name: string;
-}
+export class ManufacturerModel extends BaseIdentifiedEntity {
+  name?: string;
 
-export interface ShopAdditionalEntity {
-  id: number;
-  version: number;
-  active: boolean;
-  name: string;
-  manufacturer: ManufacturerModel;
-}
-
-export interface SalesChannelModel extends ShopAdditionalEntity {
-
-}
-
-export interface ShopSpecializationModel extends ShopAdditionalEntity{
-
+  constructor(id: number, version: number, active: boolean, name: string) {
+    super(id, version, active);
+    this.name = name;
+  }
 }
 
 export interface CounterpartyProperties {
@@ -167,25 +182,25 @@ export interface CounterpartyStatus {
   properties?: any;
 }
 
-export interface DocType {
-  id: number;
-  name: string;
-  ident: string;
-  properties?: any;
+export class DocType extends EnumerationEntity {
+
+  constructor(id: number, name: string, ident: string, properties: any) {
+    super(id, name, ident, properties);
+  }
 }
 
-export interface Citizenship {
-  id: number;
-  name: string;
-  ident: string;
-  properties?: any;
+export class Citizenship extends EnumerationEntity {
+
+  constructor(id: number, name: string, ident: string, properties: any) {
+    super(id, name, ident, properties);
+  }
 }
 
-export interface Gender {
-  id: number;
-  name: string;
-  ident: string;
-  properties?: any;
+export class Gender extends EnumerationEntity {
+
+  constructor(id: number, name: string, ident: string, properties: any) {
+    super(id, name, ident, properties);
+  }
 }
 
 export interface PersonRekv extends BaseIdentifiedEntity {
@@ -221,6 +236,44 @@ export interface CounterpartyModel extends BaseIdentifiedEntity {
 }
 
 
+export class Contract extends BaseIdentifiedEntity {
+
+  constructor(id: number, version: number, active: boolean) {
+    super(id, version, active);
+  }
+}
+
+export class ShopSpecializationModel extends ShopClassifier {
+
+  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
+    super(id, version, active, name, manufacturer);
+  }
+}
+
+export class ShopTypeModel extends ShopClassifier {
+
+  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
+    super(id, version, active, name, manufacturer);
+  }
+}
+
+export class SalesChannelModel extends ShopClassifier {
+
+
+  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
+    super(id, version, active, name, manufacturer);
+  }
+}
+
+export class ShopDepartModel extends ShopClassifier {
+
+
+  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
+    super(id, version, active, name, manufacturer);
+  }
+}
+
+
 export interface ShopModel extends BaseIdentifiedEntity {
   name: string;
   address: AddressModel;
@@ -229,30 +282,4 @@ export interface ShopModel extends BaseIdentifiedEntity {
   counterparty: CounterpartyModel;
 }
 
-export class Contract extends BaseIdentifiedEntity {
 
-}
-
-export interface ShopSpecialization extends BaseIdentifiedEntity {
-  name: string;
-}
-
-
-
-export class ShopClassifier extends BaseIdentifiedEntity {
-  name: string;
-  manufacturer: ManufacturerModel;
-}
-
-export class EnumerationEntity extends IdentifiedEntity {
-  id: number;
-  name: string;
-  ident: string;
-  properties?: any;
-}
-
-export class ShopTypeModel extends BaseIdentifiedEntity {
-  name: string;
-  manufacturer: ManufacturerModel;
-
-}

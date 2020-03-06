@@ -5,6 +5,7 @@ import {ReferenceResponseModel} from '../../../../core/models/reference-response
 import {SearchService} from '../../../../core/services/search.service';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
+import {ManufacturerModel} from "../../../../core/models/global-reference.model";
 
 @Component({
   selector: 'app-manufacture-data-table',
@@ -221,7 +222,7 @@ export class ManufactureDataTableComponent implements OnInit {
   }
 
   dataSearch(searchString: string) {
-    this.search.manufactureSearch(searchString).subscribe((data: ReferenceResponseModel) => {
+    this.search.manufactureSearch(searchString).subscribe((data: ReferenceResponseModel<ManufacturerModel>) => {
       this.dataItems = data.content;
     });
   }
@@ -273,7 +274,7 @@ export class ManufactureDataTableComponent implements OnInit {
   loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
     this.manufactureService.fetchData(options)
-      .subscribe((data: ReferenceResponseModel) => {
+      .subscribe((data: ReferenceResponseModel<ManufacturerModel>) => {
         this.dataItems = data.content;
 
         if (updatePageInfo) {
