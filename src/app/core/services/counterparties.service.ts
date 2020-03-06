@@ -2,19 +2,18 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Conf} from '../../../assets/config/conf';
 import {Observable} from "rxjs";
+import {GlobalItemServiceModel} from '../models/global-item-service.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CounterpartiesService {
+export class CounterpartiesService extends GlobalItemServiceModel{
 
   private config = new Conf();
   private counterpartiesURL = this.config.BASE_URL + this.config.COUNTERPARTIES_URL;
 
-  constructor(@Inject(HttpClient) private http: HttpClient) {
-  }
 
-  fetchCounterpartiesData(options = {}): Observable<any> {
+  fetchData(options = {}): Observable<any> {
     return this.http.get(
       this.counterpartiesURL,
       {
@@ -26,12 +25,12 @@ export class CounterpartiesService {
     return this.http.get(this.config.BASE_URL+this.config.CP_STATUSES_URL);
   }
 
-  editCounterparty(updateData: {}, id: number):any {
+  editItem(updateData: {}, id: number):any {
 
     return this.http.patch(`${this.counterpartiesURL}/${id}`, updateData)
   }
 
-  newCounterparty(updateData: {}): Observable<any> {
+  newItem(updateData: {}): Observable<any> {
     return this.http.post(this.counterpartiesURL, updateData);
   }
 

@@ -19,7 +19,7 @@ export class DadataFioComponent implements OnInit {
   public selectedItem: string;
 
   constructor(
-    @Inject(DadataService) private dadata: DadataService,
+     private dadata: DadataService,
   ) {
 
   }

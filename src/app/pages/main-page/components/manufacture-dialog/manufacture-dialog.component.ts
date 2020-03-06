@@ -16,7 +16,7 @@ export class ManufactureDialogComponent implements OnInit {
   private newManufacture = {};
   manForm: FormGroup;
 
-  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
+  constructor( private fb: FormBuilder) {
     this.manForm = this.fb.group({
       'manName': ['', Validators.required],
       'manActive': [true]

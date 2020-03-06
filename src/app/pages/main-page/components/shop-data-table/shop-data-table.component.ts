@@ -50,7 +50,7 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
 
     if (fieldName === 'counterparty') {
       dataService$ = this.counterPartiesService
-        .fetchCounterpartiesData(params);
+        .fetchData(params);
     }
     return dataService$;
   }

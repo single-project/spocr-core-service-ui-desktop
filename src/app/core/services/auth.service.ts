@@ -14,9 +14,9 @@ export class AuthService {
 
   private config = new Conf();
   constructor(
-    @Inject(CookieService) private cookies: CookieService,
-    @Inject(HttpClient) private http: HttpClient,
-    @Inject(Router) private router: Router
+     private cookies: CookieService,
+     private http: HttpClient,
+     private router: Router
   ) {
   }
 

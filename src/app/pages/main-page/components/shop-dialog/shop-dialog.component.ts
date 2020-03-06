@@ -11,7 +11,9 @@ import {ShopsService} from '../../../../core/services/shops.service';
 import {
   CounterpartyModel,
   SalesChannelModel,
-  ShopModel, ShopTypeModel} from '../../../../core/models/global-reference.model';
+  ShopModel, ShopSpecializationModel,
+  ShopTypeModel
+} from '../../../../core/models/global-reference.model';
 
 
 @Component({
@@ -25,19 +27,21 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   public counterpartiesList: any[] = [];
   public shopTypesList: ShopTypeModel[] = [];
   public salesChannelsList: { name: string, id: number }[] = [];
+  public shopSpecializationList: {name: string, id: number}[] =[];
+  public shopDepartsList: {name: string, id: number}[] =[];
   public _display = false;
   public shopFrom: FormGroup;
-  private isNew = false;
+  public isNew = false;
 
 
   constructor(
-    @Inject(FormBuilder) private fb: FormBuilder,
-    @Inject(CounterpartiesService) private counterpartiesSevice: CounterpartiesService,
-    @Inject(ShopTypesService) private shopTypeService: ShopTypesService,
-    @Inject(SaleschannelsService) private salesChanelService: SaleschannelsService,
-    @Inject(ShopdepartsService) private shopdepartsService: ShopdepartsService,
-    @Inject(ShopspecializationsService) private shopSpecializationsService: ShopspecializationsService,
-    @Inject(ShopsService) private shopService: ShopsService
+     private fb: FormBuilder,
+     private counterpartiesSevice: CounterpartiesService,
+     private shopTypeService: ShopTypesService,
+     private salesChanelService: SaleschannelsService,
+     private shopdepartsService: ShopdepartsService,
+     private shopSpecializationsService: ShopspecializationsService,
+     private shopService: ShopsService
   ) {
     this.shopFrom = this.buildShopForm();
 
@@ -132,7 +136,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadCounterpartiesList(): void {
-    this.counterpartiesSevice.fetchCounterpartiesData().pipe(
+    this.counterpartiesSevice.fetchData().pipe(
       map(p => p.content),
     ).subscribe(party => {
       this.counterpartiesList = party
@@ -152,12 +156,23 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadSalesChannels(): void {
-    this.salesChanelService.fetchData().pipe(
+    this.salesChanelService.fetchData()
+      .pipe(
       map(sc => sc.content),
       map((sc: SalesChannelModel[]) => sc.map(s => {
         return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}
       }))
     ).subscribe(channels => this.salesChannelsList = channels)
+  }
+
+  loadShopSpecialization(): void{
+    this.shopSpecializationsService.fetchData()
+      .pipe(
+        map(ss => ss.content),
+        map((ss: ShopSpecializationModel[]) => ss.map(s => {
+          return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}
+        }))
+      ).subscribe(channels => this.salesChannelsList = channels)
   }
 
   afterShow() {

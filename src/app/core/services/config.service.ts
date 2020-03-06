@@ -12,7 +12,7 @@ export class ConfigService {
   private shopUrl: string = this.configSettings.BASE_URL + this.configSettings.APP_SETTINGS_URL;
   private appConfigs: Observable<Object>;
 
-  constructor(@Inject(HttpClient) private http: HttpClient) {
+  constructor( private http: HttpClient) {
   }
 
   fetchAppSettings() {

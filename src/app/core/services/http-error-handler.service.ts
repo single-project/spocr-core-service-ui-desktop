@@ -10,7 +10,7 @@ import {Router} from "@angular/router";
 })
 export class HttpErrorHandlerService implements HttpInterceptor {
 
-  constructor(@Inject(Router) private router: Router) {
+  constructor( private router: Router) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

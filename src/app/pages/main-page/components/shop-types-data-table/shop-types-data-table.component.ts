@@ -6,7 +6,7 @@ import {AutoComplete, DialogService, LazyLoadEvent, MessageService, Table} from 
 import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from "rxjs/operators";
 import {Observable, Subject} from 'rxjs';
-import {ShopTypeModel} from "../../../../core/models/global-reference.model";
+import {ManufacturerModel, ShopTypeModel} from "../../../../core/models/global-reference.model";
 import {ShopTypeDialogComponent} from "../shop-type-dialog/shop-type-dialog.component";
 
 @Component({
@@ -393,9 +393,9 @@ export class ShopTypesDataTableComponent implements OnInit {
   }
 
   manufactureListLoad() {
-    this.manufactureService.fetchManufacturesData()
-    .subscribe((data: ReferenceResponseModel<ShopTypeModel>) => {
-      this.manufactureList = [...data.content];
-    });
+    this.manufactureService.fetchData()
+      .subscribe((data: ReferenceResponseModel<ManufacturerModel>) => {
+        this.manufactureList = [...data.content];
+      });
   }
 }

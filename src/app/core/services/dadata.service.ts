@@ -11,7 +11,7 @@ import {FioSuggestion, SuggestionFioRoot} from '../models/suggestion-fio.model';
 })
 export class DadataService {
 
-  constructor(@Inject(HttpClient) private http: HttpClient) {
+  constructor( private http: HttpClient) {
   }
 
   addressSuggestion(address: string, count = 10): Observable<AddressSuggestion[]> {
