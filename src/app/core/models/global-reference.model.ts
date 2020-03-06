@@ -1,5 +1,9 @@
 import {IdentifiedEntity} from "./identified.entity";
 
+export interface ServiceConfig {
+  url: string;
+}
+
 export class BaseIdentifiedEntity extends IdentifiedEntity {
   version?: number;
   active?: boolean;
