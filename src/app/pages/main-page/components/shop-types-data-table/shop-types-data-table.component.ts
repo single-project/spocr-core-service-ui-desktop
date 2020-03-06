@@ -2,10 +2,12 @@ import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {ManufactureService} from '../../../../core/services/manufacture.service';
-import {AutoComplete, LazyLoadEvent, MessageService, Table} from 'primeng';
+import {AutoComplete, DialogService, LazyLoadEvent, MessageService, Table} from 'primeng';
 import {SearchService} from '../../../../core/services/search.service';
 import {debounceTime, map, switchMap} from "rxjs/operators";
 import {Observable, Subject} from 'rxjs';
+import {ShopTypeModel} from "../../../../core/models/global-reference.model";
+import {ShopTypeDialogComponent} from "../shop-type-dialog/shop-type-dialog.component";
 
 @Component({
   selector: 'app-shop-types-data-table',
@@ -16,7 +18,6 @@ export class ShopTypesDataTableComponent implements OnInit {
   private _dataItems = [];
   private _loading: boolean;
   private _manufactureList = [];
-  private _displayShopTypeEditDialog: boolean;
   private _selectedShopType;
   private _isNewShopType: boolean;
   private _shopType: any = {};
@@ -107,14 +108,6 @@ export class ShopTypesDataTableComponent implements OnInit {
     this._shopType = value;
   }
 
-  get displayShopTypeEditDialog(): boolean {
-    return this._displayShopTypeEditDialog;
-  }
-
-  set displayShopTypeEditDialog(value: boolean) {
-    this._displayShopTypeEditDialog = value;
-  }
-
   get manufactureList(): any[] {
     return this._manufactureList;
   }
@@ -144,6 +137,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     private manufactureService: ManufactureService,
     private mService: MessageService,
     private search: SearchService,
+    public dialogService: DialogService,
   ) {
   }
 
@@ -159,27 +153,27 @@ export class ShopTypesDataTableComponent implements OnInit {
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
         this.fetchFilterData(params, fieldName)
-          .pipe(
-            map((data: any) => {
-              let arrayTemp: Array<Object>;
-              if (fieldName === 'active') {
-                arrayTemp = [...new Set(data.content.map(
-                  dataObj => dataObj.active))]
-                  .map((val) => ({
-                    id: -1,
-                    name: val ? 'Да' : 'Нет'
-                  }));
-              } else {
-                arrayTemp = data.content.map(dataObj => {
-                  return {
-                    id: dataObj.id,
-                    name: fieldName === 'manufacturer' ? dataObj.name : dataObj[fieldName]
-                  };
-                });
-              }
-              return arrayTemp;
-            }),
-          )
+        .pipe(
+          map((data: any) => {
+            let arrayTemp: Array<Object>;
+            if (fieldName === 'active') {
+              arrayTemp = [...new Set(data.content.map(
+                dataObj => dataObj.active))]
+              .map((val) => ({
+                id: -1,
+                name: val ? 'Да' : 'Нет'
+              }));
+            } else {
+              arrayTemp = data.content.map(dataObj => {
+                return {
+                  id: dataObj.id,
+                  name: fieldName === 'manufacturer' ? dataObj.name : dataObj[fieldName]
+                };
+              });
+            }
+            return arrayTemp;
+          }),
+        )
       ),
     );
 
@@ -189,7 +183,7 @@ export class ShopTypesDataTableComponent implements OnInit {
   }
 
   fetchFilterData(params = {}, fieldName = '') {
-    let dataService$ = this.shopTypesService.fetchShopTypesData(params);
+    let dataService$ = this.shopTypesService.get(params);
 
     if (fieldName === 'manufacturer') {
       dataService$ = this.manufactureService.fetchManufacturesData(params);
@@ -200,22 +194,30 @@ export class ShopTypesDataTableComponent implements OnInit {
 
   onRowSelect(e) {
     this.isNewShopType = false;
-    this.shopType = this.cloneEntity(e.data);
-    console.log(this.shopType);
-    this.displayShopTypeEditDialog = true;
+    let shopType = e.data;
+
+    this.openShopTypeDialog(shopType);
   }
 
-  cloneEntity(e: any) {
-    let entity = {};
-    for (let prop in e) {
-      entity[prop] = e[prop];
-    }
-    return entity;
+  private openShopTypeDialog(shopType) {
+    let header = shopType ? shopType.name : 'Новый Тип Магазина';
+    const ref = this.dialogService.open(ShopTypeDialogComponent, {
+      data: {entity: shopType, entityKey: 'shop-type'},
+      header: header,
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((e: boolean) => {
+      if (e) {
+        console.log("need to refresh page");
+      } else {
+        console.log("no need to refresh page");
+      }
+    });
   }
 
   onShopTypeEditSave(e) {
     this.shopTypeEdited(e);
-    this.displayShopTypeEditDialog = false;
     this.shopType = null;
   }
 
@@ -223,15 +225,8 @@ export class ShopTypesDataTableComponent implements OnInit {
     this.shopTypeNew(e);
   }
 
-  onCloseShopDialog(e) {
-    this.displayShopTypeEditDialog = e;
-    this.shopType = null;
-  }
-
   onShopTypeCreate() {
-    this.isNewShopType = true;
-    this.shopType = {active: true};
-    this.displayShopTypeEditDialog = true;
+    this.openShopTypeDialog(null);
   }
 
   columnsChange() {
@@ -239,7 +234,7 @@ export class ShopTypesDataTableComponent implements OnInit {
   }
 
   dataSearch(searchString: string) {
-    this.search.shopTypeSearch(searchString).subscribe((data: ReferenceResponseModel) => {
+    this.search.shopTypeSearch(searchString).subscribe((data: ReferenceResponseModel<ShopTypeModel>) => {
       this.dataItems = this.shopTypesDataTransformHelper(data);
     });
   }
@@ -309,7 +304,7 @@ export class ShopTypesDataTableComponent implements OnInit {
     console.dir;
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopTypesService.editShopType(e, e.id).subscribe((data) => {
+    this.shopTypesService.patch(e).subscribe((data) => {
       this.dataItems[idx] = {...this.shopTypesSingleTransformHelper(data)};
       this.showSuccessSavingMessage();
     }, error => {
@@ -320,7 +315,7 @@ export class ShopTypesDataTableComponent implements OnInit {
   shopTypeNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.shopTypesService.newShopType(e).subscribe((data) => {
+    this.shopTypesService.post(e).subscribe((data) => {
       this.dataItems = [...this.dataItems, this.shopTypesSingleTransformHelper(data)];
       this.showSuccessSavingMessage();
     }, error => {
@@ -330,16 +325,16 @@ export class ShopTypesDataTableComponent implements OnInit {
 
   loadTableData(options = {}, updatePageInfo = true): void {
     this.loading = true;
-    this.shopTypesService.fetchShopTypesData(options)
-      .subscribe((data: ReferenceResponseModel) => {
-        this.dataItems = data.content;
+    this.shopTypesService.get(options)
+    .subscribe((data: ReferenceResponseModel<ShopTypeModel>) => {
+      this.dataItems = data.content;
 
-        if (updatePageInfo) {
-          this.totalElements = data.totalElements;
-          this.numberOfElements = data.numberOfElements;
-        }
-        this.loading = false;
-      });
+      if (updatePageInfo) {
+        this.totalElements = data.totalElements;
+        this.numberOfElements = data.numberOfElements;
+      }
+      this.loading = false;
+    });
   }
 
   loadShopTypesDataLazy(event: LazyLoadEvent) {
@@ -399,8 +394,8 @@ export class ShopTypesDataTableComponent implements OnInit {
 
   manufactureListLoad() {
     this.manufactureService.fetchManufacturesData()
-      .subscribe((data: ReferenceResponseModel) => {
-        this.manufactureList = [...data.content];
-      });
+    .subscribe((data: ReferenceResponseModel<ShopTypeModel>) => {
+      this.manufactureList = [...data.content];
+    });
   }
 }

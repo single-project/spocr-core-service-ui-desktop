@@ -5,13 +5,14 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {Observable} from 'rxjs';
 import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
+import {SalesChannelModel} from "../../../../core/models/global-reference.model";
 
 @Component({
   selector: 'app-sales-chanels-data-table',
   templateUrl: './sales-chanels-data-table.component.html',
   styleUrls: ['./sales-chanels-data-table.component.scss']
 })
-export class SalesChanelsDataTableComponent extends AppDataTableModel implements OnInit {
+export class SalesChanelsDataTableComponent extends AppDataTableModel<SalesChannelModel> implements OnInit {
 
   selectedItem: any;
 

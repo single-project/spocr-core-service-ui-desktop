@@ -5,13 +5,14 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {Observable} from 'rxjs';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ContractService} from '../../../../core/services/contract.service';
+import {IdentifiedEntity} from "../../../../core/models/identified.entity";
 
 @Component({
   selector: 'app-contracts-data-table',
   templateUrl: './contracts-data-table.component.html',
   styleUrls: ['./contracts-data-table.component.scss']
 })
-export class ContractsDataTableComponent extends AppDataTableModel implements OnInit {
+export class ContractsDataTableComponent extends AppDataTableModel<IdentifiedEntity> implements OnInit {
 
   selectedItem: any;
 

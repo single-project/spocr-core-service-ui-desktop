@@ -3,10 +3,16 @@ import {CommonModule} from '@angular/common';
 import {
   AutoCompleteModule,
   ButtonModule,
+  CalendarModule,
   CardModule,
   CheckboxModule,
   DialogModule,
+  DialogService,
   DropdownModule,
+  DynamicDialogConfig,
+  DynamicDialogModule,
+  DynamicDialogRef,
+  InputMaskModule,
   InputTextModule,
   MenuModule,
   MessageModule,
@@ -19,19 +25,18 @@ import {
   TabMenuModule,
   TabViewModule,
   ToastModule,
-  ToolbarModule,
-  CalendarModule, InputMaskModule
+  ToolbarModule
 } from 'primeng';
 import {ActiveTagsPipe} from './pipes/active-tags.pipe';
 import {NgxDadataModule} from '@kolkov/ngx-dadata';
 import {DadataAddressComponent} from './components/dadata-address/dadata-address.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {DadataPartyComponent} from './components/dadata-party/dadata-party.component';
-import { DadataFioComponent } from './components/dadata-fio/dadata-fio.component';
+import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
 
 
 @NgModule({
-  declarations: [ ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent ],
+  declarations: [ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -48,6 +53,7 @@ import { DadataFioComponent } from './components/dadata-fio/dadata-fio.component
     MessagesModule,
     MessageModule,
     DialogModule,
+    DynamicDialogModule,
     DropdownModule,
     MultiSelectModule,
     ToastModule,
@@ -57,7 +63,7 @@ import { DadataFioComponent } from './components/dadata-fio/dadata-fio.component
     ReactiveFormsModule,
     TabViewModule,
     CalendarModule,
-    InputMaskModule,
+    InputMaskModule
   ],
   exports: [
     ToolbarModule,
@@ -87,8 +93,9 @@ import { DadataFioComponent } from './components/dadata-fio/dadata-fio.component
     CalendarModule,
     DadataFioComponent,
     InputMaskModule,
-
-  ]
+    DynamicDialogModule
+  ],
+  providers: [DialogService, DynamicDialogRef, DynamicDialogConfig]
 })
 export class SharedModule {
 }

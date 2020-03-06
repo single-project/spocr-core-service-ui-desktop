@@ -1,3 +1,11 @@
+import {IdentifiedEntity} from "./identified.entity";
+
+export class BaseIdentifiedEntity extends IdentifiedEntity {
+  id: number;
+  version: number;
+  active: boolean;
+}
+
 export interface AddressSuggestionModel {
   postal_code?: any;
   country: string;
@@ -99,16 +107,6 @@ export interface ManufacturerModel {
   active: boolean;
   name: string;
 }
-
-export interface ShopTypeModel {
-  id: number;
-  version: number;
-  active: boolean;
-  name: string;
-  manufacturer: ManufacturerModel;
-}
-
-
 export interface SalesChannelModel {
   id: number;
   version: number;
@@ -182,10 +180,7 @@ export interface Gender {
   properties?: any;
 }
 
-export interface PersonRekv {
-  id: number;
-  version: number;
-  active: boolean;
+export interface PersonRekv extends BaseIdentifiedEntity {
   name: string;
   lastName: string;
   firstName?: any;
@@ -201,17 +196,11 @@ export interface PersonRekv {
   phones?: any;
 }
 
-export interface Owner {
-  id: number;
-  version: number;
-  active: boolean;
+export interface Owner extends BaseIdentifiedEntity {
   name: string;
 }
 
-export interface CounterpartyModel {
-  id: number;
-  version: number;
-  active: boolean;
+export interface CounterpartyModel extends BaseIdentifiedEntity {
   name: string;
   legalType: LegalType;
   legalRekv: LegalRekv;
@@ -224,11 +213,7 @@ export interface CounterpartyModel {
 }
 
 
-
-export interface ShopModel {
-  id: number;
-  version: number;
-  active: boolean;
+export interface ShopModel extends BaseIdentifiedEntity {
   name: string;
   address: AddressModel;
   shopTypes: ShopTypeModel[];
@@ -236,4 +221,30 @@ export interface ShopModel {
   counterparty: CounterpartyModel;
 }
 
+export class Contract extends BaseIdentifiedEntity {
 
+}
+
+export interface ShopSpecialization extends BaseIdentifiedEntity {
+  name: string;
+}
+
+
+
+export class ShopClassifier extends BaseIdentifiedEntity {
+  name: string;
+  manufacturer: ManufacturerModel;
+}
+
+export class EnumerationEntity extends IdentifiedEntity {
+  id: number;
+  name: string;
+  ident: string;
+  properties?: any;
+}
+
+export class ShopTypeModel extends BaseIdentifiedEntity {
+  name: string;
+  manufacturer: ManufacturerModel;
+
+}

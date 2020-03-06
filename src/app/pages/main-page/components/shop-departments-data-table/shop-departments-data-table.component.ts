@@ -5,13 +5,14 @@ import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {Observable} from 'rxjs';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {MessageService} from 'primeng';
+import {IdentifiedEntity} from "../../../../core/models/identified.entity";
 
 @Component({
   selector: 'app-shop-departments-data-table',
   templateUrl: './shop-departments-data-table.component.html',
   styleUrls: ['./shop-departments-data-table.component.scss'],
 })
-export class ShopDepartmentsDataTableComponent extends AppDataTableModel implements OnInit {
+export class ShopDepartmentsDataTableComponent extends AppDataTableModel<IdentifiedEntity> implements OnInit {
 
   selectedItem: any;
 

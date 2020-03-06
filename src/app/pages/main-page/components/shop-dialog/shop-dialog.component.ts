@@ -11,9 +11,7 @@ import {ShopsService} from '../../../../core/services/shops.service';
 import {
   CounterpartyModel,
   SalesChannelModel,
-  ShopModel,
-  ShopTypeModel
-} from '../../../../core/models/global-reference.model';
+  ShopModel, ShopTypeModel} from '../../../../core/models/global-reference.model';
 
 
 @Component({
@@ -142,13 +140,13 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   }
 
   loadShopTypesList(): void {
-    this.shopTypeService.fetchShopTypesData().pipe(
+    this.shopTypeService.get().pipe(
       map(tp => tp.content),
       map(tp => tp.map(t => {
         return {id: t.id, name: `${t.name} / ${t.manufacturer.name}`}
       }))
     ).subscribe(type => {
-      this.shopTypesList = type
+      this.shopTypesList = type;
       console.dir(type);
     });
   }

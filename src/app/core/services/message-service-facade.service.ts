@@ -12,6 +12,9 @@ export class MessageServiceFacadeService {
   private messagesMap = new Map();
 
   constructor(@Inject(MessageService) private messageService: MessageService) {
+    // operation
+    this.messagesMap.set("shop-type.dialog.save.failed", "Не удалось сохранить тип магазина");
+    
     //401
     this.messagesMap.set("401", "Неправильное имя или пароль");
 
@@ -23,42 +26,38 @@ export class MessageServiceFacadeService {
   }
 
 
-  public showWrnMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
+  public showWrnMsg(messageKey: string, details?: string, frameKey?: string) {
     this.showMsg({
       frameKey: frameKey,
       severity: "warning",
       messageKey: messageKey,
-      summary: summary,
       details: details
     });
   }
 
-  public showErrMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
+  public showErrMsg(messageKey: string, details?: string, frameKey?: string) {
     this.showMsg({
       frameKey: frameKey,
       severity: "error",
       messageKey: messageKey,
-      summary: summary,
       details: details
     });
   }
 
-  public showScsMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
+  public showScsMsg(messageKey: string, details?: string, frameKey?: string) {
     this.showMsg({
       frameKey: frameKey,
       severity: "success",
       messageKey: messageKey,
-      summary: summary,
       details: details
     });
   }
 
-  public showInfMsg(messageKey: string, summary?: string, details?: string, frameKey?: string) {
+  public showInfMsg(messageKey: string, details?: string, frameKey?: string) {
     this.showMsg({
       frameKey: frameKey,
       severity: "info",
       messageKey: messageKey,
-      summary: summary,
       details: details
     });
   }
@@ -68,16 +67,14 @@ export class MessageServiceFacadeService {
       key: this.getFrameKey(params.frameKey),
       sticky: true,
       severity: params.severity,
-      summary: this.getMessage(params.messageKey, params.summary),
+      summary: this.getMessage(params.messageKey),
       detail: params.details
     });
   }
 
-  private getMessage(key: string, defaultMessage?: string): string {
+  private getMessage(key: string): string {
     if (this.messagesMap.has(key)) {
       return this.messagesMap.get(key);
-    } else if (defaultMessage != undefined) {
-      return defaultMessage;
     } else {
       return key;
     }

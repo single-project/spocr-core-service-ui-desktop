@@ -16,7 +16,7 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
   templateUrl: './shop-data-table.component.html',
   styleUrls: ['./shop-data-table.component.scss']
 })
-export class ShopDataTableComponent extends AppDataTableModel implements OnInit {
+export class ShopDataTableComponent extends AppDataTableModel<ShopModel> implements OnInit {
   selectedItem: ShopModel;
 
   @ViewChild('shopDialogComponent', {static: false})
@@ -29,7 +29,7 @@ export class ShopDataTableComponent extends AppDataTableModel implements OnInit 
     private counterPartiesService: CounterpartiesService,
     private shopTypesService: ShopTypesService,
     private mService: MessageService,
-    configService: ConfigService,
+    configService: ConfigService
   ) {
     super(
       messageService,

@@ -10,7 +10,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthInterceptorService} from './core/services/auth-interceptor.service';
-import {MessageService, ToastModule} from 'primeng';
+import {DialogService, MessageService, ToastModule} from 'primeng';
 import {HttpErrorHandlerService} from "./core/services/http-error-handler.service";
 
 @NgModule({

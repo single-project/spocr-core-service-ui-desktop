@@ -1,5 +1,11 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Component} from '@angular/core';
+import {FormBuilder, Validators} from "@angular/forms";
+import {EntityCardModel} from "../../../../core/models/entity-card.model";
+import {ShopTypeModel} from "../../../../core/models/global-reference.model";
+import {MessageServiceFacadeService} from "../../../../core/services/message-service-facade.service";
+import {ShopTypesService} from "../../../../core/services/shop-types.service";
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
+import {ManufactureService} from "../../../../core/services/manufacture.service";
 
 
 @Component({
@@ -7,92 +13,43 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   templateUrl: './shop-type-dialog.component.html',
   styleUrls: ['./shop-type-dialog.component.scss']
 })
-export class ShopTypeDialogComponent implements OnInit {
-  @Input() shopType;
-  @Input() display;
-  @Input() manufactureList;
-  @Input() isNew;
-  @Output() onEditedShopTypeSave = new EventEmitter<any>();
-  @Output() onNewShopTypeSaved = new EventEmitter<any>();
-  @Output() onCloseDialog = new EventEmitter<boolean>();
-  private newShopType = {};
-  shopTypeForm: FormGroup;
+export class ShopTypeDialogComponent extends EntityCardModel<ShopTypeModel> {
+  manufactureList;
 
+  constructor(private manufacturerService: ManufactureService,
+              public dialogRef: DynamicDialogRef, public dialogConfig: DynamicDialogConfig,
+              public formBuilder: FormBuilder, private shopTypeService: ShopTypesService,
+              private messageService: MessageServiceFacadeService) {
+    super(formBuilder, dialogRef, dialogConfig, shopTypeService, messageService);
+  }
 
-  constructor(@Inject(FormBuilder) private fb: FormBuilder) {
-    this.shopTypeForm = this.fb.group({
-      'shopTypeName': ['', Validators.required],
-      'shopTypeActive': [true],
-      'manufacture': [{}, Validators.required]
-    })
+  buildFormGroup(e: ShopTypeModel) {
+    console.log(JSON.stringify(e));
+
+    this.entityDialogForm = this.formBuilder.group({
+      id: null,
+      name: ['', Validators.required],
+      active: [true],
+      manufacturer: [{}, Validators.required]
+    });
+  }
+
+  populateFormGroup(e: ShopTypeModel) {
+    if (e != null) {
+      let fields = [{id: e['id']}, {name: e['name']}, {manufacturer: e['manufacturer']}, {active: e['active']}];
+
+      fields.forEach(field => {
+        this.entityDialogForm.patchValue({...field});
+      })
+    }
   }
 
   ngOnInit() {
-
+    this.manufacturerService.fetchManufacturesData().subscribe(page => this.manufactureList = page.content);
   }
 
-  shopTypeSave() {
-
-    console.dir(this.shopType);
-    if (this.isNew) {
-
-      this.newShopType = {
-        ...this.newShopType,
-        name: this.shopTypeForm.get('shopTypeName').value,
-        active: this.shopTypeForm.get('shopTypeActive').value,
-        manufacturer: {id: this.shopTypeForm.get('manufacture').value['id']}
-      };
-      this.onNewShopTypeSaved.emit(this.newShopType);
-    } else {
-      this.newShopType = {
-        ...this.newShopType,
-        id: this.shopType.id,
-        name: this.shopTypeForm.get('shopTypeName').value,
-        active: this.shopTypeForm.get('shopTypeActive').value,
-        manufacturer: {id: this.shopTypeForm.get('manufacture').value['id']},
-        version: this.shopType.version
-
-
-      };
-      this.onEditedShopTypeSave.emit(this.newShopType);
-    }
-
-    this.onCloseDialog.emit(false);
+  instantiate(): ShopTypeModel {
+    return {} as ShopTypeModel;
   }
 
-
-  closeDialog() {
-    this.onCloseDialog.emit(false);
-  }
-
-  initAfterViewFormValues(fields: { [key: string]: any }[]): void {
-    fields.forEach(field => {
-      this.shopTypeForm.patchValue({...field});
-    })
-  }
-
-  newResetForm(): void{
-    this.initAfterViewFormValues([
-      {'shopTypeName': null},
-      {'manufacture': null},
-      {'shopTypeActive': true}
-    ]);
-  }
-  typesChange() {
-
-  }
-
-
-  afterShow() {
-    if(!this.isNew){
-      this.initAfterViewFormValues([
-        {'shopTypeName': this.shopType['name']},
-        {'manufacture': this.shopType['manufacturer']},
-        {'shopTypeActive': this.shopType['active']}
-      ]);
-    }else{
-      this.newResetForm();
-    }
-
-  }
 }

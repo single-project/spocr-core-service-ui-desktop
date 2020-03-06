@@ -5,13 +5,15 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {Observable} from 'rxjs';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ShopspecializationsService} from '../../../../core/services/shopspecializations.service';
+import {IdentifiedEntity} from "../../../../core/models/identified.entity";
+import {ShopSpecialization} from 'src/app/core/models/global-reference.model';
 
 @Component({
   selector: 'app-shop-specializations-data-table',
   templateUrl: './shop-specializations-data-table.component.html',
   styleUrls: ['./shop-specializations-data-table.component.scss']
 })
-export class ShopSpecializationsDataTableComponent extends AppDataTableModel implements OnInit {
+export class ShopSpecializationsDataTableComponent extends AppDataTableModel<ShopSpecialization> implements OnInit {
 
   selectedItem: any;
 

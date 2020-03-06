@@ -7,7 +7,7 @@ import {AutoComplete, LazyLoadEvent, Table} from 'primeng';
 import {QueryList, ViewChildren} from '@angular/core';
 import {MessageService} from 'primeng/api';
 
-export abstract class AppDataTableModel {
+export abstract class AppDataTableModel<T> {
 
   loading: boolean;
 
@@ -99,7 +99,7 @@ export abstract class AppDataTableModel {
 
   loadTableData(options = {}, updatePageInfo = true) {
     return this.tableDataService.fetchData(options)
-      .subscribe((data: ReferenceResponseModel) => {
+      .subscribe((data: ReferenceResponseModel<T>) => {
         this.dataItems = data.content;
 
         if (updatePageInfo) {

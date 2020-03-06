@@ -1,37 +1,25 @@
-<p-dialog [formGroup]="shopTypeForm" (onShow)="afterShow()"
-          header="Карточка типов ТТ"
-          appendTo="body"
-          [(visible)]="display"
-          [closable]="false"
-          [focusOnShow]="false"
-          [responsive]="true"
-          showEffect="fade"
-          [modal]="true"
-          [style]="{width: '450px'}">
-
-    <div class="ui-g ui-fluid" *ngIf="shopType">
+<p-tabView>
+  <p-tabPanel header="Основные" leftIcon="fas fa-file-alt">
+    <div [formGroup]="entityDialogForm" class="ui-g ui-fluid">
       <div class="ui-g-12">
         <div class="ui-g-4">
           <label for="name">ИМЯ</label>
         </div>
         <div class="ui-g-8">
           <input pInputText id="name"
-                 formControlName="shopTypeName"
+                 formControlName="name"
                  autofocus/>
-        </div>
-        <div class="ui-grid-col-8">
-          <p-message severity="error" text="Имя должно быть заполнено" *ngIf="!shopTypeForm.controls['shopTypeName'].valid&&shopTypeForm.controls['shopTypeName'].dirty"></p-message>
         </div>
       </div>
       <div class="ui-g-12">
         <div class="ui-g-4">
-          <label for="acive">АКТИВНЫЙ</label>
+          <label for="active">АКТИВНЫЙ</label>
         </div>
         <div class="ui-g-8">
           <p-checkbox
-            id="acive"
+            id="active"
             binary="true"
-            formControlName="shopTypeActive"></p-checkbox>
+            formControlName="active"></p-checkbox>
         </div>
       </div>
       <div class="ui-g-12">
@@ -41,37 +29,28 @@
         <div class="ui-g-8">
           <p-dropdown
             id="manufacturer"
-            formControlName="manufacture"
+            formControlName="manufacturer"
             filter="true"
             placeholder="Выберите производителя (обязательно)"
             [options]="manufactureList"
             optionLabel="name"
             dataKey="id"
             appendTo="body">
-
           </p-dropdown>
-<!--          <p-multiSelect-->
-<!--            (onChange)="typesChange()"-->
-<!--            appendTo="body"-->
-<!--            id="manufacturer"-->
-<!--            selectedItemsLabel="{0} Производителей выбрано"-->
-<!--            defaultLabel="Выбрать производителя"-->
-<!--            dataKey="id"-->
-<!--            optionLabel="name"-->
-<!--            [options]="manufactureForLabels" [(ngModel)]="selectedManufactures"-->
-<!--            [panelStyle]="{minWidth:'12em'}"></p-multiSelect>-->
         </div>
       </div>
-
     </div>
-    <p-footer>
-      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+  </p-tabPanel>
+</p-tabView>
 
-        <button [disabled]="shopTypeForm.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check" (click)="shopTypeSave()"
-                label="Сохранить"></button>
-        <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
-                label="Отмена"></button>
-      </div>
-    </p-footer>
+<p-footer>
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
 
-</p-dialog>
+    <button type="button" class="ui-button-success" pButton icon="fa fa-check" (click)="save()"
+            label="Сохранить"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="close(false)"
+            label="Отмена"></button>
+  </div>
+</p-footer>
+
+

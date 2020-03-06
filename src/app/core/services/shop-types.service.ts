@@ -2,31 +2,21 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Conf} from '../../../assets/config/conf';
+import {ShopTypeModel} from "../models/global-reference.model";
+import {IdentifiedEntityService} from "./identified-entity.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ShopTypesService {
-  private config = new Conf();
-  private shopTypesURL: string = this.config.BASE_URL + this.config.SHOP_TYPES_URL;
+export class ShopTypesService extends IdentifiedEntityService<ShopTypeModel> {
 
-  constructor(@Inject(HttpClient) private http: HttpClient) {
+  constructor(private http: HttpClient) {
+    super({url:ShopTypesService.constructUrl()}, http)
   }
 
-  fetchShopTypesData(options = {}): Observable<any> {
-    return this.http.get(
-      this.shopTypesURL,
-      {
-        params: {...options}
-      });
-  }
-
-  editShopType(updateData: {}, id: number): Observable<any> {
-    return this.http.patch(`${this.shopTypesURL}/${id}`, updateData)
-  }
-
-  newShopType(shopData: {}): Observable<any> {
-    return this.http.post(this.shopTypesURL, shopData);
+  static constructUrl():string {
+    let config = new Conf();
+    return config.BASE_URL + config.SHOP_TYPES_URL;
   }
 
 }
