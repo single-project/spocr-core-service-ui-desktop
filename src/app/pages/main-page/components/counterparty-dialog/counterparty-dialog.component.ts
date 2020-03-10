@@ -121,6 +121,7 @@ export class CounterpartyDialogComponent implements OnInit, OnChanges {
     console.dir(this.selectedGeneralLegalType)
   }
 
+
   counterpartySaved() {
 
     if (!this.counterPartyForm.dirty) {
