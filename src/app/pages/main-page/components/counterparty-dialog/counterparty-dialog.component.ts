@@ -174,7 +174,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
 
   instantiate(): CounterpartyModel {
-    return {} as CounterpartyModel;
+    return {active: true} as CounterpartyModel;
   }
 
   populateFormGroup(e: CounterpartyModel) {

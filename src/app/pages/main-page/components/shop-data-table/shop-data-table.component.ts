@@ -10,6 +10,7 @@ import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ShopModel} from '../../../../core/models/global-reference.model';
 import {ShopDialogComponent} from '../shop-dialog/shop-dialog.component';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-shop-data-table',
@@ -46,7 +47,7 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
   }
 
   fetchFilterData(params = {}, fieldName = '') {
-    let dataService$ = this.tableDataService.get(params);
+    let dataService$:Observable<any> = this.tableDataService.get(params);
 
     if (fieldName === 'counterparty') {
       dataService$ = this.counterPartiesService.get(params);

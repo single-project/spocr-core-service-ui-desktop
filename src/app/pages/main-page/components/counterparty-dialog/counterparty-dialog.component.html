@@ -50,8 +50,8 @@
 
     </div>
   </p-tabPanel>
-  <p-tabPanel *ngIf="entity.legalRekv" header="Реквизиты" leftIcon="fas fa-file-signature">
-    <div
+  <p-tabPanel header="Реквизиты" leftIcon="fas fa-file-signature">
+    <div *ngIf="entity && entity.legalRekv"
       [formGroup]="entityDialogForm"
       class="ui-g ui-fluid">
       <div class="ui-g-12">
@@ -101,10 +101,7 @@
         </div>
       </ng-container>
     </div>
-
-  </p-tabPanel>
-  <p-tabPanel *ngIf="entity.personRekv" header="Реквизиты" leftIcon="fas fa-file-signature">
-    <div
+    <div *ngIf="entity && entity.personRekv"
       [formGroup]="entityDialogForm"
       class="ui-g ui-fluid">
       <ng-container formGroupName="personRekv">
@@ -199,10 +196,9 @@
         </div>
       </ng-container>
     </div>
-
   </p-tabPanel>
   <p-tabPanel header="Банковские реквизиты" leftIcon="fas fa-university">
-    <div
+    <div *ngIf="entity && entity.paymentDetails"
       [formGroup]="entityDialogForm"
       class="ui-g ui-fluid">
 

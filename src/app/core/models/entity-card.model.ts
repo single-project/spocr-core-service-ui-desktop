@@ -8,7 +8,7 @@ import {OnInit} from "@angular/core";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
 
-  public entity: T;
+  public entity: T = {} as T;
   public entityDialogForm: FormGroup;
 
   protected constructor(public formBuilder: FormBuilder,
@@ -32,6 +32,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   post(): void {
     this._entityService.post(this.entityDialogForm.value).subscribe(e => {
       console.log("post success");
+      this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
   }
 
@@ -39,6 +40,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     this.entityDialogForm.patchValue({updatedFields: this.getUpdatedFields()});
     this._entityService.patch(this.entityDialogForm.value).subscribe(e => {
       console.log("patch success");
+      this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
   }
 
@@ -73,12 +75,11 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     } else {
       this.patch();
     }
-    this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     this.close(true);
   }
 
   isNew() {
-    return (this.entity || this.entity.id);
+    return (this.entity == undefined || this.entity.id == undefined);
   }
 
   close(refresh?: boolean): void {
