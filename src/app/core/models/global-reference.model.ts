@@ -4,39 +4,20 @@ export interface ServiceConfig {
   url: string;
 }
 
-export class BaseIdentifiedEntity extends IdentifiedEntity {
+export interface BaseIdentifiedEntity extends IdentifiedEntity {
   version?: number;
   active?: boolean;
-
-  constructor(id: number, version: number, active: boolean) {
-    super(id);
-    this.version = version;
-    this.active = active;
-  }
 }
 
-export class ShopClassifier extends BaseIdentifiedEntity {
+export interface ShopClassifierModel extends BaseIdentifiedEntity {
   name?: string;
   manufacturer?: ManufacturerModel;
-
-  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
-    super(id, version, active);
-    this.name = name;
-    this.manufacturer = manufacturer;
-  }
 }
 
-export class EnumerationEntity extends IdentifiedEntity {
+export interface EnumerationEntity extends IdentifiedEntity {
   name?: string;
   ident?: string;
   properties?: any;
-
-  constructor(id: number, name: string, ident: string, properties: any) {
-    super(id);
-    this.name = name;
-    this.ident = ident;
-    this.properties = properties;
-  }
 }
 
 export interface AddressSuggestionModel {
@@ -134,13 +115,8 @@ export interface AddressModel {
   longitude?: any;
 }
 
-export class ManufacturerModel extends BaseIdentifiedEntity {
+export interface ManufacturerModel extends BaseIdentifiedEntity {
   name?: string;
-
-  constructor(id: number, version: number, active: boolean, name: string) {
-    super(id, version, active);
-    this.name = name;
-  }
 }
 
 export interface CounterpartyProperties {
@@ -179,32 +155,20 @@ export interface PaymentDetails {
   bank: string;
 }
 
-export interface CounterpartyStatus {
-  id: number;
-  name: string;
-  ident: string;
-  properties?: any;
+export interface CounterpartyStatus extends EnumerationEntity {
+
 }
 
-export class DocType extends EnumerationEntity {
+export interface DocType extends EnumerationEntity {
 
-  constructor(id: number, name: string, ident: string, properties: any) {
-    super(id, name, ident, properties);
-  }
 }
 
-export class Citizenship extends EnumerationEntity {
+export interface Citizenship extends EnumerationEntity {
 
-  constructor(id: number, name: string, ident: string, properties: any) {
-    super(id, name, ident, properties);
-  }
 }
 
-export class Gender extends EnumerationEntity {
+export interface Gender extends EnumerationEntity {
 
-  constructor(id: number, name: string, ident: string, properties: any) {
-    super(id, name, ident, properties);
-  }
 }
 
 export interface PersonRekv extends BaseIdentifiedEntity {
@@ -229,52 +193,36 @@ export interface Owner extends BaseIdentifiedEntity {
 
 export interface CounterpartyModel extends BaseIdentifiedEntity {
   name: string;
-  legalType: LegalType;
-  legalRekv: LegalRekv;
-  paymentDetails: PaymentDetails;
+  legalType?: EnumerationEntity;
+  legalRekv?: LegalRekv;
+  paymentDetails?: PaymentDetails;
   suggestion?: any;
-  parent?: any;
-  statuses: CounterpartyStatus[];
-  personRekv: PersonRekv;
-  owner: Owner;
+  parent?: BaseIdentifiedEntity;
+  statuses: EnumerationEntity[];
+  personRekv?: PersonRekv;
+  owner?: BaseIdentifiedEntity;
+
 }
 
 
-export class Contract extends BaseIdentifiedEntity {
+export interface ContractModel extends BaseIdentifiedEntity {
 
-  constructor(id: number, version: number, active: boolean) {
-    super(id, version, active);
-  }
 }
 
-export class ShopSpecializationModel extends ShopClassifier {
+export interface ShopSpecializationModel extends ShopClassifierModel {
 
-  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
-    super(id, version, active, name, manufacturer);
-  }
 }
 
-export class ShopTypeModel extends ShopClassifier {
+export interface ShopTypeModel extends ShopClassifierModel {
 
-  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
-    super(id, version, active, name, manufacturer);
-  }
 }
 
-export class SalesChannelModel extends ShopClassifier {
+export interface SalesChannelModel extends ShopClassifierModel {
 
-
-  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
-    super(id, version, active, name, manufacturer);
-  }
 }
 
-export class ShopDepartModel extends ShopClassifier {
+export interface ShopDepartModel extends ShopClassifierModel {
 
-
-  constructor(id: number, version: number, active: boolean, name: string, manufacturer: ManufacturerModel) {
-    super(id, version, active, name, manufacturer);
-  }
 }
 
 

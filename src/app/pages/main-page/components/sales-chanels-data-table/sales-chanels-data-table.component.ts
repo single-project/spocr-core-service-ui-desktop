@@ -3,7 +3,7 @@ import {MessageService} from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {Observable} from 'rxjs';
-import {SaleschannelsService} from '../../../../core/services/saleschannels.service';
+import {SalesChannelService} from '../../../../core/services/sales-channel.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {SalesChannelModel} from "../../../../core/models/global-reference.model";
 
@@ -19,7 +19,7 @@ export class SalesChanelsDataTableComponent extends AppDataTableModel<SalesChann
   constructor(
     messageService: MessageService,
     configService: ConfigService,
-    saleschannelsService: SaleschannelsService) {
+    saleschannelsService: SalesChannelService) {
     super(messageService,
       configService,
       saleschannelsService);
@@ -35,7 +35,7 @@ export class SalesChanelsDataTableComponent extends AppDataTableModel<SalesChann
   }
 
   fetchFilterData(params: Object, fieldName: string): Observable<any> {
-    return this.tableDataService.fetchData(params);
+    return this.tableDataService.get(params);
   }
 
 }

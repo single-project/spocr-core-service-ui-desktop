@@ -24,28 +24,21 @@ export class ShopTypeDialogComponent extends EntityCardModel<ShopTypeModel> {
   }
 
   buildFormGroup(e: ShopTypeModel) {
-    console.log(JSON.stringify(e));
-
     this.entityDialogForm = this.formBuilder.group({
-      id: null,
-      name: ['', Validators.required],
-      active: [true],
-      manufacturer: [{}, Validators.required]
+      id: e['id'],
+      name: [e['name'], Validators.required],
+      active: [e['active']],
+      manufacturer: [e['manufacturer'], Validators.required]
     });
   }
 
-  populateFormGroup(e: ShopTypeModel) {
-    if (e != null) {
-      let fields = [{id: e['id']}, {name: e['name']}, {manufacturer: e['manufacturer']}, {active: e['active']}];
 
-      fields.forEach(field => {
-        this.entityDialogForm.patchValue({...field});
-      })
-    }
+  populateFormGroup(e: ShopTypeModel) {
+
   }
 
   ngOnInit() {
-    this.manufacturerService.fetchData().subscribe(page => this.manufactureList = page.content);
+    this.manufacturerService.get().subscribe(page => this.manufactureList = page.content);
   }
 
   instantiate(): ShopTypeModel {

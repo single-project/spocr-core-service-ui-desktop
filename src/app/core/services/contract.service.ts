@@ -1,30 +1,21 @@
 import {Injectable} from '@angular/core';
-import {Conf} from '../../../assets/config/conf';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {GlobalItemServiceModel} from '../models/global-item-service.model';
+import {IdentifiedEntityService} from "./identified-entity.service";
+import {ContractModel} from "../models/global-reference.model";
+import {ConfigService} from "./config.service";
+import {AppTableTypes} from "../models/app-tabe-types.enum";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ContractService extends GlobalItemServiceModel{
-  private config = new Conf();
-  private srvUrl: string = this.config.BASE_URL + this.config.CONTRACTS_URL;
+export class ContractService extends IdentifiedEntityService<ContractModel> {
 
-
-  fetchData(options = {}): Observable<any> {
-    return this.http.get(
-      this.srvUrl,
-      {
-        params: {...options}
-      });
+  constructor(private configService: ConfigService, private http: HttpClient) {
+    super(configService, http);
   }
 
-  editItem(updateData: {}, id: number): Observable<any> {
-    return this.http.patch(`${this.srvUrl}/${id}`, updateData)
+  getConfig(configService: ConfigService) {
+    configService.fetchDataTypeEndpointURL(AppTableTypes.CONTRACTS_TABLE_TYPE).subscribe(d => this.config.url = d.url)
   }
 
-  newItem(shopData: {}): Observable<any> {
-    return this.http.post(this.srvUrl, shopData);
-  }
 }

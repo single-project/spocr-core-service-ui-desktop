@@ -1,29 +1,21 @@
-import {Inject, Injectable} from '@angular/core';
-import {Conf} from '../../../assets/config/conf';
-import {Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {GlobalItemServiceModel} from '../models/global-item-service.model';
+import {IdentifiedEntityService} from "./identified-entity.service";
+import {ManufacturerModel} from "../models/global-reference.model";
+import {ConfigService} from "./config.service";
+import {AppTableTypes} from "../models/app-tabe-types.enum";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ManufactureService extends GlobalItemServiceModel{
-  private config = new Conf();
-  private manufactureURL: string = this.config.BASE_URL + this.config.MANUFACTURES_URL;
+export class ManufactureService extends IdentifiedEntityService<ManufacturerModel> {
 
-  fetchData(options = {}): Observable<any> {
-    return this.http.get(
-      this.manufactureURL,
-      {
-        params: {...options}
-      });
+  constructor(private configService: ConfigService, private http: HttpClient) {
+    super(configService, http);
   }
 
-  editItem(updateData: {}, id: number): Observable<any> {
-    return this.http.patch(`${this.manufactureURL}/${id}`, updateData)
+  getConfig(configService: ConfigService) {
+    configService.fetchDataTypeEndpointURL(AppTableTypes.MANUFACTURE_TABLE_TYPE).subscribe(d => this.config.url = d.url)
   }
 
-  newItem(shopData: {}): Observable<any> {
-    return this.http.post(this.manufactureURL, shopData);
-  }
 }

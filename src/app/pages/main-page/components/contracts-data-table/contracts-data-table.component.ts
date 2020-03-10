@@ -6,14 +6,14 @@ import {Observable} from 'rxjs';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ContractService} from '../../../../core/services/contract.service';
 import {IdentifiedEntity} from "../../../../core/models/identified.entity";
-import {Contract} from 'src/app/core/models/global-reference.model';
+import {ContractModel} from 'src/app/core/models/global-reference.model';
 
 @Component({
   selector: 'app-contracts-data-table',
   templateUrl: './contracts-data-table.component.html',
   styleUrls: ['./contracts-data-table.component.scss']
 })
-export class ContractsDataTableComponent extends AppDataTableModel<Contract> implements OnInit {
+export class ContractsDataTableComponent extends AppDataTableModel<ContractModel> implements OnInit {
 
   selectedItem: any;
 
@@ -36,7 +36,7 @@ export class ContractsDataTableComponent extends AppDataTableModel<Contract> imp
   }
 
   fetchFilterData(params: Object, fieldName: string): Observable<any> {
-    return this.tableDataService.fetchData(params);
+    return this.tableDataService.get(params);
   }
 
 }

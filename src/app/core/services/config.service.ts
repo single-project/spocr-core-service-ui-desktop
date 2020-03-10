@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Conf} from '../../../assets/config/conf';
 import {Observable} from 'rxjs';
@@ -12,7 +12,7 @@ export class ConfigService {
   private shopUrl: string = this.configSettings.BASE_URL + this.configSettings.APP_SETTINGS_URL;
   private appConfigs: Observable<Object>;
 
-  constructor( private http: HttpClient) {
+  constructor(private http: HttpClient) {
   }
 
   fetchAppSettings() {
@@ -65,5 +65,16 @@ export class ConfigService {
 
   clearCache() {
     this.appConfigs = null;
+  }
+
+  fetchDataTypeEndpointURL(dataType: number) {
+    return this.fetchAppSettings().pipe(
+      map((data: any) => {
+        let resObj = data.availableTables.find(o => o.id === dataType);
+        return {
+          url: `${this.configSettings.BASE_URL}/api${resObj.url}`,
+        };
+      }),
+    );
   }
 }

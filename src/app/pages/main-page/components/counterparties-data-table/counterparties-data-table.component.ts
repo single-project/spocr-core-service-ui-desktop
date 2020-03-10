@@ -1,12 +1,13 @@
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
-import {AutoComplete, LazyLoadEvent, MessageService, Table} from "primeng";
+import {AutoComplete, DialogService, LazyLoadEvent, MessageService, Table} from "primeng";
 import {SearchService} from '../../../../core/services/search.service';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {CounterpartyDialogComponent} from '../counterparty-dialog/counterparty-dialog.component';
 import {CounterpartyModel} from '../../../../core/models/global-reference.model';
+import {ShopTypeDialogComponent} from "../shop-type-dialog/shop-type-dialog.component";
 
 
 @Component({
@@ -15,131 +16,33 @@ import {CounterpartyModel} from '../../../../core/models/global-reference.model'
   styleUrls: ['./counterparties-data-table.component.scss']
 })
 export class CounterpartiesDataTableComponent implements OnInit {
-  private _dataItems: CounterpartyModel [];
-  private _loading: boolean;
+  public dataItems: CounterpartyModel [];
+  public loading: boolean;
 
+  public sortField: string;
+  public sortOrder: number;
 
-  private _sortField: string;
-  private _sortOrder: number;
-
-  private _displayCounterpartyEditDialog: boolean;
-  private _selectedCounterparty: CounterpartyModel;
-  private _isNewCounterparty: boolean;
-  private _counterparty: any = {};
+  public counterparty: any = {};
+  public selectedCounterparty: any = {};
 
   cols: any[];
   selectedCols: any[];
-  private _searchItems = [];
-  private _totalElements: number;
-  private _numberOfElements: number;
-  private _isFilterShown: boolean;
+  public searchItems = [];
+  public totalElements: number;
+  public numberOfElements: number;
+  public isFilterShown: boolean;
   private columnFilters$: Observable<any>;
   private columnFilterSubj$ = new Subject();
+
   @ViewChild('counterpartyDialogComponent', {static: false}) counterpartyDialogComponent: CounterpartyDialogComponent;
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
-
-  get searchItems(): any[] {
-    return this._searchItems;
-  }
-
-  set searchItems(value: any[]) {
-    this._searchItems = value;
-  }
-
-  get isFilterShown(): boolean {
-    return this._isFilterShown;
-  }
-
-  set isFilterShown(value: boolean) {
-    this._isFilterShown = value;
-  }
-
-  get loading(): boolean {
-    return this._loading;
-  }
-
-  set loading(value: boolean) {
-    this._loading = value;
-  }
-
-  get dataItems(): CounterpartyModel[] {
-    return this._dataItems;
-  }
-
-  set dataItems(value: CounterpartyModel[]) {
-    this._dataItems = value;
-  }
-
-  get numberOfElements(): number {
-    return this._numberOfElements;
-  }
-
-  set numberOfElements(value: number) {
-    this._numberOfElements = value;
-  }
-
-  get totalElements(): number {
-    return this._totalElements;
-  }
-
-  set totalElements(value: number) {
-    this._totalElements = value;
-  }
-
-  get sortField(): string {
-    return this._sortField;
-  }
-
-  set sortField(value: string) {
-    this._sortField = value;
-  }
-
-  get sortOrder(): number {
-    return this._sortOrder;
-  }
-
-  set sortOrder(value: number) {
-    this._sortOrder = value;
-  }
-
-  get counterparty(): any {
-    return this._counterparty;
-  }
-
-  set counterparty(value: any) {
-    this._counterparty = value;
-  }
-
-  get displayCounterpartyEditDialog(): boolean {
-    return this._displayCounterpartyEditDialog;
-  }
-
-  set displayCounterpartyEditDialog(value: boolean) {
-    this._displayCounterpartyEditDialog = value;
-  }
-
-  get isNewCounterparty(): boolean {
-    return this._isNewCounterparty;
-  }
-
-  set isNewCounterparty(value: boolean) {
-    this._isNewCounterparty = value;
-  }
-
-
-  get selectedCounterparty(): CounterpartyModel {
-    return this._selectedCounterparty;
-  }
-
-  set selectedCounterparty(value: CounterpartyModel) {
-    this._selectedCounterparty = value;
-  }
 
   constructor(
     private counterPartiesService: CounterpartiesService,
     private mService: MessageService,
     private search: SearchService,
+    public dialogService: DialogService
   ) {
   }
 
@@ -153,7 +56,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName}) =>
-        this.counterPartiesService.fetchData(params)
+        this.counterPartiesService.get(params)
           .pipe(
             map((data) => {
               let arrayTemp: Array<Object>;
@@ -185,40 +88,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   }
 
   onRowSelect(e) {
-    this.isNewCounterparty = false;
-    this.counterparty = this.cloneEntity(e.data);
-    console.log(this.counterparty);
-    this.counterpartyDialogComponent._display = true;
-  }
-
-  cloneEntity(e: any) {
-    let entity = {};
-    for (let prop in e) {
-      entity[prop] = e[prop];
-    }
-    return entity;
-  }
-
-  onCounterpartyEditSave(e) {
-    this.savedCounterPartyEdited(e);
-    this.counterpartyDialogComponent._display = false;
-    this.counterparty = null;
-  }
-
-  onNewCounterpartySave(e) {
-    this.savedCounterPartyNew(e);
-  }
-
-  onCloseCounterpartyDialog(e) {
-    this.displayCounterpartyEditDialog = e;
-    this.counterparty = null;
-  }
-
-  onCounterpartyCreate() {
-    this.isNewCounterparty = true;
-    this.counterparty = {active: true};
-    this.counterpartyDialogComponent._display = true;
-
+    this.openCounterpartyDialog(this.selectedCounterparty);
   }
 
   columnsChange() {
@@ -260,7 +130,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
 
   loadCounterPartiesData(options = {}, updatePageInfo = true): void {
     this.loading = true;
-    this.counterPartiesService.fetchData(options)
+    this.counterPartiesService.get(options)
       .subscribe((data: ReferenceResponseModel<CounterpartyModel>) => {
         this.dataItems = [...data.content];
 
@@ -337,7 +207,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   savedCounterPartyNew(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.counterPartiesService.newItem(e).subscribe(data => {
+    this.counterPartiesService.post(e).subscribe(data => {
       this.dataItems = [...this.dataItems, data];
       this.showSuccessSavingMessage();
     }, error => {
@@ -348,7 +218,7 @@ export class CounterpartiesDataTableComponent implements OnInit {
   savedCounterPartyEdited(e) {
     let idx = this.dataItems.findIndex((i) => i.id === e.id);
 
-    this.counterPartiesService.editItem(e, e.id).subscribe(
+    this.counterPartiesService.patch(e).subscribe(
       (data) => {
         this.dataItems[idx] = {...data};
         this.showSuccessSavingMessage();
@@ -359,15 +229,22 @@ export class CounterpartiesDataTableComponent implements OnInit {
     )
   }
 
-  counterpartySavedFromDialog(e: any): void {
-    let idx = this.dataItems.findIndex((i) => i.id === e.id);
-    console.log('IDX' + idx);
-    if (idx !== -1) {
-      this.dataItems[idx] = {...e};
-      this.showSuccessSavingMessage()
-    } else {
-      this.dataItems = [...this.dataItems, e];
-    }
+
+  openCounterpartyDialog(counterparty?) {
+    let header = counterparty ? counterparty.name : 'Новый Контрагент';
+    const ref = this.dialogService.open(CounterpartyDialogComponent, {
+      data: {entity: counterparty, entityKey: 'counterparty'},
+      header: header,
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((e: boolean) => {
+      if (e) {
+        console.log("need to refresh page");
+      } else {
+        console.log("no need to refresh page");
+      }
+    });
   }
 }
 

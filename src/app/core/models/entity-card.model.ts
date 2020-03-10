@@ -1,4 +1,4 @@
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors} from "@angular/forms";
 import {IdentifiedEntity} from './identified.entity';
 import {ErrorModel} from './error.model';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
@@ -7,7 +7,8 @@ import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
 import {OnInit} from "@angular/core";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
-  public entity: T;
+
+  public entity: T = {} as T;
   public entityDialogForm: FormGroup;
 
   protected constructor(public formBuilder: FormBuilder,
@@ -23,6 +24,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
 
   abstract buildFormGroup(e: T);
 
+  //TODO: ранее требовалось создать форму, потом обновить значения их полей теперь не требуется - возможно метод не нужен
   abstract populateFormGroup(e: T);
 
   abstract instantiate(): T;
@@ -30,15 +32,29 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   post(): void {
     this._entityService.post(this.entityDialogForm.value).subscribe(e => {
       console.log("post success");
+      this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
   }
 
   patch(): void {
-    console.log(this.entityDialogForm.value);
+    this.entityDialogForm.patchValue({updatedFields: this.getUpdatedFields()});
     this._entityService.patch(this.entityDialogForm.value).subscribe(e => {
       console.log("patch success");
+      this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
   }
+
+  getUpdatedFields() {
+    let dirtyValues = {};
+    Object.keys(this.entityDialogForm.controls).forEach(k => {
+      let currentControl: AbstractControl = this.entityDialogForm.controls[k];
+      if (currentControl.dirty) {
+        dirtyValues[k] = currentControl.value;
+      }
+    });
+    return Object.keys(dirtyValues);
+  }
+
 
   build(e: T): void {
     if (e == null) {
@@ -49,17 +65,21 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   }
 
   save(): void {
+    if (this.entityDialogForm.invalid) {
+      this.showFormValidationErrors();
+      return;
+    }
+
     if (this.isNew()) {
       this.post();
     } else {
       this.patch();
     }
-
     this.close(true);
   }
 
   isNew() {
-    return this.entity === null;
+    return (this.entity == undefined || this.entity.id == undefined);
   }
 
   close(refresh?: boolean): void {
@@ -67,8 +87,20 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   }
 
   error(err: ErrorModel): void {
-    console.log(err.message);
-    this._messageService.showErrMsg(`${this.dialogConfig.data.resourceKey}.dialog.save.failed`, err.message);
+    this._messageService.showErrMsg(`${this.dialogConfig.data.entityKey}.dialog.save.failed`, err.message);
+  }
+
+  //TODO:
+  showFormValidationErrors() {
+    Object.keys(this.entityDialogForm.controls).forEach(key => {
+
+      const controlErrors: ValidationErrors = this.entityDialogForm.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          this.error(new ErrorModel(`Key control: ${key}, keyError: ${keyError} , err value: ${controlErrors[keyError]}`));
+        });
+      }
+    });
   }
 
 }

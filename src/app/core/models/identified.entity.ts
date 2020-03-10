@@ -1,8 +1,3 @@
-export abstract class IdentifiedEntity {
+export interface IdentifiedEntity {
   id?: number;
-
-
-  constructor(id: number) {
-    this.id = id;
-  }
 }
