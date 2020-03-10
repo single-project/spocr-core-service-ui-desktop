@@ -7,6 +7,7 @@ import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
 import {OnInit} from "@angular/core";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
+
   public entity: T;
   public entityDialogForm: FormGroup;
 
@@ -72,12 +73,12 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     } else {
       this.patch();
     }
-
+    this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     this.close(true);
   }
 
   isNew() {
-    return this.entity === null;
+    return (this.entity || this.entity.id);
   }
 
   close(refresh?: boolean): void {

@@ -25,7 +25,7 @@ export class ShopTypeDialogComponent extends EntityCardModel<ShopTypeModel> {
 
   buildFormGroup(e: ShopTypeModel) {
     this.entityDialogForm = this.formBuilder.group({
-      id:  e['id'],
+      id: e['id'],
       name: [e['name'], Validators.required],
       active: [e['active']],
       manufacturer: [e['manufacturer'], Validators.required]
