@@ -133,7 +133,7 @@ export interface LegalType {
   properties: CounterpartyProperties;
 }
 
-export interface LegalRekv {
+export interface LegalRekv extends IdentifiedEntity {
   shortName?: any;
   fullName?: any;
   inn?: any;
@@ -143,12 +143,11 @@ export interface LegalRekv {
   ogrnAuthority?: any;
   okpo?: any;
   okonh?: any;
+  suggestion?: any
 }
 
 export interface PaymentDetails {
   id: number;
-  version: number;
-  active: boolean;
   paymentAccount: string;
   correspondingAccount: string;
   bic: string;
@@ -171,7 +170,7 @@ export interface Gender extends EnumerationEntity {
 
 }
 
-export interface PersonRekv extends BaseIdentifiedEntity {
+export interface PersonRekv extends IdentifiedEntity {
   name: string;
   lastName: string;
   firstName?: any;
@@ -193,15 +192,13 @@ export interface Owner extends BaseIdentifiedEntity {
 
 export interface CounterpartyModel extends BaseIdentifiedEntity {
   name: string;
-  legalType?: EnumerationEntity;
-  legalRekv?: LegalRekv;
-  paymentDetails?: PaymentDetails;
-  suggestion?: any;
+  owner?: BaseIdentifiedEntity;
   parent?: BaseIdentifiedEntity;
   statuses: EnumerationEntity[];
+  legalType?: EnumerationEntity;
+  legalRekv?: LegalRekv;
   personRekv?: PersonRekv;
-  owner?: BaseIdentifiedEntity;
-
+  paymentDetails?: PaymentDetails;
 }
 
 

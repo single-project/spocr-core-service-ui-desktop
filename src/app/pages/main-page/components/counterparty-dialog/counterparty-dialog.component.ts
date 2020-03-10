@@ -116,12 +116,13 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (e.legalRekv) {
       let legalRekv = e.legalRekv;
       this.entityDialogForm.addControl("legalRekv", this.formBuilder.group({
+        id: legalRekv.id,
         shortName: [{value: legalRekv.shortName, disabled: true}],
         fullName: [{value: legalRekv.fullName, disabled: true}],
         inn: [{value: legalRekv.inn, disabled: true}],
         ogrn: [{value: legalRekv.ogrn, disabled: true}],
         kpp: [{value: legalRekv.kpp, disabled: true}],
-
+        suggestion: legalRekv.suggestion,
         innSug: ''
       }));
     }
@@ -130,8 +131,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       let personRekv = e.personRekv;
       this.entityDialogForm.addControl("personRekv", this.formBuilder.group({
         id: personRekv.id,
-        version: personRekv.version,
-        active: personRekv.active,
         name: [personRekv.name, Validators.required],
         lastName: personRekv.lastName,
         firstName: personRekv.firstName,
@@ -162,8 +161,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       let paymentDetails = e.paymentDetails;
       this.entityDialogForm.addControl("paymentDetails", this.formBuilder.group({
         id: paymentDetails.id,
-        version: paymentDetails.version,
-        active: paymentDetails.active,
         paymentAccount: paymentDetails.paymentAccount,
         correspondingAccount: paymentDetails.correspondingAccount,
         bic: paymentDetails.bic,
