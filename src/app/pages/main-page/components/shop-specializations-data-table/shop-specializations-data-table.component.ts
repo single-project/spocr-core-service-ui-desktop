@@ -36,6 +36,6 @@ export class ShopSpecializationsDataTableComponent extends AppDataTableModel<Sho
   }
 
   fetchFilterData(params: Object, fieldName: string): Observable<any> {
-    return this.tableDataService.fetchData(params);
+    return this.tableDataService.get(params);
   }
 }

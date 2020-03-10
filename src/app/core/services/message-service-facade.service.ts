@@ -12,8 +12,17 @@ export class MessageServiceFacadeService {
   private messagesMap = new Map();
 
   constructor( private messageService: MessageService) {
+    //entityKey.control.operation.summary
+    //entityKey.control.field
+    //validation.error-key
+
+
     // operation
+    this.messagesMap.set("shop-type.dialog.save.success", "Свойства магазина успешно сохранены");
     this.messagesMap.set("shop-type.dialog.save.failed", "Не удалось сохранить тип магазина");
+
+    this.messagesMap.set("counterparty.dialog.save.success", "Свойства контрагента успешно сохранены");
+    this.messagesMap.set("counterparty.dialog.save.failed", "Не удалось сохранить контрагента");
 
     //401
     this.messagesMap.set("401", "Неправильное имя или пароль");

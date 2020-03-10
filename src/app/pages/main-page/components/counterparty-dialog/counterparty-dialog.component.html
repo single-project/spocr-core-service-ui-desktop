@@ -1,293 +1,255 @@
-<p-dialog (onShow)="afterShow()"
-          header="Карточка контрагента"
-          [(visible)]="_display"
-          [closable]="true"
-          closeOnEscape="true"
-          [focusOnShow]="false"
-          [responsive]="true"
-          [modal]="true"
-          [style]="{width: '900px'}">
-
-  <div
-    class="ui-g ui-fluid"
-    *ngIf="formLegalType === 0">
-    <div class="ui-g-12">
-      <div class="ui-g-4">
-        <label for="name">ВЫБЕРИТЕ ТИП КОНТРАГЕНТА</label>
-      </div>
-      <div class="ui-g-8">
-        <div class="ui-inputgroup">
-          <p-dropdown
-            dataKey="id"
-            appendTo="body"
-            optionLabel="name"
-            [options]="generalLegalTypes"
-            placeholder="Выберите тип контрагента"
-                      [(ngModel)]="selectedGeneralLegalType"></p-dropdown>
-          <button pButton (click)="chooseLegalType()" type="button" icon="pi pi-check" class="ui-button-success"></button>
+<p-tabView>
+  <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
+    <div
+      [formGroup]="entityDialogForm"
+      class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="name">ИМЯ</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="name" formControlName="name" autofocus/>
         </div>
       </div>
+
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>АКТИВНЫЙ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-checkbox [binary]="true" formControlName="active"></p-checkbox>
+        </div>
+        <div class="ui-g-4">
+          <label>ГОЛОВНАЯ ОРГ.</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown
+            appendTo="body"
+            formControlName="parent"
+            optionLabel="name"
+            dataKey="id"
+            [options]="parentsList"
+            placeholder="Выберите головную организацию"
+          ></p-dropdown>
+        </div>
+        <div class="ui-g-4">
+          <label>СТАТУС</label>
+        </div>
+        <div class="ui-g-8">
+          <p-multiSelect
+            appendTo="body"
+            formControlName="statuses"
+            optionLabel="name"
+            dataKey="id"
+            [options]="statusesList"
+            defaultLabel="Выберите статус"
+          ></p-multiSelect>
+        </div>
+      </div>
+
 
     </div>
-  </div>
-  <p-tabView *ngIf="formLegalType === 1 || formLegalType === 2">
-    <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
-      <div
-        [formGroup]="counterPartyForm"
-        class="ui-g ui-fluid"
-        *ngIf="counterparty">
+  </p-tabPanel>
+  <p-tabPanel *ngIf="entity.legalRekv" header="Реквизиты" leftIcon="fas fa-file-signature">
+    <div
+      [formGroup]="entityDialogForm"
+      class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>Поиск по ИНН</label>
+        </div>
+        <div class="ui-g-8">
+          <app-dadata-party
+            [parentForm]="entityDialogForm"
+          >
+
+          </app-dadata-party>
+        </div>
+      </div>
+      <ng-container formGroupName="legalRekv">
         <div class="ui-g-12">
           <div class="ui-g-4">
-            <label for="name">ИМЯ</label>
+            <label>НАИМ.</label>
           </div>
           <div class="ui-g-8">
-            <input pInputText id="name" formControlName="name" autofocus/>
+            <input pInputText formControlName="shortName">
           </div>
-          <div class="ui-grid-col-8">
-            <p-message severity="error" text="Имя должно быть заполнено"
-                       *ngIf="!counterPartyForm.controls['name'].valid&&counterPartyForm.controls['name'].dirty"></p-message>
+          <div class="ui-g-4">
+            <label>НАИМ.(ПОЛНОЕ)</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="fullName">
+          </div>
+          <div class="ui-g-4">
+            <label>ИНН</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="inn">
+          </div>
+          <div class="ui-g-4">
+            <label>ОГРН/ОГРНИП</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="ogrn">
+          </div>
+          <div class="ui-g-4">
+            <label>КПП</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="kpp">
           </div>
         </div>
+      </ng-container>
+    </div>
 
+  </p-tabPanel>
+  <p-tabPanel *ngIf="entity.personRekv" header="Реквизиты" leftIcon="fas fa-file-signature">
+    <div
+      [formGroup]="entityDialogForm"
+      class="ui-g ui-fluid">
+      <ng-container formGroupName="personRekv">
         <div class="ui-g-12">
           <div class="ui-g-4">
-            <label>АКТИВНЫЙ</label>
+            <label>ФИО контрагента</label>
           </div>
           <div class="ui-g-8">
-            <p-checkbox  [binary]="true" formControlName="active"></p-checkbox>
+            <app-dadata-fio
+              [parentForm]="entityDialogForm"
+            >
+            </app-dadata-fio>
+          </div>
+        </div>
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>ДАТА РОЖД.</label>
+          </div>
+          <div class="ui-g-8">
+            <p-calendar
+              appendTo="body"
+              formControlName="birthDate"
+              [monthNavigator]="true"
+              [yearNavigator]="true"
+              yearRange="1924:2100"
+              [locale]="ruCalLocale"></p-calendar>
           </div>
           <div class="ui-g-4">
-            <label>ГОЛОВНАЯ ОРГ.</label>
+            <label>ТИП ДОКУМЕНТА</label>
           </div>
           <div class="ui-g-8">
             <p-dropdown
               appendTo="body"
-              formControlName="parent"
+              formGroupName="docType"
               optionLabel="name"
               dataKey="id"
-              [options]="parentsList"
-              placeholder="Выберите головную организацию"
+              [options]="docTypes"
+              placeholder="Выберите тип документа"
             ></p-dropdown>
           </div>
           <div class="ui-g-4">
-            <label>СТАТУС</label>
+            <label>СЕРИЯ И НОМЕР</label>
           </div>
           <div class="ui-g-8">
-            <p-multiSelect
+            <input pInputText formControlName="docSeriesNumber">
+          </div>
+          <div class="ui-g-4">
+            <label>Гражданство</label>
+          </div>
+          <div class="ui-g-8">
+            <p-dropdown
               appendTo="body"
-              formControlName="statuses"
+              formGroupName="citizenship"
               optionLabel="name"
               dataKey="id"
-              [options]="statusesList"
-              defaultLabel="Выберите статус"
-            ></p-multiSelect>
+              [options]="citizenships"
+              placeholder="Выберите гражданство"
+            ></p-dropdown>
           </div>
-        </div>
-
-
-      </div>
-    </p-tabPanel>
-    <p-tabPanel *ngIf="formLegalType === 1" header="Реквизиты" leftIcon="fas fa-file-signature">
-      <div
-        [formGroup]="counterPartyForm"
-        class="ui-g ui-fluid"
-        *ngIf="counterparty">
-        <div class="ui-g-12">
           <div class="ui-g-4">
-            <label>Поиск по ИНН</label>
+            <label>ПОЛ</label>
           </div>
           <div class="ui-g-8">
-            <app-dadata-party
-              [parentForm]="counterPartyForm"
-            >
-
-            </app-dadata-party>
+            <p-dropdown
+              appendTo="body"
+              formGroupName="gender"
+              optionLabel="name"
+              dataKey="id"
+              [options]="genders"
+              placeholder="Выберите пол"
+            ></p-dropdown>
+          </div>
+          <div class="ui-g-4">
+            <label>ИНН</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="inn">
+          </div>
+          <div class="ui-g-4">
+            <label>ТЕЛЕФОН:</label>
+          </div>
+          <div class="ui-g-8">
+            <p-inputMask mask="+7(999) 999-9999" placeholder="+7(999) 999-9999"
+                         formControlName="phones"></p-inputMask>
+          </div>
+          <div class="ui-g-4">
+            <label>E-MAIL:</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="email">
           </div>
         </div>
-        <ng-container formGroupName="legalRekv">
-          <div class="ui-g-12">
-            <div class="ui-g-4">
-              <label>НАИМ.</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="shortName">
-            </div>
-            <div class="ui-g-4">
-              <label>НАИМ.(ПОЛНОЕ)</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="fullName">
-            </div>
-            <div class="ui-g-4">
-              <label>ИНН</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="inn">
-            </div>
-            <div class="ui-g-4">
-              <label>ОГРН/ОГРНИП</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="ogrn">
-            </div>
-            <div class="ui-g-4">
-              <label>КПП</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="kpp">
-            </div>
-          </div>
-        </ng-container>
-      </div>
-
-    </p-tabPanel>
-    <p-tabPanel *ngIf="formLegalType === 2" header="Реквизиты" leftIcon="fas fa-file-signature">
-      <div
-        [formGroup]="counterPartyForm"
-        class="ui-g ui-fluid"
-        *ngIf="counterparty">
-        <ng-container formGroupName="personRekv">
-          <div class="ui-g-12">
-            <div class="ui-g-4">
-              <label>ФИО контрагента</label>
-            </div>
-            <div class="ui-g-8">
-              <app-dadata-fio
-                [parentForm]="counterPartyForm"
-              >
-              </app-dadata-fio>
-            </div>
-          </div>
-          <div class="ui-g-12">
-            <div class="ui-g-4">
-              <label>ДАТА РОЖД.</label>
-            </div>
-            <div class="ui-g-8">
-              <p-calendar
-                appendTo="body"
-                formControlName="birthDate"
-                [monthNavigator]="true"
-                [yearNavigator]="true"
-                yearRange="1924:2100"
-                [locale]="ruCalLocale"></p-calendar>
-            </div>
-            <div class="ui-g-4">
-              <label>ТИП ДОКУМЕНТА</label>
-            </div>
-            <div class="ui-g-8" >
-              <p-dropdown
-                appendTo="body"
-                formGroupName="docType"
-                optionLabel="name"
-                dataKey="id"
-                [options]="docTypes"
-                placeholder="Выберите тип документа"
-              ></p-dropdown>
-            </div>
-            <div class="ui-g-4">
-              <label>СЕРИЯ И НОМЕР</label>
-            </div>
-            <div class="ui-g-8" >
-              <input pInputText formControlName="docSeriesNumber">
-            </div>
-            <div class="ui-g-4">
-              <label>Гражданство</label>
-            </div>
-            <div class="ui-g-8">
-              <p-dropdown
-                appendTo="body"
-                formGroupName="citizenship"
-                optionLabel="name"
-                dataKey="id"
-                [options]="citizenships"
-                placeholder="Выберите гражданство"
-              ></p-dropdown>
-            </div>
-            <div class="ui-g-4">
-              <label>ПОЛ</label>
-            </div>
-            <div class="ui-g-8">
-              <p-dropdown
-                appendTo="body"
-                formGroupName="gender"
-                optionLabel="name"
-                dataKey="id"
-                [options]="genders"
-                placeholder="Выберите пол"
-              ></p-dropdown>
-            </div>
-            <div class="ui-g-4">
-              <label>ИНН</label>
-            </div>
-            <div class="ui-g-8" >
-              <input pInputText formControlName="inn">
-            </div>
-            <div class="ui-g-4">
-              <label>ТЕЛЕФОН:</label>
-            </div>
-            <div class="ui-g-8" >
-              <p-inputMask mask="+7(999) 999-9999" placeholder="+7(999) 999-9999" formControlName="phones" ></p-inputMask>
-            </div>
-            <div class="ui-g-4">
-              <label>E-MAIL:</label>
-            </div>
-            <div class="ui-g-8" >
-              <input pInputText formControlName="email">
-            </div>
-          </div>
-        </ng-container>
-      </div>
-
-    </p-tabPanel>
-    <p-tabPanel header="Банковские реквизиты" leftIcon="fas fa-university">
-      <div
-        [formGroup]="counterPartyForm"
-        class="ui-g ui-fluid"
-        *ngIf="counterparty">
-
-        <ng-container formGroupName="paymentDetails">
-          <div class="ui-g-12">
-            <div class="ui-g-4">
-              <label>Банк</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="bank">
-            </div>
-            <div class="ui-g-4">
-              <label>Р/С</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="paymentAccount">
-            </div>
-            <div class="ui-g-4">
-              <label>КОРР./С</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="correspondingAccount">
-            </div>
-            <div class="ui-g-4">
-              <label>БИК</label>
-            </div>
-            <div class="ui-g-8">
-              <input pInputText formControlName="bic">
-            </div>
-          </div>
-        </ng-container>
-      </div>
-
-    </p-tabPanel>
-  </p-tabView>
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-
-      <button [disabled]="counterPartyForm.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check"
-              (click)="counterpartySaved()"
-              label="Сохранить"></button>
-      <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
-              label="Отмена"></button>
+      </ng-container>
     </div>
 
-  </p-footer>
+  </p-tabPanel>
+  <p-tabPanel header="Банковские реквизиты" leftIcon="fas fa-university">
+    <div
+      [formGroup]="entityDialogForm"
+      class="ui-g ui-fluid">
 
-</p-dialog>
+      <ng-container formGroupName="paymentDetails">
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>Банк</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="bank">
+          </div>
+          <div class="ui-g-4">
+            <label>Р/С</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="paymentAccount">
+          </div>
+          <div class="ui-g-4">
+            <label>КОРР./С</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="correspondingAccount">
+          </div>
+          <div class="ui-g-4">
+            <label>БИК</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="bic">
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+  </p-tabPanel>
+</p-tabView>
+<p-footer>
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+
+    <button type="button" class="ui-button-success" pButton
+            icon="fa fa-check"
+            (click)="save()"
+            label="Сохранить"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+            (click)="close(false)"
+            label="Отмена"></button>
+  </div>
+
+</p-footer>
+
 

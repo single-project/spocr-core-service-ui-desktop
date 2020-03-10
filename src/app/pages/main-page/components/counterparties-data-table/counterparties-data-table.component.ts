@@ -1,12 +1,13 @@
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ReferenceResponseModel} from '../../../../core/models/reference-response.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
-import {AutoComplete, LazyLoadEvent, MessageService, Table} from "primeng";
+import {AutoComplete, DialogService, LazyLoadEvent, MessageService, Table} from "primeng";
 import {SearchService} from '../../../../core/services/search.service';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {CounterpartyDialogComponent} from '../counterparty-dialog/counterparty-dialog.component';
 import {CounterpartyModel} from '../../../../core/models/global-reference.model';
+import {ShopTypeDialogComponent} from "../shop-type-dialog/shop-type-dialog.component";
 
 
 @Component({
@@ -18,13 +19,9 @@ export class CounterpartiesDataTableComponent implements OnInit {
   private _dataItems: CounterpartyModel [];
   private _loading: boolean;
 
-
   private _sortField: string;
   private _sortOrder: number;
 
-  private _displayCounterpartyEditDialog: boolean;
-  private _selectedCounterparty: CounterpartyModel;
-  private _isNewCounterparty: boolean;
   private _counterparty: any = {};
 
   cols: any[];
@@ -111,35 +108,11 @@ export class CounterpartiesDataTableComponent implements OnInit {
     this._counterparty = value;
   }
 
-  get displayCounterpartyEditDialog(): boolean {
-    return this._displayCounterpartyEditDialog;
-  }
-
-  set displayCounterpartyEditDialog(value: boolean) {
-    this._displayCounterpartyEditDialog = value;
-  }
-
-  get isNewCounterparty(): boolean {
-    return this._isNewCounterparty;
-  }
-
-  set isNewCounterparty(value: boolean) {
-    this._isNewCounterparty = value;
-  }
-
-
-  get selectedCounterparty(): CounterpartyModel {
-    return this._selectedCounterparty;
-  }
-
-  set selectedCounterparty(value: CounterpartyModel) {
-    this._selectedCounterparty = value;
-  }
-
   constructor(
     private counterPartiesService: CounterpartiesService,
     private mService: MessageService,
     private search: SearchService,
+    public dialogService: DialogService
   ) {
   }
 
@@ -185,10 +158,8 @@ export class CounterpartiesDataTableComponent implements OnInit {
   }
 
   onRowSelect(e) {
-    this.isNewCounterparty = false;
     this.counterparty = this.cloneEntity(e.data);
-    console.log(this.counterparty);
-    this.counterpartyDialogComponent._display = true;
+    this.openCounterpartyDialog(e.data);
   }
 
   cloneEntity(e: any) {
@@ -201,23 +172,14 @@ export class CounterpartiesDataTableComponent implements OnInit {
 
   onCounterpartyEditSave(e) {
     this.savedCounterPartyEdited(e);
-    this.counterpartyDialogComponent._display = false;
+
     this.counterparty = null;
   }
 
-  onNewCounterpartySave(e) {
-    this.savedCounterPartyNew(e);
-  }
-
-  onCloseCounterpartyDialog(e) {
-    this.displayCounterpartyEditDialog = e;
-    this.counterparty = null;
-  }
 
   onCounterpartyCreate() {
-    this.isNewCounterparty = true;
     this.counterparty = {active: true};
-    this.counterpartyDialogComponent._display = true;
+    this.openCounterpartyDialog(null);
 
   }
 
@@ -359,15 +321,22 @@ export class CounterpartiesDataTableComponent implements OnInit {
     )
   }
 
-  counterpartySavedFromDialog(e: any): void {
-    let idx = this.dataItems.findIndex((i) => i.id === e.id);
-    console.log('IDX' + idx);
-    if (idx !== -1) {
-      this.dataItems[idx] = {...e};
-      this.showSuccessSavingMessage()
-    } else {
-      this.dataItems = [...this.dataItems, e];
-    }
+
+  private openCounterpartyDialog(counterparty) {
+    let header = counterparty ? counterparty.name : 'Новый Контрагент';
+    const ref = this.dialogService.open(CounterpartyDialogComponent, {
+      data: {entity: counterparty, entityKey: 'counterparty'},
+      header: header,
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((e: boolean) => {
+      if (e) {
+        console.log("need to refresh page");
+      } else {
+        console.log("no need to refresh page");
+      }
+    });
   }
 }
 

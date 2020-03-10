@@ -227,16 +227,30 @@ export interface Owner extends BaseIdentifiedEntity {
   name: string;
 }
 
-export interface CounterpartyModel extends BaseIdentifiedEntity {
+export class CounterpartyModel extends BaseIdentifiedEntity {
   name: string;
-  legalType: LegalType;
-  legalRekv: LegalRekv;
-  paymentDetails: PaymentDetails;
+  legalType?: EnumerationEntity;
+  legalRekv?: LegalRekv;
+  paymentDetails?: PaymentDetails;
   suggestion?: any;
-  parent?: any;
-  statuses: CounterpartyStatus[];
-  personRekv: PersonRekv;
-  owner: Owner;
+  parent?: BaseIdentifiedEntity;
+  statuses: EnumerationEntity[];
+  personRekv?: PersonRekv;
+  owner?: BaseIdentifiedEntity;
+
+
+  constructor(id: number, version: number, active: boolean, name: string, legalType: EnumerationEntity, legalRekv: LegalRekv, paymentDetails: PaymentDetails, suggestion: any, parent: BaseIdentifiedEntity, statuses: EnumerationEntity[], personRekv: PersonRekv, owner: BaseIdentifiedEntity) {
+    super(id, version, active);
+    this.name = name;
+    this.legalType = legalType;
+    this.legalRekv = legalRekv;
+    this.paymentDetails = paymentDetails;
+    this.suggestion = suggestion;
+    this.parent = parent;
+    this.statuses = statuses;
+    this.personRekv = personRekv;
+    this.owner = owner;
+  }
 }
 
 
