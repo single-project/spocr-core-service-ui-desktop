@@ -231,11 +231,12 @@ export class CounterpartiesDataTableComponent implements OnInit {
 
 
   openCounterpartyDialog(counterparty?) {
-    let header = counterparty ? counterparty.name : 'Новый Контрагент';
     const ref = this.dialogService.open(CounterpartyDialogComponent, {
       data: {entity: counterparty, entityKey: 'counterparty'},
-      header: header,
+      header: counterparty ? counterparty.name : 'Новый Контрагент',
       width: '70%',
+      closeOnEscape: true,
+
     });
 
     ref.onClose.subscribe((e: boolean) => {

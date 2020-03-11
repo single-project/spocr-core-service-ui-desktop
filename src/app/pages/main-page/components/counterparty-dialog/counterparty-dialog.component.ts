@@ -1,4 +1,11 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {
+  AfterViewInit,
+  Component, ElementRef,
+  OnChanges,
+  OnInit, Renderer2,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {CounterpartyModel} from '../../../../core/models/global-reference.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
@@ -16,7 +23,7 @@ import {MessageServiceFacadeService} from "../../../../core/services/message-ser
   templateUrl: './counterparty-dialog.component.html',
   styleUrls: ['./counterparty-dialog.component.scss']
 })
-export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyModel> implements OnInit, OnChanges {
+export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyModel> implements OnInit, OnChanges, AfterViewInit {
 
 
   public generalLegalTypes = [];
@@ -26,6 +33,9 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   public citizenships = [];
   public genders = [];
   public docTypes = [];
+  public addReqBtnLabel = 'Добавить реквизит';
+  private addReqBtnClicked = false;
+  @ViewChild('addReqBtn') addReqBtn;
 
   public ruCalLocale = {
     firstDayOfWeek: 1,
@@ -43,9 +53,12 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   constructor(private configService: ConfigService,
               private personalService: PersonalRekvService,
               private manufacturerService: ManufactureService,
-              public dialogRef: DynamicDialogRef, public dialogConfig: DynamicDialogConfig,
-              public formBuilder: FormBuilder, private counterpartyService: CounterpartiesService,
-              private messageService: MessageServiceFacadeService) {
+              public dialogRef: DynamicDialogRef,
+              public dialogConfig: DynamicDialogConfig,
+              public formBuilder: FormBuilder,
+              private counterpartyService: CounterpartiesService,
+              private messageService: MessageServiceFacadeService,
+              private renderer: Renderer2) {
     super(formBuilder, dialogRef, dialogConfig, counterpartyService, messageService);
   }
 
@@ -55,7 +68,17 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.loadStatusesList();
     this.loadAvailablePersonalData();
 
+
   }
+ngAfterViewInit(): void {
+
+  this.renderer.listen(this.addReqBtn.nativeElement, 'click', (e) =>{
+    this.addReqBtnToggle();
+  })
+}
+
+
+
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -169,6 +192,18 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     }
   }
 
+  addReqBtnToggle(){
+    const btn = this.addReqBtn.nativeElement;
+    if(!this.addReqBtnClicked){
+      this.addReqBtnClicked = true;
+      btn.classList.replace('ui-button-success', 'ui-button-danger');
+      this.addReqBtnLabel='Удалить реквизит';
+    } else {
+      this.addReqBtnClicked = false;
+      btn.classList.replace('ui-button-danger', 'ui-button-success');
+      this.addReqBtnLabel = 'Добавить реквизит';
+    }
+  }
 
   instantiate(): CounterpartyModel {
     return {active: true} as CounterpartyModel;
