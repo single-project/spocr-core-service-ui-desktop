@@ -25,7 +25,7 @@ export class SalesChanelsDataTableComponent extends AppDataTableModel<SalesChann
 
   ngOnInit(): void {
     this.loading = true;
-    this.loadShopsTableHeaders(
+    this.loadTableHeaders(
       AppTableTypes.SALES_CHANELS_TABLE_TYPE);
     this.initColumnFilter(() => {
       return []

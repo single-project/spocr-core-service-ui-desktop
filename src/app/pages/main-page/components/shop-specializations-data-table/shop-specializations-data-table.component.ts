@@ -25,7 +25,7 @@ export class ShopSpecializationsDataTableComponent extends AppDataTableModel<Sho
 
   ngOnInit(): void {
     this.loading = true;
-    this.loadShopsTableHeaders(
+    this.loadTableHeaders(
       AppTableTypes.SHOP_SPECIALIZATIONS_TABLE_TYPE);
     this.initColumnFilter(() => {
       return []

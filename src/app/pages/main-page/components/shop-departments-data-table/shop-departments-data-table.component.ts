@@ -25,7 +25,7 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel<Identif
 
   ngOnInit(): void {
     this.loading = true;
-    this.loadShopsTableHeaders(
+    this.loadTableHeaders(
       AppTableTypes.SHOP_DEPARTMENTS_TABLE_TYPE);
     this.initColumnFilter(() => {
       return []

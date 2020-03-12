@@ -25,7 +25,7 @@ export class ContractsDataTableComponent extends AppDataTableModel<ContractModel
 
   ngOnInit(): void {
     this.loading = true;
-    this.loadShopsTableHeaders(
+    this.loadTableHeaders(
       AppTableTypes.CONTRACTS_TABLE_TYPE);
     this.initColumnFilter(() => {
       return []

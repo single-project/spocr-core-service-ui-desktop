@@ -3,8 +3,8 @@ import {AppTableTypes} from './app-tabe-types.enum';
 import {ReferenceResponseModel} from './reference-response.model';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {AutoComplete, LazyLoadEvent, Table} from 'primeng';
-import {QueryList, ViewChildren} from '@angular/core';
+import {AutoComplete, DialogService, LazyLoadEvent, Table} from 'primeng';
+import {QueryList, Type, ViewChildren} from '@angular/core';
 import {MessageService} from 'primeng/api';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
 
@@ -37,6 +37,8 @@ export abstract class AppDataTableModel<T> {
     protected messageService: MessageService,
     protected configService: ConfigService,
     protected tableDataService: IdentifiedEntityService<T>,
+    protected dialogService?: DialogService,
+    protected dialogComponentType?: Type<any>
   ) {
   }
 
@@ -73,7 +75,7 @@ export abstract class AppDataTableModel<T> {
    *
    * @param headerType
    */
-  loadShopsTableHeaders(headerType: AppTableTypes) {
+  loadTableHeaders(headerType: AppTableTypes) {
     this.configService
       .fetchTableHeader(headerType)
       .subscribe((data) => {
@@ -110,10 +112,6 @@ export abstract class AppDataTableModel<T> {
         }
         this.loading = false;
       });
-  }
-
-  getFieldValue(field: any): any {
-    return (typeof field === 'object') ? field.name : field;
   }
 
   /**

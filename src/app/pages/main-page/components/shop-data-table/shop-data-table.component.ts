@@ -39,7 +39,7 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
 
   ngOnInit() {
     this.loading = true;
-    this.loadShopsTableHeaders(AppTableTypes.SHOP_TABLE_TYPE);
+    this.loadTableHeaders(AppTableTypes.SHOP_TABLE_TYPE);
     this.initColumnFilter(() => {
       return []
     });
