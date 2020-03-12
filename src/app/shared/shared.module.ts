@@ -33,10 +33,16 @@ import {DadataAddressComponent} from './components/dadata-address/dadata-address
 import {ReactiveFormsModule} from "@angular/forms";
 import {DadataPartyComponent} from './components/dadata-party/dadata-party.component';
 import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
+import {NameTagsPipe} from "./pipes/name-tags.pipe";
 
 
 @NgModule({
-  declarations: [ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent],
+  declarations: [
+    ActiveTagsPipe,
+    NameTagsPipe,
+    DadataAddressComponent,
+    DadataPartyComponent,
+    DadataFioComponent],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -76,6 +82,7 @@ import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
     CheckboxModule,
     MultiSelectModule,
     ActiveTagsPipe,
+    NameTagsPipe,
     CardModule,
     PaginatorModule,
     MessagesModule,

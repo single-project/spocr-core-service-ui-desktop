@@ -18,7 +18,6 @@ import {Observable} from "rxjs";
   styleUrls: ['./shop-data-table.component.scss']
 })
 export class ShopDataTableComponent extends AppDataTableModel<ShopModel> implements OnInit {
-  selectedItem: ShopModel;
 
   @ViewChild('shopDialogComponent', {static: false})
   shopDialogComponent: ShopDialogComponent;

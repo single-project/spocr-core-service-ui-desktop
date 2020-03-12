@@ -6,7 +6,7 @@ import {Observable, Subject} from 'rxjs';
 import {AutoComplete, LazyLoadEvent, Table} from 'primeng';
 import {QueryList, ViewChildren} from '@angular/core';
 import {MessageService} from 'primeng/api';
-import {IdentifiedEntityService} from "../services/identified-entity.service";
+import {IdentifiedEntityService} from '../services/identified-entity.service';
 
 export abstract class AppDataTableModel<T> {
 
@@ -22,6 +22,7 @@ export abstract class AppDataTableModel<T> {
   isFilterShown: boolean;
 
   dataItems: Object[];
+  selectedItem: any;
 
   private columnFilters$: Observable<any>;
   protected columnFilterSubj$ = new Subject();
