@@ -35,6 +35,7 @@ import {DadataPartyComponent} from './components/dadata-party/dadata-party.compo
 import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
 
 
+
 @NgModule({
   declarations: [ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent],
   imports: [

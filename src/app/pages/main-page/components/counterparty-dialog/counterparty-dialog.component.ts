@@ -12,7 +12,7 @@ import {CounterpartiesService} from '../../../../core/services/counterparties.se
 import {ConfigService} from '../../../../core/services/config.service';
 import {map, shareReplay} from 'rxjs/operators';
 import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
-import {forkJoin} from 'rxjs';
+import {forkJoin, noop} from 'rxjs';
 import {EntityCardModel} from "../../../../core/models/entity-card.model";
 import {ManufactureService} from "../../../../core/services/manufacture.service";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
@@ -25,7 +25,6 @@ import {MessageServiceFacadeService} from "../../../../core/services/message-ser
 })
 export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyModel> implements OnInit, OnChanges, AfterViewInit {
 
-
   public generalLegalTypes = [];
   public selectedGeneralLegalType = [];
   public parentsList = [];
@@ -34,8 +33,14 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   public genders = [];
   public docTypes = [];
   public addReqBtnLabel = 'Добавить реквизит';
+  public showLegalTypeChoice = false;
+  public personReq = false;
+  public legalReq = false;
+  public paymentReqs = false;
+  public addReqBtnIcon: string;
   private addReqBtnClicked = false;
   @ViewChild('addReqBtn') addReqBtn;
+  @ViewChild('addPaymentReqBtn') addPaymentReqBtn;
 
   public ruCalLocale = {
     firstDayOfWeek: 1,
@@ -70,14 +75,21 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
 
   }
-ngAfterViewInit(): void {
 
-  this.renderer.listen(this.addReqBtn.nativeElement, 'click', (e) =>{
-    this.addReqBtnToggle();
-  })
-}
+  ngAfterViewInit(): void {
+    this.addReqBtnIcon='pi pi-plus';
+    if (this.addReqBtn) {
+      this.renderer.listen(this.addReqBtn.nativeElement, 'click', (e) => {
+        this.addReqBtnToggleReqs({key: 'addReqBtn', elem: this.addReqBtn});
+      })
+    }
+    if(this.addPaymentReqBtn){
+      this.renderer.listen(this.addPaymentReqBtn.nativeElement, 'click', (e) => {
+        this.addReqBtnToggleReqs({key: 'addPaymentReqBtn', elem: this.addPaymentReqBtn});
+      })
+    }
 
-
+  }
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -97,14 +109,14 @@ ngAfterViewInit(): void {
       this.personalService.fetchCitizenship(),
       this.personalService.fetchDocTypes(),
       this.personalService.fetchGender()])
-    .subscribe(data => {
-      this.citizenships = data[0]['content'];
+      .subscribe(data => {
+        this.citizenships = data[0]['content'];
 
-      this.docTypes = data[1]['content'];
+        this.docTypes = data[1]['content'];
 
-      this.genders = data[2]['content'];
+        this.genders = data[2]['content'];
 
-    })
+      })
 
   }
 
@@ -118,10 +130,10 @@ ngAfterViewInit(): void {
 
   loadStatusesList(): void {
     this.counterpartyService.fetchCounterpartiesStatuses()
-    .pipe(map(s => s['content']))
-    .subscribe(s => {
-      this.statusesList = s;
-    })
+      .pipe(map(s => s['content']))
+      .subscribe(s => {
+        this.statusesList = s;
+      })
   }
 
   buildFormGroup(e: CounterpartyModel) {
@@ -191,18 +203,91 @@ ngAfterViewInit(): void {
       }));
     }
   }
-
-  addReqBtnToggle(){
-    const btn = this.addReqBtn.nativeElement;
-    if(!this.addReqBtnClicked){
+  addReqBtnToggleReqs(button) {
+    const btn = button.elem.nativeElement;
+    if (!this.addReqBtnClicked) {
       this.addReqBtnClicked = true;
+      this.showLegalTypeChoice = true;
       btn.classList.replace('ui-button-success', 'ui-button-danger');
-      this.addReqBtnLabel='Удалить реквизит';
+      this.addReqBtnIcon='pi pi-minus';
+      this.addReqBtnLabel = 'Удалить реквизит';
+      if(button.key === 'addPaymentReqBtn'){
+        this.showPaymentReqs(!this.paymentReqs);
+      }
     } else {
+      if(button.key === 'addReqBtn'){
+        this.personReq = false;
+        this.legalReq = false;
+      }
+      if(button.key === 'addPaymentReqBtn'){
+        this.showPaymentReqs(!this.paymentReqs);
+      }
       this.addReqBtnClicked = false;
+      this.showLegalTypeChoice = false;
       btn.classList.replace('ui-button-danger', 'ui-button-success');
+      this.addReqBtnIcon='pi pi-plus';
       this.addReqBtnLabel = 'Добавить реквизит';
     }
+  }
+
+
+
+  legalTypeChoose(e: any) {
+    this.showLegalTypeChoice = false;
+    if (e.value.id === '1') {
+      this.entityDialogForm.addControl("personRekv",
+        this.formBuilder.group({
+        id: null,
+        name: ['', Validators.required],
+        lastName: '',
+        firstName: '',
+        patronymic: '',
+        birthDate: '',
+        birthPlace: '',
+        docType: this.formBuilder.group([]),
+        docSeriesNumber: null,
+        inn: [null, Validators.compose(
+          [Validators.maxLength(12),
+            Validators.minLength(12)])],
+        citizenship: this.formBuilder.group({
+          id: null,
+          name: '',
+          ident: '',
+          properties: null
+        }),
+        gender: this.formBuilder.group({
+          id: '',
+          name: '',
+          ident: null,
+          properties: null
+        }),
+        email: ['', Validators.email],
+        phones: [],
+      }));
+      this.personReq = true;
+    } else if (e.value.id === '2') {
+      this.entityDialogForm.addControl("legalRekv", this.formBuilder.group({
+        id: null,
+        shortName: [{value: '', disabled: true}],
+        fullName: [{value: '', disabled: true}],
+        inn: [{value: '', disabled: true}],
+        ogrn: [{value: '', disabled: true}],
+        kpp: [{value: '', disabled: true}],
+        suggestion: {},
+        innSug: ''
+      }));
+      this.legalReq = true;
+    }
+  }
+  showPaymentReqs(show: boolean){
+    this.entityDialogForm.addControl("paymentDetails", this.formBuilder.group({
+      id: null,
+      paymentAccount: '',
+      correspondingAccount: '',
+      bic: '',
+      bank: '',
+    }));
+    this.paymentReqs = show;
   }
 
   instantiate(): CounterpartyModel {
