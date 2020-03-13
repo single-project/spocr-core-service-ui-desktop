@@ -59,6 +59,7 @@ export class CounterpartiesDataTableComponent extends AppDataTableModel<Counterp
       data: {entity: counterparty, entityKey: 'counterparty'},
       header: header,
       width: '70%',
+      closeOnEscape: true,
     });
 
     ref.onClose.subscribe((e: boolean) => {
