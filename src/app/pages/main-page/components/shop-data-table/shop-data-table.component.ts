@@ -55,7 +55,7 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
    * @param shop
    */
   onItemCreate(shop?) {
-    let header = shop ? shop.name : 'Новый Контрагент1';
+    let header = shop ?  `Карточка ТТ - ${shop.name}` : 'Карточка ТТ - Новая';
     const ref = this.dialogService.open(this.dialogComponentType, {
       data: {entity: shop, entityKey: 'shop'},
       header: header,
