@@ -19,8 +19,10 @@ export class CounterpartiesDataTableComponent extends AppDataTableModel<Counterp
     messageService: MessageService,
     configService: ConfigService,
     dialogService: DialogService,
-    counterpartiesService: CounterpartiesService) {
-    super(messageService,
+    counterpartiesService: CounterpartiesService
+  ) {
+    super(
+      messageService,
       configService,
       counterpartiesService,
       dialogService,
@@ -44,9 +46,16 @@ export class CounterpartiesDataTableComponent extends AppDataTableModel<Counterp
     this.onItemCreate(this.selectedItem);
   }
 
+  /**
+   *
+   * Открывает динамическое диалоговое окно
+   * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
+   *
+   * @param counterparty
+   */
   onItemCreate(counterparty?) {
     let header = counterparty ? counterparty.name : 'Новый Контрагент';
-    const ref = this.dialogService.open(CounterpartyDialogComponent, {
+    const ref = this.dialogService.open(this.dialogComponentType, {
       data: {entity: counterparty, entityKey: 'counterparty'},
       header: header,
       width: '70%',

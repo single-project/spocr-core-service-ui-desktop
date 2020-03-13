@@ -1,20 +1,17 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 
 import {ShopsService} from '../../../../core/services/shops.service';
-import {CounterpartiesService} from '../../../../core/services/counterparties.service';
-import {ShopTypesService} from '../../../../core/services/shop-types.service';
-import {MessageService} from 'primeng';
-import {SearchService} from '../../../../core/services/search.service';
+import {DialogService, MessageService} from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ShopModel} from '../../../../core/models/global-reference.model';
 import {ShopDialogComponent} from '../shop-dialog/shop-dialog.component';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-shop-data-table',
-  templateUrl: './shop-data-table.component.html',
+  templateUrl: '../templates/data-table.template.html',
   styleUrls: ['./shop-data-table.component.scss']
 })
 export class ShopDataTableComponent extends AppDataTableModel<ShopModel> implements OnInit {
@@ -24,17 +21,16 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
 
   constructor(
     messageService: MessageService,
+    configService: ConfigService,
     shopService: ShopsService,
-    private search: SearchService,
-    private counterPartiesService: CounterpartiesService,
-    private shopTypesService: ShopTypesService,
-    private mService: MessageService,
-    configService: ConfigService
+    dialogService: DialogService,
   ) {
     super(
       messageService,
       configService,
-      shopService);
+      shopService,
+      dialogService,
+      ShopDialogComponent);
   }
 
   ngOnInit() {
@@ -45,55 +41,33 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
     });
   }
 
-  fetchFilterData(params = {}, fieldName = '') {
-    let dataService$:Observable<any> = this.tableDataService.get(params);
-
-    if (fieldName === 'counterparty') {
-      dataService$ = this.counterPartiesService.get(params);
-    }
-    return dataService$;
+  fetchFilterData(params: Object, fieldName: string): Observable<any> {
+    return this.tableDataService.get(params);
   }
 
   onRowSelect() {
-    this.shopDialogComponent._display = true;
+    this.onItemCreate(this.selectedItem);
   }
 
-  onItemCreate() {
-    this.shopDialogComponent._display = true;
-  }
-
-  columnsChange() {
-    console.dir(this.selectedCols);
-  }
-
-  showServerErrorToast() {
-    this.mService.clear();
-    this.mService.add({
-      key: 'c',
-      sticky: true,
-      severity: 'error',
-      summary: 'Что-то пошло не так. Попробуйте сохранить позже',
-      detail: 'Данные не сохранены'
+  /**
+   * Открывает динамическое диалоговое окно
+   * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
+   * @param shop
+   */
+  onItemCreate(shop?) {
+    let header = shop ? shop.name : 'Новый Контрагент1';
+    const ref = this.dialogService.open(this.dialogComponentType, {
+      data: {entity: shop, entityKey: 'shop'},
+      header: header,
+      width: '70%',
     });
-  }
 
-  showSuccessSavingMessage() {
-    this.mService.clear();
-    this.mService.add({
-      key: 'tc',
-      severity: 'success',
-      summary: 'Данные успешно сохранены'
+    ref.onClose.subscribe((e: boolean) => {
+      if (e) {
+        console.log("need to refresh page");
+      } else {
+        console.log("no need to refresh page");
+      }
     });
-  }
-
-  shopSavedFromDialog(e: ShopModel): void {
-    let idx = this.dataItems.findIndex((i: any) => i.id === e.id);
-    console.log('IDX' + idx);
-    if (idx !== -1) {
-      this.dataItems[idx] = {...e};
-      this.showSuccessSavingMessage()
-    } else {
-      this.dataItems = [...this.dataItems, e];
-    }
   }
 }
