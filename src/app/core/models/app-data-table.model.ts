@@ -42,12 +42,12 @@ export abstract class AppDataTableModel<T> {
   ) {
   }
 
-  onRowSelect(): void {
-    this.messageService.clear();
-    this.messageService.add({
-      key: 'tr',
-      severity: 'error',
-      summary: 'Данная функция еще не реализована!'
+  оnInit(аppTableTypes: AppTableTypes): void {
+    this.loading = true;
+    this.loadTableHeaders(
+      аppTableTypes);
+    this.initColumnFilter(() => {
+      return []
     });
   }
 
@@ -60,12 +60,47 @@ export abstract class AppDataTableModel<T> {
     });
   }
 
-  onItemCreate(): void {
+  notImplementedMessage() {
     this.messageService.clear();
     this.messageService.add({
       key: 'tr',
       severity: 'error',
       summary: 'Данная функция еще не реализована!'
+    });
+  }
+
+  onRowSelect() {
+    if(this.dialogService) {
+      this.onItemCreate(this.selectedItem);
+    } else {
+      this.notImplementedMessage();
+    }
+  }
+
+  /**
+   * Открывает динамическое диалоговое окно
+   * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
+   * @param item
+   */
+  onItemCreate(item?): void {
+    if (!this.dialogService) {
+      this.notImplementedMessage();
+      return;
+    }
+
+    let header = item ?  `Диалог- ${item.name}` : 'Диалог'; //TODO нужно в классе базового диалога создать статическое свойство title
+    const ref = this.dialogService.open(this.dialogComponentType, {
+      data: {entity: item, entityKey: 'unknown'}, //TODO не понятно нужно ли это свойство entityKey на этом уровне
+      header: header,
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((e: boolean) => {
+      if (e) {
+        console.log("need to refresh page");
+      } else {
+        console.log("no need to refresh page");
+      }
     });
   }
 
@@ -199,8 +234,9 @@ export abstract class AppDataTableModel<T> {
     });
   }
 
-  abstract fetchFilterData(
-    params: Object, fieldName: string): Observable<any>;
+  fetchFilterData(params: Object, fieldName: string): Observable<any> {
+    return this.tableDataService.get(params);
+  }
 }
 
 /**

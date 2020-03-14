@@ -52,8 +52,8 @@
   </p-tabPanel>
   <p-tabPanel header="Реквизиты" leftIcon="fas fa-file-signature">
     <div *ngIf="entity && entity.legalRekv"
-      [formGroup]="entityDialogForm"
-      class="ui-g ui-fluid">
+         [formGroup]="entityDialogForm"
+         class="ui-g ui-fluid">
       <div class="ui-g-12">
         <div class="ui-g-4">
           <label>Поиск по ИНН</label>
@@ -102,8 +102,8 @@
       </ng-container>
     </div>
     <div *ngIf="entity && entity.personRekv"
-      [formGroup]="entityDialogForm"
-      class="ui-g ui-fluid">
+         [formGroup]="entityDialogForm"
+         class="ui-g ui-fluid">
       <ng-container formGroupName="personRekv">
         <div class="ui-g-12">
           <div class="ui-g-4">
@@ -199,8 +199,8 @@
   </p-tabPanel>
   <p-tabPanel header="Банковские реквизиты" leftIcon="fas fa-university">
     <div *ngIf="entity && entity.paymentDetails"
-      [formGroup]="entityDialogForm"
-      class="ui-g ui-fluid">
+         [formGroup]="entityDialogForm"
+         class="ui-g ui-fluid">
 
       <ng-container formGroupName="paymentDetails">
         <div class="ui-g-12">

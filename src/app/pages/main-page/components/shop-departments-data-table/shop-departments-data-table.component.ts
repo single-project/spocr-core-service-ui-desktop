@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ShopDepartsService} from '../../../../core/services/shop-departs.service';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
-import {Observable} from 'rxjs';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {MessageService} from 'primeng';
 import {IdentifiedEntity} from '../../../../core/models/identified.entity';
@@ -24,15 +23,7 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel<Identif
   }
 
   ngOnInit(): void {
-    this.loading = true;
-    this.loadTableHeaders(
+    this.оnInit(
       AppTableTypes.SHOP_DEPARTMENTS_TABLE_TYPE);
-    this.initColumnFilter(() => {
-      return []
-    });
-  }
-
-  fetchFilterData(params: Object, fieldName: string): Observable<any> {
-    return this.tableDataService.get(params);
   }
 }

@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {MessageService} from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
-import {Observable} from 'rxjs';
 import {SalesChannelService} from '../../../../core/services/sales-channel.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {SalesChannelModel} from '../../../../core/models/global-reference.model';
@@ -24,15 +23,7 @@ export class SalesChanelsDataTableComponent extends AppDataTableModel<SalesChann
   }
 
   ngOnInit(): void {
-    this.loading = true;
-    this.loadTableHeaders(
+    this.оnInit(
       AppTableTypes.SALES_CHANELS_TABLE_TYPE);
-    this.initColumnFilter(() => {
-      return []
-    });
-  }
-
-  fetchFilterData(params: Object, fieldName: string): Observable<any> {
-    return this.tableDataService.get(params);
   }
 }
