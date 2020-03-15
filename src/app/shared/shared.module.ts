@@ -33,11 +33,12 @@ import {DadataAddressComponent} from './components/dadata-address/dadata-address
 import {ReactiveFormsModule} from "@angular/forms";
 import {DadataPartyComponent} from './components/dadata-party/dadata-party.component';
 import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
+import { AddRequisiteButtonComponent } from './components/add-requisite-button/add-requisite-button.component';
 
 
 
 @NgModule({
-  declarations: [ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent],
+  declarations: [ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent, AddRequisiteButtonComponent],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -94,7 +95,8 @@ import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
     CalendarModule,
     DadataFioComponent,
     InputMaskModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    AddRequisiteButtonComponent
   ],
   providers: [DialogService, DynamicDialogRef, DynamicDialogConfig]
 })

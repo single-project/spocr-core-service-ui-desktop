@@ -32,13 +32,10 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   public citizenships = [];
   public genders = [];
   public docTypes = [];
-  public addReqBtnLabel = 'Добавить реквизит';
   public showLegalTypeChoice = false;
   public personReq = false;
   public legalReq = false;
   public paymentReqs = false;
-  public addReqBtnIcon: string;
-  private addReqBtnClicked = false;
   @ViewChild('addReqBtn') addReqBtn;
   @ViewChild('addPaymentReqBtn') addPaymentReqBtn;
 
@@ -65,6 +62,9 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
               private messageService: MessageServiceFacadeService,
               private renderer: Renderer2) {
     super(formBuilder, dialogRef, dialogConfig, counterpartyService, messageService);
+    this.paymentReqs = !!this.entity;
+    this.personReq = !!this.entity;
+    this.legalReq = !!this.entity;
   }
 
   ngOnInit() {
@@ -73,21 +73,11 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.loadStatusesList();
     this.loadAvailablePersonalData();
 
-
   }
 
   ngAfterViewInit(): void {
-    this.addReqBtnIcon='pi pi-plus';
-    if (this.addReqBtn) {
-      this.renderer.listen(this.addReqBtn.nativeElement, 'click', (e) => {
-        this.addReqBtnToggleReqs({key: 'addReqBtn', elem: this.addReqBtn});
-      })
-    }
-    if(this.addPaymentReqBtn){
-      this.renderer.listen(this.addPaymentReqBtn.nativeElement, 'click', (e) => {
-        this.addReqBtnToggleReqs({key: 'addPaymentReqBtn', elem: this.addPaymentReqBtn});
-      })
-    }
+    this.initPaymentReqBtn();
+    this.initAddReqBtn();
 
   }
 
@@ -145,7 +135,8 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       name: [e.name, Validators.required],
       statuses: [e.statuses],
       parent: e.parent,
-      owner: e.owner
+      owner: e.owner,
+      updatedFields: []
     });
 
     if (e.legalRekv) {
@@ -191,7 +182,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
         phones: [personRekv.phones,],
       }));
     }
-
     if (e.paymentDetails) {
       let paymentDetails = e.paymentDetails;
       this.entityDialogForm.addControl("paymentDetails", this.formBuilder.group({
@@ -203,100 +193,70 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       }));
     }
   }
-  addReqBtnToggleReqs(button) {
-    const btn = button.elem.nativeElement;
-    if (!this.addReqBtnClicked) {
-      this.addReqBtnClicked = true;
-      this.showLegalTypeChoice = true;
-      btn.classList.replace('ui-button-success', 'ui-button-danger');
-      this.addReqBtnIcon='pi pi-minus';
-      this.addReqBtnLabel = 'Удалить реквизит';
-      if(button.key === 'addPaymentReqBtn'){
-        this.showPaymentReqs(!this.paymentReqs);
-      }
-    } else {
-      if(button.key === 'addReqBtn'){
-        this.personReq = false;
-        this.legalReq = false;
-      }
-      if(button.key === 'addPaymentReqBtn'){
-        this.showPaymentReqs(!this.paymentReqs);
-      }
-      this.addReqBtnClicked = false;
-      this.showLegalTypeChoice = false;
-      btn.classList.replace('ui-button-danger', 'ui-button-success');
-      this.addReqBtnIcon='pi pi-plus';
-      this.addReqBtnLabel = 'Добавить реквизит';
-    }
-  }
 
-
-
-  legalTypeChoose(e: any) {
+  legalTypeChoose(val: string) {
     this.showLegalTypeChoice = false;
-    if (e.value.id === '1') {
-      this.entityDialogForm.addControl("personRekv",
-        this.formBuilder.group({
-        id: null,
-        name: ['', Validators.required],
-        lastName: '',
-        firstName: '',
-        patronymic: '',
-        birthDate: '',
-        birthPlace: '',
-        docType: this.formBuilder.group([]),
-        docSeriesNumber: null,
-        inn: [null, Validators.compose(
-          [Validators.maxLength(12),
-            Validators.minLength(12)])],
-        citizenship: this.formBuilder.group({
-          id: null,
-          name: '',
-          ident: '',
-          properties: null
-        }),
-        gender: this.formBuilder.group({
-          id: '',
-          name: '',
-          ident: null,
-          properties: null
-        }),
-        email: ['', Validators.email],
-        phones: [],
-      }));
+    if (val === '1') {
       this.personReq = true;
-    } else if (e.value.id === '2') {
-      this.entityDialogForm.addControl("legalRekv", this.formBuilder.group({
-        id: null,
-        shortName: [{value: '', disabled: true}],
-        fullName: [{value: '', disabled: true}],
-        inn: [{value: '', disabled: true}],
-        ogrn: [{value: '', disabled: true}],
-        kpp: [{value: '', disabled: true}],
-        suggestion: {},
-        innSug: ''
-      }));
+    } else if (val === '2') {
       this.legalReq = true;
     }
   }
-  showPaymentReqs(show: boolean){
-    this.entityDialogForm.addControl("paymentDetails", this.formBuilder.group({
-      id: null,
-      paymentAccount: '',
-      correspondingAccount: '',
-      bic: '',
-      bank: '',
-    }));
-    this.paymentReqs = show;
-  }
+
 
   instantiate(): CounterpartyModel {
-    return {active: true} as CounterpartyModel;
+
+    return {personRekv: {citizenship: {}, gender: {}}, legalRekv: {}, paymentDetails: {}, active: true} as CounterpartyModel;
   }
 
   populateFormGroup(e: CounterpartyModel) {
     return;
   }
 
+  save(): void {
+    if(this.entityDialogForm.dirty){
+      if(this.isNew()){
+        this.entityDialogForm.removeControl('updatedFields');
+      }else {
+        this.entityDialogForm.patchValue({updatedFields: this.getUpdatedFields()});
+      }
+      super.save();
+    }else {
+      this.close(false)
+    }
+
+  }
+
+  initPaymentReqBtn(): void {
+    this.addPaymentReqBtn.externalRequisiteVisible$.asObservable().subscribe(value => {
+      this.paymentReqs = value;
+      if(!value){
+        this.entityDialogForm.get('paymentDetails').reset();
+        this.entityDialogForm.get('paymentDetails').markAsDirty();
+      }
+    });
+  }
+
+  initAddReqBtn(): void{
+    this.addReqBtn.selectedType$.asObservable().subscribe(value => {
+      if(value === '1'){
+        this.personReq = true;
+        this.legalReq = false;
+      }else if(value === '2'){
+        this.legalReq = true;
+        this.personReq = false;
+      }
+    });
+    this.addReqBtn.externalRequisiteVisible$.asObservable().subscribe(value => {
+      if(!value){
+        this.personReq = false;
+        this.legalReq = false;
+        this.entityDialogForm.reset('personRekv');
+        this.entityDialogForm.reset('legalRekv');
+      }
+    });
+
+
+  }
 
 }

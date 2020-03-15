@@ -49,7 +49,7 @@
     </div>
   </p-tabPanel>
   <p-tabPanel header="Реквизиты" leftIcon="fas fa-file-signature">
-    <div *ngIf="(entity && entity.legalRekv)||legalReq"
+    <div *ngIf="legalReq"
          [formGroup]="entityDialogForm"
          class="ui-g ui-fluid">
       <div class="ui-g-12">
@@ -98,7 +98,7 @@
         </div>
       </ng-container>
     </div>
-    <div *ngIf="entity && entity.personRekv  || personReq"
+    <div *ngIf="personReq"
          [formGroup]="entityDialogForm"
          class="ui-g ui-fluid">
       <ng-container formGroupName="personRekv">
@@ -193,36 +193,14 @@
         </div>
       </ng-container>
     </div>
-    <div class="ui-g ui-fluid" *ngIf="!entity">
-      <div class="ui-g-12">
-        <div class="ui-g-4"></div>
-        <div class="ui-g-4">
-          <button
-              #addReqBtn
-              pButton
-              type="button"
-              label="{{addReqBtnLabel}}"
-              class="ui-button-success"
-              icon="{{addReqBtnIcon || 'pi pi-plus'}}">
-          </button>
-        </div>
-        <div class="ui-g-4"></div>
-      </div>
-      <div *ngIf="showLegalTypeChoice" class="ui-g-12">
-        <p-dropdown
-          [options]="generalLegalTypes"
-          [(ngModel)]="selectedGeneralLegalType"
-          dataKey="id"
-          optionLabel="name"
-          placeholder="Выберите тип реквизитов"
-          (onChange)="legalTypeChoose($event)">
-        </p-dropdown>
-      </div>
-
-    </div>
+    <app-add-requisite-button
+      [requisite]="entity"
+      [dropDownOptions]="generalLegalTypes"
+      #addReqBtn>
+    </app-add-requisite-button>
   </p-tabPanel>
   <p-tabPanel header="Банковские реквизиты" leftIcon="fas fa-university">
-    <div *ngIf="entity && entity.paymentDetails || paymentReqs"
+    <div *ngIf="paymentReqs"
          [formGroup]="entityDialogForm"
          class="ui-g ui-fluid">
 
@@ -256,22 +234,10 @@
       </ng-container>
 
     </div>
-    <div class="ui-g ui-fluid" *ngIf="!entity">
-      <div class="ui-g-12">
-        <div class="ui-g-4"></div>
-        <div class="ui-g-4">
-          <button
-              #addPaymentReqBtn
-              pButton
-              type="button"
-              label="{{addReqBtnLabel}}"
-              class="ui-button-success"
-              icon="{{addReqBtnIcon || 'pi pi-plus'}}">
-          </button>
-        </div>
-        <div class="ui-g-4"></div>
-      </div>
-    </div>
+          <app-add-requisite-button
+            [requisite]="entity"
+            #addPaymentReqBtn>
+          </app-add-requisite-button>
   </p-tabPanel>
 
 

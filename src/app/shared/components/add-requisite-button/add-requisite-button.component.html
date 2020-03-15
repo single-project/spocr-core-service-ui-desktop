@@ -1,0 +1,35 @@
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12">
+    <div class="ui-g-4"></div>
+    <div class="ui-g-4">
+      <button
+        pButton
+        type="button"
+        label="{{currentLabel}}"
+        class="{{currentClass}}"
+        icon="{{currentIcon}}"
+        (click)="addReqBtnToggleReqs()">
+      </button>
+    </div>
+    <div class="ui-g-4"></div>
+  </div>
+  <div *ngIf="dropdownShow" class="ui-g-12">
+    <div class="ui-g-3"></div>
+    <div class="ui-g-6">
+      <p-dropdown
+      [options]="dropDownOptions"
+      [(ngModel)]="selectedOptions"
+      optionLabel="name"
+      dataKey="id"
+      placeholder="Выберите тип: "
+      (onChange)="selectDropdownOption($event)"
+      >
+      </p-dropdown>
+    </div>
+    <div class="ui-g-3"></div>
+  </div>
+</div>
+
+
+
+

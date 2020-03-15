@@ -4,7 +4,7 @@ import {ErrorModel} from './error.model';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
 import {MessageServiceFacadeService} from "../services/message-service-facade.service";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
-import {OnInit} from "@angular/core";
+import {AfterViewInit, OnInit} from "@angular/core";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
 
@@ -18,16 +18,19 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
                         private _messageService: MessageServiceFacadeService) {
     this.entity = dialogConfig.data.entity;
     this.build(dialogConfig.data.entity);
+
   }
 
   abstract ngOnInit(): void;
+
+
 
   abstract buildFormGroup(e: T);
 
   //TODO: ранее требовалось создать форму, потом обновить значения их полей теперь не требуется - возможно метод не нужен
   abstract populateFormGroup(e: T);
 
-  abstract instantiate(): T;
+  abstract instantiate(options?): T;
 
   post(): void {
     this._entityService.post(this.entityDialogForm.value).subscribe(e => {
@@ -57,7 +60,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
 
 
   build(e: T): void {
-    if (e == null) {
+    if (e === undefined) {
       e = this.instantiate();
     }
     this.buildFormGroup(e);
