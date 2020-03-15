@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {ShopsService} from '../../../../core/services/shops.service';
 import {DialogService, MessageService} from 'primeng';

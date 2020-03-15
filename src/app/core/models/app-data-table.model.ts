@@ -7,6 +7,10 @@ import {AutoComplete, DialogService, LazyLoadEvent, Table} from 'primeng';
 import {QueryList, Type, ViewChildren} from '@angular/core';
 import {MessageService} from 'primeng/api';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
+import {CounterpartiesService} from '../services/counterparties.service';
+import {MainPageInjector} from '../../pages/main-page/main-page-routing.module';
+import {ManufactureService} from '../services/manufacture.service';
+
 
 export abstract class AppDataTableModel<T> {
 
@@ -29,10 +33,20 @@ export abstract class AppDataTableModel<T> {
   searchItems = [];
   private colFilterFormatter = new TableColFilterFormatterBuilder();
   protected tableReqParamBuilder = new TableRequestParamBuilder();
+  private filterDataServices: Map<string, any> = new Map();
+
 
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
+  /**
+   *
+   * @param messageService
+   * @param configService
+   * @param tableDataService
+   * @param dialogService
+   * @param dialogComponentType
+   */
   protected constructor(
     protected messageService: MessageService,
     protected configService: ConfigService,
@@ -40,6 +54,12 @@ export abstract class AppDataTableModel<T> {
     protected dialogService?: DialogService,
     protected dialogComponentType?: Type<any>
   ) {
+
+    this.filterDataServices.set('counterparty', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set('counterparty1', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set('counterparty2', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set('manufacturer',  MainPageInjector.get(ManufactureService));
+    this.filterDataServices.set('default', this.tableDataService);
   }
 
   оnInit(аppTableTypes: AppTableTypes): void {
@@ -235,7 +255,8 @@ export abstract class AppDataTableModel<T> {
   }
 
   fetchFilterData(params: Object, fieldName: string): Observable<any> {
-    return this.tableDataService.get(params);
+    const service = this.filterDataServices.get(fieldName) || this.filterDataServices.get('default');
+    return service.get(params);
   }
 }
 
@@ -336,7 +357,6 @@ class TableRequestParamBuilder {
 
       return param;
     },
-
     counterparty: (id: number, name: string) => {
       let param = {};
       if (id === -1) {
@@ -346,7 +366,37 @@ class TableRequestParamBuilder {
       }
 
       return param;
-    }
+    },
+    counterparty1: (id: number, name: string) => {
+      let param = {};
+      if (id === -1) {
+        param['counterparty1.name'] = name;
+      } else {
+        param['counterparty1.id'] = id;
+      }
+
+      return param;
+    },
+    counterparty2: (id: number, name: string) => {
+      let param = {};
+      if (id === -1) {
+        param['counterparty2.name'] = name;
+      } else {
+        param['counterparty2.id'] = id;
+      }
+
+      return param;
+    },
+    manufacturer: (id: number, name: string) => {
+      let param = {};
+      if (id === -1) {
+        param['manufacturer.name'] = name;
+      } else {
+        param['manufacturer.id'] = id;
+      }
+
+      return param;
+    },
   };
 
   public buildParam(paramName: string, id: number, name: string) {
