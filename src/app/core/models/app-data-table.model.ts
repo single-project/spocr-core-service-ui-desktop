@@ -12,7 +12,7 @@ import {MainPageInjector} from '../../pages/main-page/main-page-routing.module';
 import {ManufactureService} from '../services/manufacture.service';
 
 
-export abstract class AppDataTableModel<T> {
+export abstract class  AppDataTableModel<T> {
 
   loading: boolean;
 
@@ -54,12 +54,16 @@ export abstract class AppDataTableModel<T> {
     protected dialogService?: DialogService,
     protected dialogComponentType?: Type<any>
   ) {
-
-    this.filterDataServices.set('counterparty', MainPageInjector.get(CounterpartiesService));
-    this.filterDataServices.set('counterparty1', MainPageInjector.get(CounterpartiesService));
-    this.filterDataServices.set('counterparty2', MainPageInjector.get(CounterpartiesService));
-    this.filterDataServices.set('manufacturer',  MainPageInjector.get(ManufactureService));
-    this.filterDataServices.set('default', this.tableDataService);
+    this.filterDataServices.set(
+      'counterparty', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set(
+      'counterparty1', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set(
+      'counterparty2', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set(
+      'manufacturer',  MainPageInjector.get(ManufactureService));
+    this.filterDataServices.set(
+      'default', this.tableDataService);
   }
 
   оnInit(аppTableTypes: AppTableTypes): void {
@@ -89,9 +93,9 @@ export abstract class AppDataTableModel<T> {
     });
   }
 
-  onRowSelect() {
+  onRowSelect(dt: Table) {
     if(this.dialogService) {
-      this.onItemCreate(this.selectedItem);
+      this.onItemCreate(dt, this.selectedItem);
     } else {
       this.notImplementedMessage();
     }
@@ -102,7 +106,7 @@ export abstract class AppDataTableModel<T> {
    * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
    * @param item
    */
-  onItemCreate(item?): void {
+  onItemCreate(dt: Table, item?): void {
     if (!this.dialogService) {
       this.notImplementedMessage();
       return;

@@ -10,7 +10,7 @@
          [responsive]="true"
          selectionMode="single"
          [(selection)]="selectedItem"
-         (onRowSelect)="onRowSelect()"
+         (onRowSelect)="onRowSelect(dt)"
          [sortField]="sortField"
          [sortOrder]="sortOrder"
          [scrollable]="true"
@@ -28,7 +28,7 @@
                      defaultLabel="Выбрать колонки">
       </p-multiSelect>
 
-      <button (click)="onItemCreate()"
+      <button (click)="onItemCreate(dt)"
               style="margin-left: 1em; top: -10px"
               type="button"
               class="ui-button-success"
