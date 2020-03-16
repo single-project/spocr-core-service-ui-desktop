@@ -31,6 +31,7 @@ export class ShopDialogComponent implements OnInit, OnChanges {
   public _display = false;
   public shopFrom: FormGroup;
   public isNew = false;
+  public static title = '';
 
 
   constructor(

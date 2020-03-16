@@ -8,9 +8,9 @@ import {AppTableTypes} from '../../core/models/app-tabe-types.enum';
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit {
-  private _searchString: string;
-  private _tableTitle: string;
-  private _dataType: AppTableTypes;
+  searchString: string;
+  tableTitle: string;
+  dataType: AppTableTypes;
 
   @ViewChildren('appDataTable') appDataTable: QueryList<any>;
 
@@ -21,30 +21,6 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit() {
     this.setConfiguration(AppTableTypes.SHOP_TABLE_TYPE);
-  }
-
-  get searchString(): string {
-    return this._searchString;
-  }
-
-  set searchString(searchString: string) {
-    this._searchString = searchString;
-  }
-
-  get tableTitle(): string {
-    return this._tableTitle;
-  }
-
-  set tableTitle(tableTitle: string) {
-    this._tableTitle = tableTitle;
-  }
-
-  get dataType(): AppTableTypes {
-    return this._dataType;
-  }
-
-  set dataType(value: AppTableTypes) {
-    this._dataType = value;
   }
 
   clearSearch(): void {

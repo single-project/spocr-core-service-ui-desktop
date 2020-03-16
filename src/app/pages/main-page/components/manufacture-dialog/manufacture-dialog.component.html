@@ -1,14 +1,14 @@
-<p-dialog [formGroup]="manForm"
-          (onShow)="afterShow()"
-          header="Карточка производителя"
-          appendTo="body"
-          [(visible)]="display"
-          [closable]="false"
-          [focusOnShow]="false"
-          [responsive]="true"
-          showEffect="fade"
-          [modal]="true"
-          [style]="{width: '450px'}">
+<!--<p-dialog [formGroup]="manForm"-->
+<!--          (onShow)="afterShow()"-->
+<!--          header="Карточка производителя"-->
+<!--          appendTo="body"-->
+<!--          [(visible)]="display"-->
+<!--          [closable]="false"-->
+<!--          [focusOnShow]="false"-->
+<!--          [responsive]="true"-->
+<!--          showEffect="fade"-->
+<!--          [modal]="true"-->
+<!--          [style]="{width: '450px'}">-->
 
   <div class="ui-g ui-fluid" *ngIf="manufacture">
     <div class="ui-g-12">
@@ -36,8 +36,6 @@
           formControlName="manActive"></p-checkbox>
       </div>
     </div>
-
-
   </div>
   <p-footer>
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
@@ -46,6 +44,6 @@
       <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()" label="Отмена"></button>
     </div>
   </p-footer>
-</p-dialog>
+<!--</p-dialog>-->
 
 

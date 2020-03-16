@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from "@angular/router";
 import {MainPageComponent} from "./main-page.component";
+
+export let MainPageInjector: Injector;
 
 const routes: Routes = [
   {path: '', component: MainPageComponent}
@@ -15,4 +17,8 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class MainPageRoutingModule { }
+export class MainPageRoutingModule {
+  constructor(private injector: Injector) {
+    MainPageInjector = this.injector;
+  }
+}

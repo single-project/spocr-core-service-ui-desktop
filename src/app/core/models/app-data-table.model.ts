@@ -3,12 +3,16 @@ import {AppTableTypes} from './app-tabe-types.enum';
 import {ReferenceResponseModel} from './reference-response.model';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {AutoComplete, LazyLoadEvent, Table} from 'primeng';
-import {QueryList, ViewChildren} from '@angular/core';
+import {AutoComplete, DialogService, LazyLoadEvent, Table} from 'primeng';
+import {QueryList, Type, ViewChildren} from '@angular/core';
 import {MessageService} from 'primeng/api';
-import {IdentifiedEntityService} from "../services/identified-entity.service";
+import {IdentifiedEntityService} from '../services/identified-entity.service';
+import {CounterpartiesService} from '../services/counterparties.service';
+import {MainPageInjector} from '../../pages/main-page/main-page-routing.module';
+import {ManufactureService} from '../services/manufacture.service';
 
-export abstract class AppDataTableModel<T> {
+
+export abstract class  AppDataTableModel<T> {
 
   loading: boolean;
 
@@ -22,29 +26,52 @@ export abstract class AppDataTableModel<T> {
   isFilterShown: boolean;
 
   dataItems: Object[];
+  selectedItem: any;
 
   private columnFilters$: Observable<any>;
   protected columnFilterSubj$ = new Subject();
   searchItems = [];
   private colFilterFormatter = new TableColFilterFormatterBuilder();
   protected tableReqParamBuilder = new TableRequestParamBuilder();
+  private filterDataServices: Map<string, any> = new Map();
+
 
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
+  /**
+   *
+   * @param messageService
+   * @param configService
+   * @param tableDataService
+   * @param dialogService
+   * @param dialogComponentType
+   */
   protected constructor(
     protected messageService: MessageService,
     protected configService: ConfigService,
     protected tableDataService: IdentifiedEntityService<T>,
+    protected dialogService?: DialogService,
+    protected dialogComponentType?: Type<any>
   ) {
+    this.filterDataServices.set(
+      'counterparty', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set(
+      'counterparty1', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set(
+      'counterparty2', MainPageInjector.get(CounterpartiesService));
+    this.filterDataServices.set(
+      'manufacturer',  MainPageInjector.get(ManufactureService));
+    this.filterDataServices.set(
+      'default', this.tableDataService);
   }
 
-  onRowSelect(): void {
-    this.messageService.clear();
-    this.messageService.add({
-      key: 'tr',
-      severity: 'error',
-      summary: 'Данная функция еще не реализована!'
+  оnInit(аppTableTypes: AppTableTypes): void {
+    this.loading = true;
+    this.loadTableHeaders(
+      аppTableTypes);
+    this.initColumnFilter(() => {
+      return []
     });
   }
 
@@ -57,12 +84,47 @@ export abstract class AppDataTableModel<T> {
     });
   }
 
-  onItemCreate(): void {
+  notImplementedMessage() {
     this.messageService.clear();
     this.messageService.add({
       key: 'tr',
       severity: 'error',
       summary: 'Данная функция еще не реализована!'
+    });
+  }
+
+  onRowSelect(dt: Table) {
+    if(this.dialogService) {
+      this.onItemCreate(dt, this.selectedItem);
+    } else {
+      this.notImplementedMessage();
+    }
+  }
+
+  /**
+   * Открывает динамическое диалоговое окно
+   * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
+   * @param item
+   */
+  onItemCreate(dt: Table, item?): void {
+    if (!this.dialogService) {
+      this.notImplementedMessage();
+      return;
+    }
+
+    let header = item ?  `Диалог- ${item.name}` : 'Диалог'; //TODO нужно в классе базового диалога создать статическое свойство title
+    const ref = this.dialogService.open(this.dialogComponentType, {
+      data: {entity: item, entityKey: 'unknown'}, //TODO не понятно нужно ли это свойство entityKey на этом уровне
+      header: header,
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((e: boolean) => {
+      if (e) {
+        console.log("need to refresh page");
+      } else {
+        console.log("no need to refresh page");
+      }
     });
   }
 
@@ -72,7 +134,7 @@ export abstract class AppDataTableModel<T> {
    *
    * @param headerType
    */
-  loadShopsTableHeaders(headerType: AppTableTypes) {
+  loadTableHeaders(headerType: AppTableTypes) {
     this.configService
       .fetchTableHeader(headerType)
       .subscribe((data) => {
@@ -109,10 +171,6 @@ export abstract class AppDataTableModel<T> {
         }
         this.loading = false;
       });
-  }
-
-  getFieldValue(field: any): any {
-    return (typeof field === 'object') ? field.name : field;
   }
 
   /**
@@ -200,8 +258,10 @@ export abstract class AppDataTableModel<T> {
     });
   }
 
-  abstract fetchFilterData(
-    params: Object, fieldName: string): Observable<any>;
+  fetchFilterData(params: Object, fieldName: string): Observable<any> {
+    const service = this.filterDataServices.get(fieldName) || this.filterDataServices.get('default');
+    return service.get(params);
+  }
 }
 
 /**
@@ -301,7 +361,6 @@ class TableRequestParamBuilder {
 
       return param;
     },
-
     counterparty: (id: number, name: string) => {
       let param = {};
       if (id === -1) {
@@ -311,7 +370,37 @@ class TableRequestParamBuilder {
       }
 
       return param;
-    }
+    },
+    counterparty1: (id: number, name: string) => {
+      let param = {};
+      if (id === -1) {
+        param['counterparty1.name'] = name;
+      } else {
+        param['counterparty1.id'] = id;
+      }
+
+      return param;
+    },
+    counterparty2: (id: number, name: string) => {
+      let param = {};
+      if (id === -1) {
+        param['counterparty2.name'] = name;
+      } else {
+        param['counterparty2.id'] = id;
+      }
+
+      return param;
+    },
+    manufacturer: (id: number, name: string) => {
+      let param = {};
+      if (id === -1) {
+        param['manufacturer.name'] = name;
+      } else {
+        param['manufacturer.id'] = id;
+      }
+
+      return param;
+    },
   };
 
   public buildParam(paramName: string, id: number, name: string) {
