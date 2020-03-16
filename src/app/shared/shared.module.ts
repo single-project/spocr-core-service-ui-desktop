@@ -34,11 +34,12 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {DadataPartyComponent} from './components/dadata-party/dadata-party.component';
 import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
 import { AddRequisiteButtonComponent } from './components/add-requisite-button/add-requisite-button.component';
+import {NameTagsPipe} from "./pipes/name-tags.pipe";
 
 
 
 @NgModule({
-  declarations: [ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent, AddRequisiteButtonComponent],
+  declarations: [NameTagsPipe, ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent, AddRequisiteButtonComponent],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -78,6 +79,7 @@ import { AddRequisiteButtonComponent } from './components/add-requisite-button/a
     CheckboxModule,
     MultiSelectModule,
     ActiveTagsPipe,
+    NameTagsPipe,
     CardModule,
     PaginatorModule,
     MessagesModule,
