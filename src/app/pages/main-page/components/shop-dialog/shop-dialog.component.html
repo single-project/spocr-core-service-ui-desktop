@@ -11,100 +11,106 @@
 
 <!--  [style]="{width: '900px'}">-->
 
-  <p-tabView>
-    <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
-      <div [formGroup]="shopFrom" class="ui-g ui-fluid">
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="name">ИМЯ</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText id="name" formControlName="name" autofocus/>
-          </div>
-          <div class="ui-grid-col-8">
-            <p-message severity="error" text="Имя должно быть заполнено"
-                       *ngIf="!shopFrom.controls['name'].valid&&shopFrom.controls['name'].dirty"></p-message>
-          </div>
+<p-tabView>
+  <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
+    <div [formGroup]="entityDialogForm" class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="name">ИМЯ</label>
         </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="counterparty">КОНТРАГЕНТ</label>
-          </div>
-          <div class="ui-g-8">
-            <p-dropdown appendTo="body"
-                        id="counterparty"
-                        [options]="counterpartiesList"
-                        optionLabel="name"
-                        dataKey="id"
-                        placeholder="Выберите контрагента (обязательно)"
-                        formControlName="counterparty"
-                        [filter]="true">
-            </p-dropdown>
-
-          </div>
-
+        <div class="ui-g-8">
+          <input pInputText id="name" formControlName="name" autofocus/>
         </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="active">АКТИВНЫЙ</label>
-          </div>
-          <div class="ui-g-8">
-            <p-checkbox id="active" binary="true" formControlName="active"></p-checkbox>
-          </div>
+        <div class="ui-grid-col-8">
+          <p-message severity="error" text="Имя должно быть заполнено"
+                     *ngIf="!entityDialogForm.controls['name'].valid&&entityDialogForm.controls['name'].dirty"></p-message>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="counterparty">КОНТРАГЕНТ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown appendTo="body"
+                      id="counterparty"
+                      [options]="counterpartiesList"
+                      optionLabel="name"
+                      dataKey="id"
+                      placeholder="Выберите контрагента (обязательно)"
+                      formControlName="counterparty"
+                      [filter]="true">
+          </p-dropdown>
+
         </div>
 
       </div>
-    </p-tabPanel>
-    <p-tabPanel header="Свойства" leftIcon="fas fa-file-alt">
-      <div [formGroup]="shopFrom" class="ui-g ui-fluid">
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="shop-type">ТИП ТТ</label>
-          </div>
-          <div id="shop-type" class="ui-g-8">
-            <p-multiSelect
-              appendTo="body"
-              [filter]="true"
-              [options]="shopTypesList"
-              optionLabel="name"
-              defaultLabel="Выберать тип ТТ (обязательно)"
-              dataKey="id"
-              formControlName="shopTypes">
-
-            </p-multiSelect>
-
-          </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="active">АКТИВНЫЙ</label>
         </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="shop-type">КАНАЛ ПРОДАЖ</label>
-          </div>
-          <div id="sales-channel" class="ui-g-8">
-            <p-multiSelect
-              appendTo="body"
-              [filter]="true"
-              [options]="salesChannelsList"
-              dataKey="id"
-              optionLabel="name"
-              formControlName="salesChannels">
-            </p-multiSelect>
-
-          </div>
+        <div class="ui-g-8">
+          <p-checkbox id="active" binary="true" formControlName="active"></p-checkbox>
         </div>
       </div>
-    </p-tabPanel>
-    <p-tabPanel header="Адрес" leftIcon="fas fa-map-marker-alt">
-      <div [formGroup]="shopFrom" class="ui-g ui-fluid" *ngIf="shop">
 
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Свойства" leftIcon="fas fa-file-alt">
+    <div [formGroup]="entityDialogForm" class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="shop-type">ТИП ТТ</label>
+        </div>
+        <div id="shop-type" class="ui-g-8">
+          <p-multiSelect
+            appendTo="body"
+            [filter]="true"
+            [options]="shopTypesList"
+            optionLabel="name"
+            defaultLabel="Выберать тип ТТ (обязательно)"
+            dataKey="id"
+            formControlName="shopTypes">
+
+          </p-multiSelect>
+
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="shop-type">КАНАЛ ПРОДАЖ</label>
+        </div>
+        <div id="sales-channel" class="ui-g-8">
+          <p-multiSelect
+            appendTo="body"
+            [filter]="true"
+            [options]="salesChannelsList"
+            dataKey="id"
+            optionLabel="name"
+            formControlName="salesChannels">
+          </p-multiSelect>
+
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Адрес" leftIcon="fas fa-map-marker-alt">
+
+    <button type="button" class="ui-button-success" pButton icon="fa fa-check"
+            (click)="addAddress()"
+            label="Добавить адрес"></button>
+    <button type="button" class="ui-button-danger" pButton icon="fa fa-remove"
+            (click)="removeAddress()"
+            label="Удалить адрес"></button>
+
+    <div [formGroup]="entityDialogForm" class="ui-g ui-fluid" *ngIf="entity.address">
+      <ng-container formGroupName="address">
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label>Адрес ТТ</label>
           </div>
           <div class="ui-g-8">
             <app-dadata-address
-              [parentForm]="shopFrom"
-            >
-
+              [parentForm]="entityDialogForm">
             </app-dadata-address>
           </div>
         </div>
@@ -112,7 +118,7 @@
           <div class="ui-g-4">
             <label>Широта</label>
           </div>
-          <div class="ui-g-8" formGroupName="address">
+          <div class="ui-g-8">
             <input pInputText formControlName="latitude">
           </div>
         </div>
@@ -120,7 +126,7 @@
           <div class="ui-g-4">
             <label>Долгота</label>
           </div>
-          <div class="ui-g-8" formGroupName="address">
+          <div class="ui-g-8">
             <input pInputText formControlName="longitude">
           </div>
         </div>
@@ -128,24 +134,25 @@
           <div class="ui-g-4">
             <label>Комментарий</label>
           </div>
-          <div class="ui-g-8" formGroupName="address">
+          <div class="ui-g-8">
             <input pInputText formControlName="comment">
           </div>
         </div>
-      </div>
-
-    </p-tabPanel>
-  </p-tabView>
-  <p-footer>
-    <div class="ui-dialog-buttonpane ui-helper-clearfix">
-
-      <button [disabled]="shopFrom.invalid" type="button" class="ui-button-success" pButton icon="fa fa-check"
-              (click)="shopSaved()"
-              label="Сохранить"></button>
-      <button type="button" class="ui-button-secondary" pButton icon="pi pi-times" (click)="closeDialog()"
-              label="Отмена"></button>
+      </ng-container>
     </div>
-  </p-footer>
+  </p-tabPanel>
+</p-tabView>
+<p-footer>
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+
+    <button type="button" class="ui-button-success" pButton icon="fa fa-check"
+            (click)="save()"
+            label="Сохранить"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+            (click)="close(false)"
+            label="Отмена"></button>
+  </div>
+</p-footer>
 
 <!--</p-dialog>-->
 
