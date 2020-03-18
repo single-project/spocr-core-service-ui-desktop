@@ -35,11 +35,18 @@ import {DadataPartyComponent} from './components/dadata-party/dadata-party.compo
 import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
 import { AddRequisiteButtonComponent } from './components/add-requisite-button/add-requisite-button.component';
 import {NameTagsPipe} from "./pipes/name-tags.pipe";
-
-
+import {DateTimeTagsPipe} from "./pipes/date-time-tags.pipe";
 
 @NgModule({
-  declarations: [NameTagsPipe, ActiveTagsPipe, DadataAddressComponent, DadataPartyComponent, DadataFioComponent, AddRequisiteButtonComponent],
+  declarations: [
+    NameTagsPipe,
+    ActiveTagsPipe,
+    DateTimeTagsPipe,
+    DadataAddressComponent,
+    DadataPartyComponent,
+    DadataFioComponent,
+    AddRequisiteButtonComponent
+  ],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -80,6 +87,7 @@ import {NameTagsPipe} from "./pipes/name-tags.pipe";
     MultiSelectModule,
     ActiveTagsPipe,
     NameTagsPipe,
+    DateTimeTagsPipe,
     CardModule,
     PaginatorModule,
     MessagesModule,
