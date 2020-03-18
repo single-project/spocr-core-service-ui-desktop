@@ -95,10 +95,10 @@
   </p-tabPanel>
   <p-tabPanel header="Адрес" leftIcon="fas fa-map-marker-alt">
 
-    <button type="button" class="ui-button-success" pButton icon="fa fa-check"
+    <button *ngIf="!entity.address" type="button" class="ui-button-success" pButton icon="fa fa-check"
             (click)="addAddress()"
             label="Добавить адрес"></button>
-    <button type="button" class="ui-button-danger" pButton icon="fa fa-remove"
+    <button *ngIf="entity.address" type="button" class="ui-button-danger" pButton icon="fa fa-remove"
             (click)="removeAddress()"
             label="Удалить адрес"></button>
 

@@ -38,16 +38,11 @@ import {MessageServiceFacadeService} from "../../../../core/services/message-ser
   styleUrls: ['./shop-dialog.component.scss']
 })
 export class ShopDialogComponent extends EntityCardModel<ShopModel> implements OnInit, OnChanges {
-  @Input() public shop: ShopModel;
-  @Output() public onShopSaved = new EventEmitter<ShopModel>();
   public counterpartiesList: any[] = [];
   public shopTypesList: ShopTypeModel[] = [];
   public salesChannelsList: { name: string, id: number }[] = [];
   public shopSpecializationList: { name: string, id: number }[] = [];
   public shopDepartsList: { name: string, id: number }[] = [];
-  public _display = false;
-  public shopFrom: FormGroup;
-  public static title = '';
 
   constructor(private configService: ConfigService,
               private personalService: PersonalRekvService,
@@ -93,12 +88,14 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   addAddress(e?: ShopModel) {
+    //TODO: может вообще никакой entity как свойства не требуется? И опираться в шаблоне на некий набор свойств
     if (!e) {
       this.entity.address = {active: true} as AddressModel;
       e = this.entity;
     }
-    if (e.address != undefined) {
-      this.entityDialogForm.addControl("address", this.formBuilder.group({
+
+    if (e.address) {
+      this.addNestedObjectIfNotContains(e, "address", {
         id: e.address.id,
         version: e.address.version,
         active: e.address.active,
@@ -107,13 +104,12 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
         latitude: e.address.latitude,
         longitude: e.address.longitude,
         suggestion: <AddressSuggestion>{},
-      }));
+      });
     }
   }
 
   removeAddress() {
-    this.entityDialogForm.removeControl("address");
-    this.entity.address = undefined;
+    this.removeNestedObjectIfContains("address");
   }
 
   loadCounterpartiesList(): void {

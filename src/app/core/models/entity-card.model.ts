@@ -106,6 +106,19 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     });
   }
 
+  addNestedObjectIfNotContains(e: T, nestedObjectName: string, nestedObjectConfig: {[key: string]: any;}) {
+    if (!this.entityDialogForm.contains(nestedObjectName)) {
+      this.entityDialogForm.addControl(nestedObjectName, this.formBuilder.group(nestedObjectConfig));
+    }
+  }
+
+  removeNestedObjectIfContains(nestedObjectName: string) {
+    if (this.entityDialogForm.contains(nestedObjectName)) {
+      this.entityDialogForm.removeControl(nestedObjectName);
+      this.entity[nestedObjectName] = undefined;
+    }
+  }
+
 }
 
 interface EntityCardModelI extends OnInit {
