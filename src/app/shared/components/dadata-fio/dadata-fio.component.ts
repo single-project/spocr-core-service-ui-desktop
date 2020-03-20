@@ -12,7 +12,7 @@ import {FioSuggestion} from '../../../core/models/suggestion-fio.model';
   styleUrls: ['./dadata-fio.component.scss']
 })
 export class DadataFioComponent implements OnInit {
-  @Input() parentForm: FormGroup;
+  @Input() parentForm2: FormGroup;
 
   public results: string[];
   public suggestions: FioSuggestion[];
@@ -31,8 +31,9 @@ export class DadataFioComponent implements OnInit {
 
 
   select(e: FioSuggestion) {
-    console.log(this.parentForm);
-    this.parentForm.patchValue({
+    console.log(this.parentForm2);
+    console.dir(e);
+    this.parentForm2.patchValue({
       personRekv: {
         name: `${e.data.surname} ${e.data.name} ${e.data.patronymic}`,
         lastName: e.data.surname,
@@ -52,7 +53,7 @@ export class DadataFioComponent implements OnInit {
 
   onAddressClean(): void {
     this.suggestionReset();
-    this.parentForm.patchValue({
+    this.parentForm2.patchValue({
       personRekv: {
         name: '',
         lastName: '',

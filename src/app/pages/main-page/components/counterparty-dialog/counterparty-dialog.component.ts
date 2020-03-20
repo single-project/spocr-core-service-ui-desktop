@@ -141,17 +141,17 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   addLegalRekv(): void{
     this.removePersonRekv();
     if(!this.entity.legalRekv){
-      this.entity.legalRekv = {id: null, shortName: null, fullName: null} as LegalRekv;
+      this.entity.legalRekv = {} as LegalRekv;
     }
     let legalRekv = this.entity.legalRekv;
     this.addNestedObjectIfNotContains('legalRekv', {
       id: legalRekv.id,
-      shortName: [{value: legalRekv.shortName || '', disabled: true}],
-      fullName: [{value: legalRekv.fullName || '', disabled: true}],
-      inn: [{value: legalRekv.inn || '', disabled: true}],
-      ogrn: [{value: legalRekv.ogrn || '', disabled: true}],
-      kpp: [{value: legalRekv.kpp || '', disabled: true}],
-      suggestion: legalRekv.suggestion || '',
+      shortName: legalRekv.shortName,
+      fullName: legalRekv.fullName,
+      inn: legalRekv.inn,
+      ogrn: legalRekv.ogrn,
+      kpp: legalRekv.kpp,
+      suggestion: legalRekv.suggestion,
       innSug: ''
     });
     this.legalReq = true;
@@ -233,7 +233,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       statuses: [e.statuses],
       parent: e.parent,
       owner: e.owner,
-      paymentDetails:[],
+      // paymentDetails:[],
       updatedFields: []
     });
     if (e.legalRekv) {
