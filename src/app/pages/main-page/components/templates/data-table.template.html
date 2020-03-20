@@ -97,7 +97,7 @@
           style="text-align: center">
         <span
               [ngClass]="{'cell-active': col.field === 'active' && dataItem[col.field], 'cell-passive': col.field === 'active' && !dataItem[col.field]}">
-          {{dataItem[col.field] | activeTags | nameTags }}
+          {{dataItem[col.field] | activeTags | nameTags | dateTimeTags  }}
         </span>
       </td>
     </tr>
