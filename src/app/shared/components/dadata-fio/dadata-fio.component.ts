@@ -3,7 +3,7 @@ import {FormGroup} from '@angular/forms';
 import {AddressSuggestion} from '../../../core/models/suggestion-address.model';
 import {DadataService} from '../../../core/services/dadata.service';
 import * as _ from 'lodash';
-import {map, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {FioSuggestion} from '../../../core/models/suggestion-fio.model';
 
 @Component({
@@ -12,9 +12,9 @@ import {FioSuggestion} from '../../../core/models/suggestion-fio.model';
   styleUrls: ['./dadata-fio.component.scss']
 })
 export class DadataFioComponent implements OnInit {
-  @Input() parentForm2: FormGroup;
+  @Input() parentForm: FormGroup;
 
-  public results: string[];
+  public results: any;
   public suggestions: FioSuggestion[];
   public selectedItem: string;
 
@@ -30,15 +30,16 @@ export class DadataFioComponent implements OnInit {
   }
 
 
-  select(e: FioSuggestion) {
-    console.log(this.parentForm2);
+  select(e: string) {
     console.dir(e);
-    this.parentForm2.patchValue({
+    console.dir(this.suggestions);
+    let sug = this.suggestions[0];
+    this.parentForm.patchValue({
       personRekv: {
-        name: `${e.data.surname} ${e.data.name} ${e.data.patronymic}`,
-        lastName: e.data.surname,
-        firstName: e.data.name,
-        patronymic: e.data.patronymic,
+        name: e,
+        lastName: sug.data.surname,
+        firstName: sug.data.name,
+        patronymic: sug.data.patronymic,
       }
     });
   }
@@ -46,14 +47,14 @@ export class DadataFioComponent implements OnInit {
   find(e) {
     this.dadata.fioSuggest(e.query).pipe(
       tap(su => this.suggestions = su),
-      map(su => su.map(s => s.value)),
+      map(s => s.map(s => s.value))
     ).subscribe(v => this.results = v)
   }
 
 
   onAddressClean(): void {
     this.suggestionReset();
-    this.parentForm2.patchValue({
+    this.parentForm.patchValue({
       personRekv: {
         name: '',
         lastName: '',

@@ -34,7 +34,7 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   }
 
   select(e: PartySuggestion) {
-    console.dir(this.parentForm);
+    console.dir(e);
     this.parentForm.patchValue({
       legalRekv: {
         shortName: e.value,
