@@ -8,7 +8,7 @@ import {AfterViewInit, OnInit} from "@angular/core";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
 
-  public entity: T = {} as T;
+  public entity: T;
   public entityDialogForm: FormGroup;
 
   protected constructor(public formBuilder: FormBuilder,
@@ -16,8 +16,9 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
                         public dialogConfig: DynamicDialogConfig,
                         private _entityService: IdentifiedEntityService<T>,
                         private _messageService: MessageServiceFacadeService) {
-    this.entity = dialogConfig.data.entity;
-    this.build(dialogConfig.data.entity);
+    console.dir(this.dialogConfig.data.entity);
+    this.dialogConfig.data.entity? this.entity =  this.dialogConfig.data.entity : this.entity = {} as T;
+    this.build();
 
   }
 
@@ -25,10 +26,10 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
 
 
 
-  abstract buildFormGroup(e: T);
+  abstract buildFormGroup();
 
   //TODO: ранее требовалось создать форму, потом обновить значения их полей теперь не требуется - возможно метод не нужен
-  abstract populateFormGroup(e: T);
+  abstract populateFormGroup();
 
   abstract instantiate(options?): T;
 
@@ -59,12 +60,9 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   }
 
 
-  build(e: T): void {
-    if (e === undefined) {
-      e = this.instantiate();
-    }
-    this.buildFormGroup(e);
-    this.populateFormGroup(e);
+  build(): void {
+    this.buildFormGroup();
+    this.populateFormGroup();
   }
 
   save(): void {
@@ -82,7 +80,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   }
 
   isNew() {
-    return (this.entity == undefined || this.entity.id == undefined);
+    return (!this.entity.id);
   }
 
   close(refresh?: boolean): void {
@@ -106,7 +104,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     });
   }
 
-  addNestedObjectIfNotContains(e: T, nestedObjectName: string, nestedObjectConfig: {[key: string]: any;}) {
+  addNestedObjectIfNotContains(nestedObjectName: string, nestedObjectConfig: {[key: string]: any;}) {
     if (!this.entityDialogForm.contains(nestedObjectName)) {
       this.entityDialogForm.addControl(nestedObjectName, this.formBuilder.group(nestedObjectConfig));
     }

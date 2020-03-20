@@ -198,7 +198,7 @@ export interface CounterpartyModel extends BaseIdentifiedEntity {
   legalType?: EnumerationEntity;
   legalRekv?: LegalRekv;
   personRekv?: PersonRekv;
-  paymentDetails?: PaymentDetails;
+  paymentDetails?: PaymentDetails[];
 }
 
 

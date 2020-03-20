@@ -94,14 +94,14 @@
     </div>
   </p-tabPanel>
   <p-tabPanel header="Адрес" leftIcon="fas fa-map-marker-alt">
-
-    <button *ngIf="!entity.address" type="button" class="ui-button-success" pButton icon="fa fa-check"
-            (click)="addAddress()"
-            label="Добавить адрес"></button>
-    <button *ngIf="entity.address" type="button" class="ui-button-danger" pButton icon="fa fa-remove"
-            (click)="removeAddress()"
-            label="Удалить адрес"></button>
-
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button *ngIf="!entity.address" type="button" class="ui-button-success" pButton icon="fa fa-check"
+              (click)="addAddress()"
+              label="Добавить адрес"></button>
+      <button *ngIf="entity.address" type="button" class="ui-button-danger" pButton icon="fa fa-remove"
+              (click)="removeAddress()"
+              label="Удалить адрес"></button>
+    </div>
     <div [formGroup]="entityDialogForm" class="ui-g ui-fluid" *ngIf="entity.address">
       <ng-container formGroupName="address">
         <div class="ui-g-12">

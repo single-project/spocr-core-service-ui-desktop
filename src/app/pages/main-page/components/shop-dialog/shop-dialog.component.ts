@@ -72,7 +72,8 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
 
   }
 
-  buildFormGroup(e: ShopModel) {
+  buildFormGroup() {
+    let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
       name: [e.name, Validators.required],
@@ -84,18 +85,19 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       updatedFields: null
     });
 
-    this.addAddress(e);
+    this.addAddress();
   }
 
-  addAddress(e?: ShopModel) {
+  addAddress() {
+    let e = this.entity;
+    console.log(this.entity);
     //TODO: может вообще никакой entity как свойства не требуется? И опираться в шаблоне на некий набор свойств
-    if (!e) {
+    if (!this.entity.address) {
       this.entity.address = {active: true} as AddressModel;
-      e = this.entity;
     }
 
     if (e.address) {
-      this.addNestedObjectIfNotContains(e, "address", {
+      this.addNestedObjectIfNotContains("address", {
         id: e.address.id,
         version: e.address.version,
         active: e.address.active,
@@ -159,7 +161,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
     return {active: true} as ShopModel;
   }
 
-  populateFormGroup(e: ShopModel) {
+  populateFormGroup() {
   }
 
 }

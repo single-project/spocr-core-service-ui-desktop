@@ -31,6 +31,7 @@ export class DadataFioComponent implements OnInit {
 
 
   select(e: FioSuggestion) {
+    console.log(this.parentForm);
     this.parentForm.patchValue({
       personRekv: {
         name: `${e.data.surname} ${e.data.name} ${e.data.patronymic}`,

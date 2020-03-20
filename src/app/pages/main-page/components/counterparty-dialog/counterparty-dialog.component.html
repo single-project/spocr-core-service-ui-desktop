@@ -123,7 +123,8 @@
               formControlName="birthDate"
               [monthNavigator]="true"
               [yearNavigator]="true"
-              yearRange="1924:2100"
+              yearRange="1914:2114"
+              dataType="date"
               [locale]="ruCalLocale"></p-calendar>
           </div>
           <div class="ui-g-4">
@@ -193,18 +194,52 @@
         </div>
       </ng-container>
     </div>
-    <app-add-requisite-button
-      [requisite]="entity"
-      [dropDownOptions]="generalLegalTypes"
-      #addReqBtn>
-    </app-add-requisite-button>
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4"></div>
+        <div class="ui-g-4">
+          <button *ngIf="!personReq && !legalReq"
+            pButton
+            type="button"
+            label="Добавить реквизит"
+            class="ui-button-success"
+            icon="pi pi-plus"
+            (click)="onAddReqClicked()">
+          </button>
+          <button *ngIf="legalReq || personReq"
+                  pButton
+                  type="button"
+                  label="Убрать реквизит"
+                  class="ui-button-danger"
+                  icon="pi pi-minus"
+                  (click)="removeReq()">
+          </button>
+        </div>
+        <div class="ui-g-4"></div>
+      </div>
+      <div *ngIf="dropDownShow" class="ui-g-12">
+        <div class="ui-g-3"></div>
+        <div class="ui-g-6">
+          <p-dropdown
+            [options]="generalLegalTypes"
+            [(ngModel)]="selectedLegalType"
+            optionLabel="name"
+            dataKey="id"
+            placeholder="Выберите тип:"
+            (onChange)="switchPartyReq()"
+          >
+          </p-dropdown>
+        </div>
+        <div class="ui-g-3"></div>
+      </div>
+    </div>
   </p-tabPanel>
-  <p-tabPanel header="Банковские реквизиты" leftIcon="fas fa-university">
-    <div *ngIf="paymentReqs"
+  <p-tabPanel *ngIf="false" header="Банковские реквизиты" leftIcon="fas fa-university">
+    <div
          [formGroup]="entityDialogForm"
          class="ui-g ui-fluid">
 
-      <ng-container formGroupName="paymentDetails">
+      <ng-container formGroupName="paymentDetail">
         <div class="ui-g-12">
           <div class="ui-g-4">
             <label>Банк</label>

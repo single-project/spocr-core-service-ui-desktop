@@ -26,5 +26,10 @@ export class CounterpartiesService extends IdentifiedEntityService<CounterpartyM
     return this.http.get(this.cfg.BASE_URL + this.cfg.CP_STATUSES_URL);
   }
 
+  //TODO Needs to will be moved to another service after creation of enumeration endpoints
+  fetchLegalTypes(): Observable<any>{
+    return this.http.get(this.cfg.BASE_URL+this.cfg.LEGAL_TYPES_URL);
+  }
+
 
 }

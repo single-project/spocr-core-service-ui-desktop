@@ -13,6 +13,7 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   @Input() parentForm: FormGroup;
 
 
+
   public results: any;
   public suggestions: PartySuggestion[];
   public selectedItem: string;
@@ -33,13 +34,15 @@ export class DadataPartyComponent implements OnInit, OnChanges {
   }
 
   select(e: PartySuggestion) {
+    console.dir(this.parentForm);
     this.parentForm.patchValue({
       legalRekv: {
         shortName: e.value,
         fullName: e.unrestricted_value,
         inn: e.data.inn,
         ogrn: e.data.ogrn,
-        kpp: e.data.kpp
+        kpp: e.data.kpp,
+        suggestion: e,
       }
     })
   }

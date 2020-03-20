@@ -6,8 +6,14 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
-import {CounterpartyModel} from '../../../../core/models/global-reference.model';
+import {FormArray, FormBuilder, Validators} from "@angular/forms";
+import {
+  Citizenship,
+  CounterpartyModel, Gender,
+  LegalRekv,
+  PaymentDetails,
+  PersonRekv
+} from '../../../../core/models/global-reference.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ConfigService} from '../../../../core/services/config.service';
 import {map, shareReplay} from 'rxjs/operators';
@@ -26,18 +32,17 @@ import {MessageServiceFacadeService} from "../../../../core/services/message-ser
 export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyModel> implements OnInit, OnChanges, AfterViewInit {
 
   public generalLegalTypes = [];
-  public selectedGeneralLegalType = [];
+  public selectedLegalType: {id: number, name: string};
+  public dropDownShow = false;
   public parentsList = [];
   public statusesList = [];
   public citizenships = [];
   public genders = [];
   public docTypes = [];
-  public showLegalTypeChoice = false;
   public personReq = false;
   public legalReq = false;
   public paymentReqs = false;
-  @ViewChild('addReqBtn') addReqBtn;
-  @ViewChild('addPaymentReqBtn') addPaymentReqBtn;
+
 
   public ruCalLocale = {
     firstDayOfWeek: 1,
@@ -60,11 +65,11 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
               public formBuilder: FormBuilder,
               private counterpartyService: CounterpartiesService,
               private messageService: MessageServiceFacadeService,
-              private renderer: Renderer2) {
+              ) {
     super(formBuilder, dialogRef, dialogConfig, counterpartyService, messageService);
-    this.paymentReqs = !!this.entity;
-    this.personReq = !!this.entity;
-    this.legalReq = !!this.entity;
+    this.paymentReqs = !!this.entity.paymentDetails;
+    this.personReq = !!this.entity.personRekv;
+    this.legalReq = !!this.entity.legalRekv;
   }
 
   ngOnInit() {
@@ -73,11 +78,18 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.loadStatusesList();
     this.loadAvailablePersonalData();
 
+
   }
 
   ngAfterViewInit(): void {
-    this.initPaymentReqBtn();
-    this.initAddReqBtn();
+    // this.initPaymentReqBtn();
+    // this.initAddReqBtn();
+    // if(this.entity.paymentDetails){
+    //   this.entityDialogForm.patchValue({paymentDetails: [...this.entity.paymentDetails]})
+    // }else{
+    //   this.entityDialogForm.patchValue({paymentDetails: []})
+    // }
+
 
   }
 
@@ -87,10 +99,10 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   }
 
   loadAvailableLegalTypes(): void {
-    this.configService.fetchAppSettings().pipe(
+    this.counterpartyService.fetchLegalTypes().pipe(
       shareReplay()
     ).subscribe(c => {
-      this.generalLegalTypes = c['newLegalTypes'];
+      this.generalLegalTypes = c['content'];
     });
   }
 
@@ -126,137 +138,143 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       })
   }
 
-  buildFormGroup(e: CounterpartyModel) {
+  addLegalRekv(): void{
+    this.removePersonRekv();
+    if(!this.entity.legalRekv){
+      this.entity.legalRekv = {id: null, shortName: null, fullName: null} as LegalRekv;
+    }
+    let legalRekv = this.entity.legalRekv;
+    this.addNestedObjectIfNotContains('legalRekv', {
+      id: legalRekv.id,
+      shortName: [{value: legalRekv.shortName || '', disabled: true}],
+      fullName: [{value: legalRekv.fullName || '', disabled: true}],
+      inn: [{value: legalRekv.inn || '', disabled: true}],
+      ogrn: [{value: legalRekv.ogrn || '', disabled: true}],
+      kpp: [{value: legalRekv.kpp || '', disabled: true}],
+      suggestion: legalRekv.suggestion || '',
+      innSug: ''
+    });
+    this.legalReq = true;
+    this.entityDialogForm.get('legalRekv').markAsTouched();
+  }
+  removeLegalRekv(){
+    this.legalReq = false;
+    this.removeNestedObjectIfContains('legalRekv');
+  }
 
+  removePersonRekv(){
+    this.personReq = false;
+    this.removeNestedObjectIfContains('personRekv');
+  }
+
+  onAddReqClicked(){
+    this.dropDownShow = true;
+  }
+
+  addPersonRekv(): void{
+    if(!this.entity.personRekv){
+      this.entity.personRekv = {} as PersonRekv;
+      this.entity.personRekv.citizenship = {} as Citizenship;
+      this.entity.personRekv.gender = {} as Gender;
+    }
+    this.removeLegalRekv();
+    let personRekv = this.entity.personRekv;
+    this.addNestedObjectIfNotContains('personRekv', {
+      id: personRekv.id,
+      name: [personRekv.name, Validators.required],
+      lastName: personRekv.lastName,
+      firstName: personRekv.firstName,
+      patronymic: personRekv.patronymic,
+      birthDate: personRekv.birthDate,
+      birthPlace: personRekv.birthPlace,
+      docType: this.formBuilder.group([]),
+      docSeriesNumber: personRekv.docSeriesNumber,
+      inn: [personRekv.inn, Validators.compose([Validators.maxLength(12), Validators.minLength(12)])],
+      citizenship: this.formBuilder.group({
+        id: personRekv.citizenship.id,
+        name: personRekv.citizenship.name,
+        ident: personRekv.citizenship.ident,
+        properties: personRekv.citizenship.properties
+      }),
+      gender: this.formBuilder.group({
+        id: personRekv.gender.id,
+        name: personRekv.gender.name,
+        ident: personRekv.gender.ident,
+        properties: personRekv.gender.properties
+      }),
+      email: [personRekv.email, Validators.email],
+      phones: [personRekv.phones,],
+    });
+    this.personReq = true;
+  }
+
+  addPaymentDetails(){
+    if (!this.entity.paymentDetails) {
+        this.entity.paymentDetails = [] as PaymentDetails[];
+    }
+
+    let paymentDetail = this.entity.paymentDetails[0];
+    this.addNestedObjectIfNotContains('paymentDetail', {
+      id: paymentDetail.id,
+      paymentAccount: paymentDetail.paymentAccount,
+      correspondingAccount: paymentDetail.correspondingAccount,
+      bic: paymentDetail.bic,
+      bank: paymentDetail.bank,
+    })
+  }
+
+  buildFormGroup() {
+    let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
       version: e.version,
-      active: e.active,
+      active: e.active || true,
       name: [e.name, Validators.required],
       statuses: [e.statuses],
       parent: e.parent,
       owner: e.owner,
+      paymentDetails:[],
       updatedFields: []
     });
-
     if (e.legalRekv) {
-      let legalRekv = e.legalRekv;
-      this.entityDialogForm.addControl("legalRekv", this.formBuilder.group({
-        id: legalRekv.id,
-        shortName: [{value: legalRekv.shortName, disabled: true}],
-        fullName: [{value: legalRekv.fullName, disabled: true}],
-        inn: [{value: legalRekv.inn, disabled: true}],
-        ogrn: [{value: legalRekv.ogrn, disabled: true}],
-        kpp: [{value: legalRekv.kpp, disabled: true}],
-        suggestion: legalRekv.suggestion,
-        innSug: ''
-      }));
+      this.addLegalRekv();
     }
-
     if (e.personRekv) {
-      let personRekv = e.personRekv;
-      this.entityDialogForm.addControl("personRekv", this.formBuilder.group({
-        id: personRekv.id,
-        name: [personRekv.name, Validators.required],
-        lastName: personRekv.lastName,
-        firstName: personRekv.firstName,
-        patronymic: personRekv.patronymic,
-        birthDate: personRekv.birthDate,
-        birthPlace: personRekv.birthPlace,
-        docType: this.formBuilder.group([]),
-        docSeriesNumber: personRekv.docSeriesNumber,
-        inn: [personRekv.inn, Validators.compose([Validators.maxLength(12), Validators.minLength(12)])],
-        citizenship: this.formBuilder.group({
-          id: personRekv.citizenship.id,
-          name: personRekv.citizenship.name,
-          ident: personRekv.citizenship.ident,
-          properties: personRekv.citizenship.properties
-        }),
-        gender: this.formBuilder.group({
-          id: personRekv.gender.id,
-          name: personRekv.gender.name,
-          ident: personRekv.gender.ident,
-          properties: personRekv.gender.properties
-        }),
-        email: [personRekv.email, Validators.email],
-        phones: [personRekv.phones,],
-      }));
+      this.addPersonRekv();
     }
-    if (e.paymentDetails) {
-      let paymentDetails = e.paymentDetails;
-      this.entityDialogForm.addControl("paymentDetails", this.formBuilder.group({
-        id: paymentDetails.id,
-        paymentAccount: paymentDetails.paymentAccount,
-        correspondingAccount: paymentDetails.correspondingAccount,
-        bic: paymentDetails.bic,
-        bank: paymentDetails.bank,
-      }));
-    }
+    // if (e.paymentDetails) {
+    //   this.addPaymentDetails();
+    // }
   }
-
-  legalTypeChoose(val: string) {
-    this.showLegalTypeChoice = false;
-    if (val === '1') {
-      this.personReq = true;
-    } else if (val === '2') {
-      this.legalReq = true;
-    }
-  }
-
 
   instantiate(): CounterpartyModel {
 
-    return {personRekv: {citizenship: {}, gender: {}}, legalRekv: {}, paymentDetails: {}, active: true} as CounterpartyModel;
+    return {} as CounterpartyModel;
   }
 
-  populateFormGroup(e: CounterpartyModel) {
+  populateFormGroup() {
     return;
   }
 
-  save(): void {
-    if(this.entityDialogForm.dirty){
-      if(this.isNew()){
-        this.entityDialogForm.removeControl('updatedFields');
-      }else {
-        this.entityDialogForm.patchValue({updatedFields: this.getUpdatedFields()});
-      }
-      super.save();
-    }else {
-      this.close(false)
+  switchPartyReq(){
+    if(this.selectedLegalType.id === 5){
+      this.addPersonRekv();
+    }else if(this.selectedLegalType.id === 6){
+      this.addLegalRekv()
     }
-
+    this.dropDownShow = false;
   }
 
-  initPaymentReqBtn(): void {
-    this.addPaymentReqBtn.externalRequisiteVisible$.asObservable().subscribe(value => {
-      this.paymentReqs = value;
-      if(!value){
-        this.entityDialogForm.get('paymentDetails').reset();
-        this.entityDialogForm.get('paymentDetails').markAsDirty();
-      }
-    });
+  removeReq(){
+    this.removeLegalRekv();
+    this.removePersonRekv();
   }
 
-  initAddReqBtn(): void{
-    this.addReqBtn.selectedType$.asObservable().subscribe(value => {
-      if(value === '1'){
-        this.personReq = true;
-        this.legalReq = false;
-      }else if(value === '2'){
-        this.legalReq = true;
-        this.personReq = false;
-      }
-    });
-    this.addReqBtn.externalRequisiteVisible$.asObservable().subscribe(value => {
-      if(!value){
-        this.personReq = false;
-        this.legalReq = false;
-        this.entityDialogForm.reset('personRekv');
-        this.entityDialogForm.reset('legalRekv');
-      }
-    });
-
-
+  save(): void {
+   this.entityDialogForm.removeControl('innSug');
+    super.save();
   }
+
+
 
 }

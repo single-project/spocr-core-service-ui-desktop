@@ -23,7 +23,8 @@ export class ShopTypeDialogComponent extends EntityCardModel<ShopTypeModel> {
     super(formBuilder, dialogRef, dialogConfig, shopTypeService, messageService);
   }
 
-  buildFormGroup(e: ShopTypeModel) {
+  buildFormGroup() {
+    let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e['id'],
       name: [e['name'], Validators.required],
@@ -33,7 +34,7 @@ export class ShopTypeDialogComponent extends EntityCardModel<ShopTypeModel> {
   }
 
 
-  populateFormGroup(e: ShopTypeModel) {
+  populateFormGroup() {
 
   }
 

@@ -19,6 +19,11 @@ export class Conf {
   // Counterparty urls
   private _COUNTERPARTIES_URL = '/api/counterparties';
   private _CP_STATUSES_URL = '/api/enumerations?ident=CP-STATUS';
+  private _LEGAL_TYPES_URL = '/api/enumerations?ident=LEGAL-TYPE';
+
+  get LEGAL_TYPES_URL(): string {
+    return this._LEGAL_TYPES_URL;
+  }
 
   //Personal requisites URLS
   private _DOC_TYPES_URL = '/api/enumerations?ident=DOC-TYPE';
