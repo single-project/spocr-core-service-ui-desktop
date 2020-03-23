@@ -19,7 +19,7 @@ import {map} from 'rxjs/operators';
 import {ShopsService} from '../../../../core/services/shops.service';
 import {
   AddressModel,
-  SalesChannelModel,
+  SalesChannelModel, ShopDepartModel,
   ShopModel,
   ShopSpecializationModel,
   ShopTypeModel
@@ -63,9 +63,12 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   ngOnInit() {
+    console.dir(this.entity);
     this.loadCounterpartiesList();
     this.loadShopTypesList();
     this.loadSalesChannels();
+    this.loadShopSpecialization();
+    this.loadShopDeparts();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -80,6 +83,8 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       shopTypes: [e.shopTypes, Validators.required],
       counterparty: [e.counterparty, Validators.required],
       salesChannels: [e.salesChannels, Validators.required],
+      shopDeparts: e['shopDeparts'],
+      shopSpecializations: e['shopSpecializations'],
       active: e.active,
       version: e.version,
       updatedFields: null
@@ -150,12 +155,20 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       map((ss: ShopSpecializationModel[]) => ss.map(s => {
         return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}
       }))
-    ).subscribe(channels => this.salesChannelsList = channels)
+    ).subscribe(spec => this.shopSpecializationList = spec)
   }
 
-  optionLabelMaker(e) {
-    console.dir(e)
+  loadShopDeparts(): void {
+    this.shopdepartsService.get()
+      .pipe(
+        map(sd => sd.content),
+        map((sd: ShopDepartModel[]) => sd.map(d => {
+          return {id: d.id, name: `${d.name} / ${d.manufacturer.name}`}
+        }))
+      ).subscribe(departs => this.shopDepartsList = departs)
   }
+
+
 
   instantiate(options?): ShopModel {
     return {active: true} as ShopModel;
