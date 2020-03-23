@@ -4,7 +4,7 @@ import {ErrorModel} from './error.model';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
 import {MessageServiceFacadeService} from "../services/message-service-facade.service";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
-import {AfterViewInit, OnInit} from "@angular/core";
+import {OnInit} from "@angular/core";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
 
@@ -16,15 +16,11 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
                         public dialogConfig: DynamicDialogConfig,
                         private _entityService: IdentifiedEntityService<T>,
                         private _messageService: MessageServiceFacadeService) {
-    console.dir(this.dialogConfig.data.entity);
-    this.dialogConfig.data.entity? this.entity =  this.dialogConfig.data.entity : this.entity = {} as T;
+    this.setEntity();
     this.build();
-
   }
 
   abstract ngOnInit(): void;
-
-
 
   abstract buildFormGroup();
 
@@ -68,7 +64,6 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   save(): void {
     if (this.entityDialogForm.invalid) {
       this.showFormValidationErrors();
-      return;
     }
 
     if (this.isNew()) {
@@ -104,7 +99,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     });
   }
 
-  addNestedObjectIfNotContains(nestedObjectName: string, nestedObjectConfig: {[key: string]: any;}) {
+  addNestedObjectIfNotContains(nestedObjectName: string, nestedObjectConfig: { [key: string]: any; }) {
     if (!this.entityDialogForm.contains(nestedObjectName)) {
       this.entityDialogForm.addControl(nestedObjectName, this.formBuilder.group(nestedObjectConfig));
     }
@@ -114,6 +109,13 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     if (this.entityDialogForm.contains(nestedObjectName)) {
       this.entityDialogForm.removeControl(nestedObjectName);
       this.entity[nestedObjectName] = undefined;
+    }
+  }
+
+  private setEntity() {
+    this.entity = this.dialogConfig.data.entity;
+    if (this.entity === undefined) {
+      this.entity = this.instantiate();
     }
   }
 

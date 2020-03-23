@@ -1,81 +1,48 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from "@angular/forms";
+import {EntityCardModel} from "../../../../core/models/entity-card.model";
+import {ManufacturerModel} from "../../../../core/models/global-reference.model";
+import {ConfigService} from "../../../../core/services/config.service";
+import {ManufactureService} from "../../../../core/services/manufacture.service";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
+import {MessageServiceFacadeService} from "../../../../core/services/message-service-facade.service";
 
 @Component({
   selector: 'app-manufacture-dialog',
   templateUrl: './manufacture-dialog.component.html',
   styleUrls: ['./manufacture-dialog.component.scss']
 })
-export class ManufactureDialogComponent implements OnInit {
-  @Input() manufacture;
-  @Input() display;
-  @Input() isNew;
-  @Output() onEditedManufactureSave = new EventEmitter<any>();
-  @Output() onNewManufactureSaved = new EventEmitter<any>();
-  @Output() onCloseDialog = new EventEmitter<boolean>();
-  private newManufacture = {};
-  manForm: FormGroup;
+export class ManufactureDialogComponent extends EntityCardModel<ManufacturerModel> implements OnInit {
 
-  constructor( private fb: FormBuilder) {
-    this.manForm = this.fb.group({
-      'manName': ['', Validators.required],
-      'manActive': [true]
-    });
+
+  constructor(private configService: ConfigService,
+              private manufacturerService: ManufactureService,
+              public dialogRef: DynamicDialogRef,
+              public dialogConfig: DynamicDialogConfig,
+              public formBuilder: FormBuilder,
+              private messageService: MessageServiceFacadeService) {
+    super(formBuilder, dialogRef, dialogConfig, manufacturerService, messageService);
   }
+
 
   ngOnInit() {
   }
 
-  manufactureSaved() {
-
-    if (this.isNew) {
-
-      this.newManufacture = {
-        name: this.manForm.get('manName').value,
-        active: this.manForm.get('manActive').value
-
-      };
-      this.onNewManufactureSaved.emit(this.newManufacture);
-    } else {
-      this.newManufacture = {
-        name: this.manForm.get('manName').value,
-        active: this.manForm.get('manActive').value,
-        version: this.manufacture.version,
-        id: this.manufacture.id
-      };
-      this.onEditedManufactureSave.emit(this.newManufacture);
-    }
-
-    this.onCloseDialog.emit(false);
+  buildFormGroup() {
+    let e = this.entity;
+    this.entityDialogForm = this.formBuilder.group({
+      id: e.id,
+      name: [e.name, Validators.required],
+      active: e.active,
+      version: e.version,
+      updatedFields: null
+    });
   }
 
-  initAfterViewFormValues(fields: { [key: string]: any  }[]): void {
-    fields.forEach(field => {
-      this.manForm.patchValue({...field});
-    })
+  instantiate(options?): ManufacturerModel {
+    return {active: true} as ManufacturerModel;
   }
 
-  newResetForm(): void {
-    this.initAfterViewFormValues([
-      {'manName': null},
-      {'manActive': true}
-    ]);
-  }
-
-  closeDialog() {
-    this.onCloseDialog.emit(false);
-  }
-
-
-  afterShow() {
-    if (!this.isNew) {
-      this.initAfterViewFormValues([
-        {'manName': this.manufacture.name},
-        {'manActive': this.manufacture.active}
-      ]);
-    } else {
-      this.newResetForm();
-    }
-
+  populateFormGroup() {
   }
 }
