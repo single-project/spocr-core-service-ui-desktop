@@ -1,7 +1,7 @@
 export class Conf {
 
   // General urls
-  private _BASE_URL = 'http://84.201.159.119:8112/spocr';
+  private _BASE_URL = 'http://127.0.0.1:8112/spocr';
   private _AUTH_URL = '/auth/signin';
 
   private _APP_SETTINGS_URL = '/api/app/settings';

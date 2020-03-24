@@ -1,9 +1,0 @@
-{
-  "CORE_URLS": {
-    "BASE_URL": "http://84.201.159.119:8112/spocr",
-    "AUTH_URL": "/auth/signin",
-    "SHOP_URL": "/api/shops",
-    "COUNTERPARTIES_URL": "/api/counterparties",
-    "MANUFACTURES_URL": "/api/manufactures"
-  }
-}
