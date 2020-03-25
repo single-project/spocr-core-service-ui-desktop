@@ -171,7 +171,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
 
 
   instantiate(options?): ShopModel {
-    return {active: true} as ShopModel;
+    return {} as ShopModel;
   }
 
   populateFormGroup() {
