@@ -55,6 +55,7 @@ export class ConfigService {
       map((data: any) => {
         let resObj = data.availableTables.find(o => o.id === dataType);
         return {
+          key: resObj.key,
           columns: [...resObj.columns],
           sortField: resObj.sortField,
           sortOrder: resObj.sortOrder,
