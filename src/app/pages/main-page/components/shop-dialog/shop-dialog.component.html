@@ -1,16 +1,3 @@
-<!--<p-dialog-->
-<!--  (onShow)="afterShow()"-->
-<!--  (onHide)="closeDialog()"-->
-<!--  header="Карточка ТТ"-->
-<!--  [(visible)]="_display"-->
-<!--  [closable]="true"-->
-<!--  [focusOnShow]="false"-->
-<!--  [responsive]="true"-->
-<!--  [modal]="true"-->
-<!--  [closeOnEscape]="true"-->
-
-<!--  [style]="{width: '900px'}">-->
-
 <p-tabView>
   <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
     <div [formGroup]="entityDialogForm" class="ui-g ui-fluid">
@@ -102,7 +89,7 @@
             [options]="shopSpecializationList"
             dataKey="id"
             optionLabel="name"
-            defaultLabel="Выберите специализации"
+            defaultLabel="Выберите специализацию"
             formControlName="shopSpecializations">
           </p-multiSelect>
 
@@ -125,38 +112,7 @@
 
         </div>
       </div>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label for="shop-type">СПЕЦИАЛИЗАЦИЯ</label>
-        </div>
-        <div  class="ui-g-8">
-          <p-multiSelect
-            appendTo="body"
-            [filter]="true"
-            [options]="shopSpecializationList"
-            dataKey="id"
-            optionLabel="name"
-            formControlName="shopSpecializations">
-          </p-multiSelect>
 
-        </div>
-      </div>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label for="shop-type">ОТДЕЛЫ</label>
-        </div>
-        <div  class="ui-g-8">
-          <p-multiSelect
-            appendTo="body"
-            [filter]="true"
-            [options]="shopDepartsList"
-            dataKey="id"
-            optionLabel="name"
-            formControlName="shopDeparts">
-          </p-multiSelect>
-
-        </div>
-      </div>
     </div>
   </p-tabPanel>
   <p-tabPanel header="Адрес" leftIcon="fas fa-map-marker-alt">
@@ -220,5 +176,5 @@
   </div>
 </p-footer>
 
-<!--</p-dialog>-->
+
 
