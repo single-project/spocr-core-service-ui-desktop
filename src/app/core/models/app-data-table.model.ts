@@ -16,6 +16,8 @@ export abstract class  AppDataTableModel<T> {
 
   loading: boolean;
 
+  entityKey: string;
+  аppTableTypes: AppTableTypes;
   sortField: string;
   sortOrder: number;
   totalElements: number;
@@ -68,6 +70,7 @@ export abstract class  AppDataTableModel<T> {
 
   оnInit(аppTableTypes: AppTableTypes): void {
     this.loading = true;
+    this.аppTableTypes = аppTableTypes;
     this.loadTableHeaders(
       аppTableTypes);
     this.initColumnFilter(() => {
@@ -114,7 +117,7 @@ export abstract class  AppDataTableModel<T> {
 
     let header = item ?  `Диалог- ${item.name}` : 'Диалог'; //TODO нужно в классе базового диалога создать статическое свойство title
     const ref = this.dialogService.open(this.dialogComponentType, {
-      data: {entity: item, entityKey: 'unknown'}, //TODO не понятно нужно ли это свойство entityKey на этом уровне
+      data: {entity: item, entityKey: this.entityKey},
       header: header,
       width: '70%',
     });
@@ -138,7 +141,7 @@ export abstract class  AppDataTableModel<T> {
     this.configService
       .fetchTableHeader(headerType)
       .subscribe((data) => {
-
+        this.entityKey = data.key;
         this.cols = data.columns;
         this.selectedCols = data.columns;
         this.sortField = data.sortField;
