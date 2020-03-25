@@ -40,9 +40,9 @@ import {MessageServiceFacadeService} from "../../../../core/services/message-ser
 export class ShopDialogComponent extends EntityCardModel<ShopModel> implements OnInit, OnChanges {
   public counterpartiesList: any[] = [];
   public shopTypesList: ShopTypeModel[] = [];
-  public salesChannelsList: { name: string, id: number }[] = [];
-  public shopSpecializationList: { name: string, id: number }[] = [];
-  public shopDepartsList: { name: string, id: number }[] = [];
+  public salesChannelsList: SalesChannelModel[] = [];
+  public shopSpecializationList: ShopSpecializationModel[] = [];
+  public shopDepartsList: ShopDepartModel[] = [];
 
   constructor(private configService: ConfigService,
               private personalService: PersonalRekvService,
@@ -63,7 +63,6 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   ngOnInit() {
-    console.dir(this.entity);
     this.loadCounterpartiesList();
     this.loadShopTypesList();
     this.loadSalesChannels();
@@ -76,6 +75,8 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   buildFormGroup() {
+    console.log(JSON.stringify(this.entity.shopTypes));
+    console.log(JSON.stringify(this.entity.shopSpecializations));
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
@@ -83,8 +84,8 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       shopTypes: [e.shopTypes, Validators.required],
       counterparty: [e.counterparty, Validators.required],
       salesChannels: [e.salesChannels, Validators.required],
-      shopDeparts: e['shopDeparts'],
-      shopSpecializations: e['shopSpecializations'],
+      shopDeparts: [e.shopDeparts, Validators.required],
+      shopSpecializations: [e.shopSpecializations, Validators.required],
       active: e.active,
       version: e.version,
       updatedFields: null
@@ -95,7 +96,6 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
 
   addAddress() {
     let e = this.entity;
-    console.log(this.entity);
     //TODO: может вообще никакой entity как свойства не требуется? И опираться в шаблоне на некий набор свойств
     if (!this.entity.address) {
       this.entity.address = {active: true} as AddressModel;
@@ -145,7 +145,9 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       map((sc: SalesChannelModel[]) => sc.map(s => {
         return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}
       }))
-    ).subscribe(channels => this.salesChannelsList = channels)
+    ).subscribe(channels => {
+      this.salesChannelsList = channels;
+    })
   }
 
   loadShopSpecialization(): void {
@@ -155,23 +157,24 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       map((ss: ShopSpecializationModel[]) => ss.map(s => {
         return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`}
       }))
-    ).subscribe(spec => this.shopSpecializationList = spec)
+    ).subscribe(spec => {
+      this.shopSpecializationList = spec;
+    })
   }
 
   loadShopDeparts(): void {
     this.shopdepartsService.get()
-      .pipe(
-        map(sd => sd.content),
-        map((sd: ShopDepartModel[]) => sd.map(d => {
-          return {id: d.id, name: `${d.name} / ${d.manufacturer.name}`}
-        }))
-      ).subscribe(departs => this.shopDepartsList = departs)
+    .pipe(
+      map(sd => sd.content),
+      map((sd: ShopDepartModel[]) => sd.map(d => {
+        return {id: d.id, name: `${d.name} / ${d.manufacturer.name}`}
+      }))
+    ).subscribe(departs => this.shopDepartsList = departs)
   }
 
 
-
   instantiate(options?): ShopModel {
-    return {} as ShopModel;
+    return {active: true} as ShopModel;
   }
 
   populateFormGroup() {

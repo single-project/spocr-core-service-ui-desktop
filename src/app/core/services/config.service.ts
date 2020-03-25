@@ -78,4 +78,12 @@ export class ConfigService {
       }),
     );
   }
+
+  fetchDaDataConfiguration() {
+    return this.fetchAppSettings().pipe(
+      map((data: any) => {
+        return data.daDataConfiguration.apiKey;
+      }),
+    );
+  }
 }

@@ -17,7 +17,7 @@
         <div class="ui-g-4">
           <label for="counterparty">КОНТРАГЕНТ</label>
         </div>
-        <div class="ui-g-8">
+        <div  class="ui-g-8">
           <p-dropdown appendTo="body"
                       id="counterparty"
                       [options]="counterpartiesList"
@@ -48,79 +48,80 @@
         <div class="ui-g-4">
           <label for="shop-type">ТИП ТТ</label>
         </div>
-        <div id="shop-type" class="ui-g-8">
+        <div class="ui-g-8">
           <p-multiSelect
+            id="shop-type"
             appendTo="body"
             [filter]="true"
             [options]="shopTypesList"
-            optionLabel="name"
-            defaultLabel="Выберать тип ТТ (обязательно)"
             dataKey="id"
+            optionLabel="name"
+            defaultLabel="Выберите тип тт (обязательно)"
             formControlName="shopTypes">
-
           </p-multiSelect>
-
         </div>
       </div>
       <div class="ui-g-12">
         <div class="ui-g-4">
-          <label for="shop-type">КАНАЛ ПРОДАЖ</label>
+          <label for="sales-channel">КАНАЛ ПРОДАЖ</label>
         </div>
-        <div id="sales-channel" class="ui-g-8">
+        <div class="ui-g-8">
           <p-multiSelect
+            id="sales-channel"
             appendTo="body"
             [filter]="true"
             [options]="salesChannelsList"
             dataKey="id"
             optionLabel="name"
+            defaultLabel="Выберите канал продаж (обязательно)"
             formControlName="salesChannels">
           </p-multiSelect>
-
         </div>
       </div>
       <div class="ui-g-12">
         <div class="ui-g-4">
-          <label for="shop-type">СПЕЦИАЛИЗАЦИЯ</label>
+          <label for="shop-specialization">СПЕЦИАЛИЗАЦИЯ</label>
         </div>
-        <div  class="ui-g-8">
+        <div class="ui-g-8">
           <p-multiSelect
+            id="shop-specialization"
             appendTo="body"
             [filter]="true"
             [options]="shopSpecializationList"
             dataKey="id"
             optionLabel="name"
-            defaultLabel="Выберите специализацию"
+            defaultLabel="Выберите специализацию (обязательно)"
             formControlName="shopSpecializations">
           </p-multiSelect>
-
         </div>
       </div>
       <div class="ui-g-12">
         <div class="ui-g-4">
-          <label for="shop-type">ОТДЕЛЫ</label>
+          <label for="shop-depart">ОТДЕЛЫ</label>
         </div>
-        <div  class="ui-g-8">
+        <div class="ui-g-8">
           <p-multiSelect
+            id="shop-depart"
             appendTo="body"
             [filter]="true"
             [options]="shopDepartsList"
             dataKey="id"
             optionLabel="name"
-            defaultLabel="Выберите отделы"
+            defaultLabel="Выберите отдел (обязательно)"
             formControlName="shopDeparts">
           </p-multiSelect>
-
         </div>
       </div>
-
     </div>
   </p-tabPanel>
   <p-tabPanel header="Адрес" leftIcon="fas fa-map-marker-alt">
     <div class="ui-dialog-buttonpane ui-helper-clearfix">
-      <button *ngIf="!entity.address" type="button" class="ui-button-success" pButton icon="fa fa-check"
+      <button *ngIf="!entity.address" type="button" class="ui-button-success" pButton
+              icon="fa fa-check"
               (click)="addAddress()"
               label="Добавить адрес"></button>
-      <button *ngIf="entity.address" type="button" class="ui-button-danger" pButton icon="fa fa-remove"
+      <button *ngIf="entity.address" type="button" class="ui-button-danger" pButton
+              icon="fa fa-remove"
               (click)="removeAddress()"
               label="Удалить адрес"></button>
     </div>

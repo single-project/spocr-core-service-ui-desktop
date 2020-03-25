@@ -96,9 +96,9 @@ export abstract class  AppDataTableModel<T> {
     });
   }
 
-  onRowSelect(dt: Table) {
+  onRowSelect() {
     if(this.dialogService) {
-      this.onItemCreate(dt, this.selectedItem);
+      this.onItemCreate(this.selectedItem);
     } else {
       this.notImplementedMessage();
     }
@@ -109,7 +109,7 @@ export abstract class  AppDataTableModel<T> {
    * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
    * @param item
    */
-  onItemCreate(dt: Table, item?): void {
+  onItemCreate(item?): void {
     if (!this.dialogService) {
       this.notImplementedMessage();
       return;

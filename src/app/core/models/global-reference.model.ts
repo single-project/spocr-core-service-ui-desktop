@@ -119,18 +119,11 @@ export interface ManufacturerModel extends BaseIdentifiedEntity {
   name?: string;
 }
 
-export interface CounterpartyProperties {
-  opfType: string;
-  opfShort: string;
-  opfFull: string;
-  opfCode: string;
-}
-
 export interface LegalType {
   id: number;
   name: string;
   ident: string;
-  properties: CounterpartyProperties;
+  properties?: any;
 }
 
 export interface LegalRekv extends IdentifiedEntity {
@@ -225,10 +218,12 @@ export interface ShopDepartModel extends ShopClassifierModel {
 
 export interface ShopModel extends BaseIdentifiedEntity {
   name: string;
-  address: AddressModel;
-  shopTypes: ShopTypeModel[];
-  salesChannels: SalesChannelModel[];
   counterparty: CounterpartyModel;
+  address?: AddressModel;
+  shopTypes?: ShopTypeModel[];
+  salesChannels?: SalesChannelModel[];
+  shopDeparts?: ShopDepartModel[];
+  shopSpecializations?: ShopSpecializationModel[];
 }
 
 
