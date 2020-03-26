@@ -6,7 +6,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {FormArray, FormBuilder, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {
   Citizenship,
   CounterpartyModel, Gender,
@@ -33,14 +33,13 @@ import {MessageServiceFacadeService} from "../../../../core/services/message-ser
 export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyModel> implements OnInit, OnChanges, AfterViewInit {
 
   public generalLegalTypes = [];
-  public selectedLegalType: {id: number, name: string};
+  public selectedLegalType: { id: number, name: string };
   public dropDownShow = false;
   public parentsList = [];
   public statusesList = [];
   public citizenships = [];
   public genders = [];
   public docTypes = [];
-  public paymentDetails = [] as PaymentDetails[];
   public personReq = false;
   public legalReq = false;
   public paymentReqs = false;
@@ -67,7 +66,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
               public formBuilder: FormBuilder,
               private counterpartyService: CounterpartiesService,
               private messageService: MessageServiceFacadeService,
-              ) {
+  ) {
     super(formBuilder, dialogRef, dialogConfig, counterpartyService, messageService);
     this.paymentReqs = !!this.entity.paymentDetails;
     this.personReq = !!this.entity.personRekv;
@@ -84,7 +83,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   }
 
   ngAfterViewInit(): void {
-    this.paymentDetails = this.entity.paymentDetails;
+
   }
 
 
@@ -132,9 +131,9 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       })
   }
 
-  addLegalRekv(): void{
+  addLegalRekv(): void {
     this.removePersonRekv();
-    if(!this.entity.legalRekv){
+    if (!this.entity.legalRekv) {
       this.entity.legalRekv = {} as LegalRekv;
     }
     let legalRekv = this.entity.legalRekv;
@@ -151,22 +150,23 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.legalReq = true;
     this.entityDialogForm.get('legalRekv').markAsTouched();
   }
-  removeLegalRekv(){
+
+  removeLegalRekv() {
     this.legalReq = false;
     this.removeNestedObjectIfContains('legalRekv');
   }
 
-  removePersonRekv(){
+  removePersonRekv() {
     this.personReq = false;
     this.removeNestedObjectIfContains('personRekv');
   }
 
-  onAddReqClicked(){
+  onAddReqClicked() {
     this.dropDownShow = true;
   }
 
-  addPersonRekv(): void{
-    if(!this.entity.personRekv){
+  addPersonRekv(): void {
+    if (!this.entity.personRekv) {
       this.entity.personRekv = {} as PersonRekv;
       this.entity.personRekv.citizenship = {} as Citizenship;
       this.entity.personRekv.gender = {} as Gender;
@@ -202,16 +202,44 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.personReq = true;
   }
 
-  addPaymentDetails(){
+  addPaymentDetails() {
+    this.entityDialogForm.addControl('paymentDetails', this.formBuilder.array([]));
     if (!this.entity.paymentDetails) {
-        this.entity.paymentDetails = [] as PaymentDetails[];
+      this.pushPaymentDetails();
     }
-    let paymentDetails = this.entity.paymentDetails[0];
-    this.addNestedArrayIfNotContains('paymentDetails', [])
+    if(this.entity.paymentDetails){
+      this.entity.paymentDetails.forEach( pd => {
+        this.pushPaymentDetails(pd)
+
+      })
+    }
+
+
   }
 
-  pushPaymentDetails(){
-    this.formBuilder.control({})
+  pushPaymentDetails(values?: PaymentDetails) {
+
+    const paymentArray = this.entityDialogForm.get('paymentDetails') as FormArray;
+    if (values) {
+      console.dir(values);
+      paymentArray.push(this.formBuilder.group({
+        ...values
+      }))
+    } else {
+      paymentArray.push(this.formBuilder.group({
+        id: null,
+        paymentAccount: '',
+        correspondingAccount: '',
+        bic: '',
+        bank: '',
+      }))
+    }
+
+  }
+
+  get paymentDetails(){
+    return this.entityDialogForm.get('paymentDetails') as FormArray;
+
   }
   buildFormGroup() {
     let e = this.entity;
@@ -245,25 +273,24 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     return;
   }
 
-  switchPartyReq(){
-    if(this.selectedLegalType.id === 5){
+  switchPartyReq() {
+    if (this.selectedLegalType.id === 5) {
       this.addPersonRekv();
-    }else if(this.selectedLegalType.id === 6){
+    } else if (this.selectedLegalType.id === 6) {
       this.addLegalRekv()
     }
     this.dropDownShow = false;
   }
 
-  removeReq(){
+  removeReq() {
     this.removeLegalRekv();
     this.removePersonRekv();
   }
 
   save(): void {
-   this.entityDialogForm.removeControl('innSug');
+    this.entityDialogForm.removeControl('innSug');
     super.save();
   }
-
 
 
 }

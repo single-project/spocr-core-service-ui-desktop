@@ -239,8 +239,8 @@
          [formGroup]="entityDialogForm"
          class="ui-g ui-fluid">
       <p-accordion>
-        <p-accordionTab *ngFor="let details of paymentDetails" header="Header 1">
-          <ng-container formGroupName="paymentDetail">
+        <p-accordionTab formArrayName="paymentDetails" *ngFor="let details of paymentDetails.controls; let i = index" header="{{details['bank']}}">
+
             <div class="ui-g-12">
               <div class="ui-g-4">
                 <label>Банк</label>
@@ -267,14 +267,9 @@
                 <input pInputText formControlName="bic">
               </div>
             </div>
-          </ng-container>
+
         </p-accordionTab>
-
       </p-accordion>
-
-
-
-
     </div>
           <app-add-requisite-button
             [requisite]="entity"
