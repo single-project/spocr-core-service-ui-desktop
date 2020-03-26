@@ -196,7 +196,13 @@ export interface CounterpartyModel extends BaseIdentifiedEntity {
 
 
 export interface ContractModel extends BaseIdentifiedEntity {
-
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  comment?: string;
+  contractNumber: string;
+  counterparty1: CounterpartyModel;
+  counterparty2: CounterpartyModel;
 }
 
 export interface ShopSpecializationModel extends ShopClassifierModel {

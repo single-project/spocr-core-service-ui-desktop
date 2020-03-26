@@ -44,18 +44,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   public paymentReqs = false;
 
 
-  public ruCalLocale = {
-    firstDayOfWeek: 1,
-    dayNames: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение"],
-    dayNamesShort: ["Пнд", "Втр", "Срд", "Чтв", "Птн", "Сбт", "Вск"],
-    dayNamesMin: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
-    monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-    monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
-    today: 'Сегодня',
-    clear: 'Очист.',
-    dateFormat: 'dd.mm.yy',
-    weekHeader: 'Нед'
-  };
+  public ruCalLocale;
 
   constructor(private configService: ConfigService,
               private personalService: PersonalRekvService,
@@ -70,6 +59,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.paymentReqs = !!this.entity.paymentDetails;
     this.personReq = !!this.entity.personRekv;
     this.legalReq = !!this.entity.legalRekv;
+    this.ruCalLocale = messageService.ruCalLocale;
   }
 
   ngOnInit() {

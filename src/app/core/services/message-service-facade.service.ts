@@ -11,6 +11,19 @@ export class MessageServiceFacadeService {
   //TODO: put it to assets/resources or assets/i18
   private messagesMap = new Map();
 
+  public ruCalLocale = {
+    firstDayOfWeek: 1,
+    dayNames: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение"],
+    dayNamesShort: ["Пнд", "Втр", "Срд", "Чтв", "Птн", "Сбт", "Вск"],
+    dayNamesMin: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+    monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+    monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+    today: 'Сегодня',
+    clear: 'Очист.',
+    dateFormat: 'dd.mm.yy',
+    weekHeader: 'Нед'
+  };
+
   constructor( private messageService: MessageService) {
     //entityKey.control.operation.summary
     //entityKey.control.field

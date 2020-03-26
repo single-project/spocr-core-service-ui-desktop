@@ -1,0 +1,83 @@
+<p-tabView>
+  <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
+    <div [formGroup]="entityDialogForm" class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="name">ИМЯ</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="name" formControlName="name" autofocus/>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="number">НОМЕР</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="number" formControlName="contractNumber" autofocus/>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="counterparty1">КОНТРАГЕНТ1</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown appendTo="body"
+                      id="counterparty1"
+                      [options]="counterpartiesList"
+                      optionLabel="name"
+                      dataKey="id"
+                      placeholder="Выберите контрагента (обязательно)"
+                      formControlName="counterparty1"
+                      [filter]="true">
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="counterparty2">КОНТРАГЕНТ2</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown appendTo="body"
+                      id="counterparty2"
+                      [options]="counterpartiesList"
+                      optionLabel="name"
+                      dataKey="id"
+                      placeholder="Выберите контрагента (обязательно)"
+                      formControlName="counterparty2"
+                      [filter]="true">
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="ui-g-4">
+        <label>ДАТА НАЧАЛА</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="startDate" formControlName="startDate" autofocus/>
+      </div>
+      <div class="ui-g-4">
+        <label>ДАТА ОКОНЧАНИЯ</label>
+      </div>
+      <div class="ui-g-8">
+        <input pInputText id="endDate" formControlName="endDate" autofocus/>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="active">АКТИВНЫЙ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-checkbox id="active" binary="true" formControlName="active"></p-checkbox>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+</p-tabView>
+<div class="ui-dialog-footer" [ngStyle]="{border: 'none'}">
+  <button type="button" class="ui-button-success" pButton
+          icon="fa fa-check"
+          (click)="save()"
+          label="Сохранить"></button>
+  <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+          (click)="close(false)"
+          label="Отмена"></button>
+</div>

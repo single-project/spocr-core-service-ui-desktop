@@ -75,8 +75,6 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   buildFormGroup() {
-    console.log(JSON.stringify(this.entity.shopTypes));
-    console.log(JSON.stringify(this.entity.shopSpecializations));
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
