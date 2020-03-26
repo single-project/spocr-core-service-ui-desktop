@@ -105,6 +105,12 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     }
   }
 
+  addNestedArrayIfNotContains(nestedArrayName: string, nestedArrayConfig: any[]){
+    if (!this.entityDialogForm.contains(nestedArrayName)) {
+      this.entityDialogForm.addControl(nestedArrayName, this.formBuilder.array(nestedArrayConfig));
+    }
+  }
+
   removeNestedObjectIfContains(nestedObjectName: string) {
     if (this.entityDialogForm.contains(nestedObjectName)) {
       this.entityDialogForm.removeControl(nestedObjectName);

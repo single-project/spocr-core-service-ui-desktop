@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
+  AccordionModule,
   AutoCompleteModule,
   ButtonModule,
   CalendarModule,
@@ -73,7 +74,8 @@ import {DateTimeTagsPipe} from "./pipes/date-time-tags.pipe";
     ReactiveFormsModule,
     TabViewModule,
     CalendarModule,
-    InputMaskModule
+    InputMaskModule,
+    AccordionModule,
   ],
   exports: [
     ToolbarModule,
@@ -106,7 +108,8 @@ import {DateTimeTagsPipe} from "./pipes/date-time-tags.pipe";
     DadataFioComponent,
     InputMaskModule,
     DynamicDialogModule,
-    AddRequisiteButtonComponent
+    AccordionModule,
+    AddRequisiteButtonComponent,
   ],
   providers: [DialogService, DynamicDialogRef, DynamicDialogConfig]
 })

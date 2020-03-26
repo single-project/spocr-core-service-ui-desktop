@@ -23,6 +23,7 @@
     "@auth0/angular-jwt": "^4.0.0",
     "@fullcalendar/core": "^4.4.0",
     "@kolkov/ngx-dadata": "^0.7.0",
+    "@types/lodash": "^4.14.149",
     "chart.js": "^2.9.3",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",

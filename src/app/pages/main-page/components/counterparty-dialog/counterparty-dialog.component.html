@@ -234,39 +234,46 @@
       </div>
     </div>
   </p-tabPanel>
-  <p-tabPanel *ngIf="false" header="Банковские реквизиты" leftIcon="fas fa-university">
+  <p-tabPanel *ngIf="entity" header="Банковские реквизиты" leftIcon="fas fa-university">
     <div
          [formGroup]="entityDialogForm"
          class="ui-g ui-fluid">
+      <p-accordion>
+        <p-accordionTab *ngFor="let details of paymentDetails" header="Header 1">
+          <ng-container formGroupName="paymentDetail">
+            <div class="ui-g-12">
+              <div class="ui-g-4">
+                <label>Банк</label>
+              </div>
+              <div class="ui-g-8">
+                <input pInputText formControlName="bank">
+              </div>
+              <div class="ui-g-4">
+                <label>Р/С</label>
+              </div>
+              <div class="ui-g-8">
+                <input pInputText formControlName="paymentAccount">
+              </div>
+              <div class="ui-g-4">
+                <label>КОРР./С</label>
+              </div>
+              <div class="ui-g-8">
+                <input pInputText formControlName="correspondingAccount">
+              </div>
+              <div class="ui-g-4">
+                <label>БИК</label>
+              </div>
+              <div class="ui-g-8">
+                <input pInputText formControlName="bic">
+              </div>
+            </div>
+          </ng-container>
+        </p-accordionTab>
 
-      <ng-container formGroupName="paymentDetail">
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label>Банк</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText formControlName="bank">
-          </div>
-          <div class="ui-g-4">
-            <label>Р/С</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText formControlName="paymentAccount">
-          </div>
-          <div class="ui-g-4">
-            <label>КОРР./С</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText formControlName="correspondingAccount">
-          </div>
-          <div class="ui-g-4">
-            <label>БИК</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText formControlName="bic">
-          </div>
-        </div>
-      </ng-container>
+      </p-accordion>
+
+
+
 
     </div>
           <app-add-requisite-button

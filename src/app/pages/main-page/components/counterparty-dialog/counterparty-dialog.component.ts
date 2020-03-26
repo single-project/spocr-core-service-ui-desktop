@@ -15,6 +15,7 @@ import {
   PersonRekv
 } from '../../../../core/models/global-reference.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import * as _ from 'lodash';
 import {ConfigService} from '../../../../core/services/config.service';
 import {map, shareReplay} from 'rxjs/operators';
 import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
@@ -39,6 +40,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   public citizenships = [];
   public genders = [];
   public docTypes = [];
+  public paymentDetails = [] as PaymentDetails[];
   public personReq = false;
   public legalReq = false;
   public paymentReqs = false;
@@ -82,15 +84,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   }
 
   ngAfterViewInit(): void {
-    // this.initPaymentReqBtn();
-    // this.initAddReqBtn();
-    // if(this.entity.paymentDetails){
-    //   this.entityDialogForm.patchValue({paymentDetails: [...this.entity.paymentDetails]})
-    // }else{
-    //   this.entityDialogForm.patchValue({paymentDetails: []})
-    // }
-
-
+    this.paymentDetails = this.entity.paymentDetails;
   }
 
 
@@ -212,17 +206,13 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (!this.entity.paymentDetails) {
         this.entity.paymentDetails = [] as PaymentDetails[];
     }
-
-    let paymentDetail = this.entity.paymentDetails[0];
-    this.addNestedObjectIfNotContains('paymentDetail', {
-      id: paymentDetail.id,
-      paymentAccount: paymentDetail.paymentAccount,
-      correspondingAccount: paymentDetail.correspondingAccount,
-      bic: paymentDetail.bic,
-      bank: paymentDetail.bank,
-    })
+    let paymentDetails = this.entity.paymentDetails[0];
+    this.addNestedArrayIfNotContains('paymentDetails', [])
   }
 
+  pushPaymentDetails(){
+    this.formBuilder.control({})
+  }
   buildFormGroup() {
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
@@ -233,7 +223,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       statuses: [e.statuses],
       parent: e.parent,
       owner: e.owner,
-      // paymentDetails:[],
       updatedFields: []
     });
     if (e.legalRekv) {
@@ -242,9 +231,9 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (e.personRekv) {
       this.addPersonRekv();
     }
-    // if (e.paymentDetails) {
-    //   this.addPaymentDetails();
-    // }
+    if (e.paymentDetails) {
+      this.addPaymentDetails();
+    }
   }
 
   instantiate(): CounterpartyModel {
