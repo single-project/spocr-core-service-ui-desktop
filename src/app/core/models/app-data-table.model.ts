@@ -96,9 +96,9 @@ export abstract class  AppDataTableModel<T> {
     });
   }
 
-  onRowSelect() {
+  onRowSelect(dt: Table) {
     if(this.dialogService) {
-      this.onItemCreate(this.selectedItem);
+      this.onItemCreate(dt, this.selectedItem);
     } else {
       this.notImplementedMessage();
     }
@@ -109,7 +109,7 @@ export abstract class  AppDataTableModel<T> {
    * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
    * @param item
    */
-  onItemCreate(item?): void {
+  onItemCreate(dt: Table, item?): void {
     if (!this.dialogService) {
       this.notImplementedMessage();
       return;
@@ -125,6 +125,7 @@ export abstract class  AppDataTableModel<T> {
     ref.onClose.subscribe((e: boolean) => {
       if (e) {
         console.log("need to refresh page");
+        dt.filter(null, 'dialog', null);
       } else {
         console.log("no need to refresh page");
       }
