@@ -86,4 +86,12 @@ export class ConfigService {
       }),
     );
   }
+
+  fetchDateTimeConfig() {
+    return {
+      tz: 'Europe/Moscow',
+      format: 'DD.MM.YYYY',
+      locale: 'ru'
+    };
+  }
 }
