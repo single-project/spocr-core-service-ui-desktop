@@ -76,7 +76,7 @@
                        mask="99/99/9999"
                        placeholder="dd/mm/yyyy"
                        slotChar="dd/mm/yyyy"
-                       (onComplete)="dt.filter({id: -1, name: col.val}, col.field, 'contains');">
+                       (onComplete)="dt.filter({id: -1, name: dateFormat(col.val)}, col.field, 'contains');">
           </p-inputMask>
           <p-autoComplete *ngIf="!['startDate', 'endDate'].includes(col.field)"
                           [suggestions]="searchItems"

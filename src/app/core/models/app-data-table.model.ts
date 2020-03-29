@@ -10,6 +10,7 @@ import {IdentifiedEntityService} from '../services/identified-entity.service';
 import {CounterpartiesService} from '../services/counterparties.service';
 import {MainPageInjector} from '../../pages/main-page/main-page-routing.module';
 import {ManufactureService} from '../services/manufacture.service';
+import moment from 'moment-timezone';
 
 
 export abstract class  AppDataTableModel<T> {
@@ -244,6 +245,10 @@ export abstract class  AppDataTableModel<T> {
     this.addCustomParamAtr(params, event);
 
     this.loadTableData(params, true);
+  }
+
+  dateFormat(data: string) {
+    return moment(data, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
   }
 
   filterSearch(event, fieldName: string): void {
