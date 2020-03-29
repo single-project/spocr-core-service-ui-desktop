@@ -213,8 +213,14 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
       })
     }
+  }
 
-
+  insertPaymentDetail(): void{
+    this.pushPaymentDetails();
+  }
+  deletePaymentDetail(index: number): void{
+    const paymentArray = this.entityDialogForm.get('paymentDetails') as FormArray;
+    paymentArray.removeAt(index);
   }
 
   pushPaymentDetails(values?: PaymentDetails) {
@@ -239,8 +245,12 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
   get paymentDetails(){
     return this.entityDialogForm.get('paymentDetails') as FormArray;
-
   }
+
+  getBankName(detail: any): string{
+    return detail.get('bank').value
+  }
+
   buildFormGroup() {
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
