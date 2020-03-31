@@ -61,6 +61,9 @@
     <app-owner-data-table *ngIf="dataType === 9"
                               #appDataTable>
     </app-owner-data-table>
+    <app-ext-reg-system-data-table *ngIf="dataType === 10"
+                          #appDataTable>
+    </app-ext-reg-system-data-table>
   </div>
   <p-toast [style]="{marginTop: '80px'}"
            key="tc"
