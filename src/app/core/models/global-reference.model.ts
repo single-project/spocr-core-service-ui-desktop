@@ -179,8 +179,11 @@ export interface PersonRekv extends IdentifiedEntity {
   phones?: any;
 }
 
-export interface Owner extends BaseIdentifiedEntity {
+export interface OwnerModel extends BaseIdentifiedEntity {
   name: string;
+}
+
+export interface ExtRegSystemModel extends BaseIdentifiedEntity {
 }
 
 export interface CounterpartyModel extends BaseIdentifiedEntity {

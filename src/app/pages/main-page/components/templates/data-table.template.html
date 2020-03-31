@@ -71,14 +71,30 @@
     <tr [hidden]="!isFilterShown">
       <th *ngFor="let col of columns; let i = index">
         <div>
-          <p-autoComplete [suggestions]="searchItems"
+          <p-inputMask *ngIf="['startDate', 'endDate'].includes(col.field)"
+                       [(ngModel)]="col.val"
+                       mask="99/99/9999"
+                       placeholder="dd/mm/yyyy"
+                       slotChar="dd/mm/yyyy"
+                       (onComplete)="dt.filter({id: -1, name: dateFormat(col.val)}, col.field, 'contains');">
+          </p-inputMask>
+          <button *ngIf="['startDate', 'endDate'].includes(col.field)"
+                  pButton
+                  type="button"
+                  icon="pi pi-times"
+                  class="ui-button-secondary"
+                  (click)="cleanFilter(dt, i, col.field, 'contains', col)">
+          </button>
+          <p-autoComplete *ngIf="!['startDate', 'endDate'].includes(col.field)"
+                          [suggestions]="searchItems"
                           field="name"
                           (onSelect)="dt.filter($event, col.field, 'contains')"
                           (keydown.enter)="dt.filter({id: -1, name: $event.target.value}, col.field, 'contains');searchItems = []"
                           (completeMethod)="filterSearch($event, col.field)"
                           appendTo="body">
           </p-autoComplete>
-          <button pButton
+          <button *ngIf="!['startDate', 'endDate'].includes(col.field)"
+                  pButton
                   type="button"
                   icon="pi pi-times"
                   class="ui-button-secondary"

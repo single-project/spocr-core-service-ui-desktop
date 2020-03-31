@@ -75,6 +75,16 @@ export class NavbarComponent implements OnInit {
           icon: 'pi pi-fw pi-folder-open',
           command: () => this.switchTable(AppTableTypes.CONTRACTS_TABLE_TYPE)
         },
+        {
+          label: 'Хозяева сети',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.OWNER_TABLE_TYPE)
+        },
+        {
+          label: 'Внешние системы',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => this.switchTable(AppTableTypes.EXT_REG_SYSTEM_TABLE_TYPE)
+        },
       ]
     },
       {
