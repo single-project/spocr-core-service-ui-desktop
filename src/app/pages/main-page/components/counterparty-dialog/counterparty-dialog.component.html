@@ -236,62 +236,65 @@
   </p-tabPanel>
   <p-tabPanel *ngIf="entity" header="Банковские реквизиты" leftIcon="fas fa-university">
     <div
-      [formGroup]="entityDialogForm"
-      class="ui-g ui-fluid">
+      [formGroup]="entityDialogForm">
+
       <p-accordion formArrayName="paymentDetails">
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <button
+                pButton
+                type="button"
+                label="Добавить реквизит"
+                class="ui-button-success"
+                icon="pi pi-plus"
+                (click)="insertPaymentDetail()">
+              </button>
+            </div>
+          </div>
+        </div>
         <p-accordionTab *ngFor="let detail of paymentDetails.controls; let i = index"
                         [header]="getBankName(detail)" [formGroupName]="i">
-
-              <div class="ui-g-4">
-                <label>Банк</label>
-              </div>
-              <div class="ui-g-8">
-                <input pInputText formControlName="bank">
-              </div>
-              <div class="ui-g-4">
-                <label>Р/С</label>
-              </div>
-              <div class="ui-g-8">
-                <input pInputText formControlName="paymentAccount">
-              </div>
-              <div class="ui-g-4">
-                <label>КОРР./С</label>
-              </div>
-              <div class="ui-g-8">
-                <input pInputText formControlName="correspondingAccount">
-              </div>
-              <div class="ui-g-4">
-                <label>БИК</label>
-              </div>
-              <div class="ui-g-8">
-                <input pInputText formControlName="bic">
-              </div>
-              <div class="ui-g-3">
-                <button
-                  pButton
-                  type="button"
-                  label="Удалить реквизит"
-                  class="ui-button-danger"
-                  icon="pi pi-minus"
-                  (click)="deletePaymentDetail(i)">
-                </button>
-              </div>
-
+          <div class="ui-g">
+            <div class="ui-g-4">
+              <label>Банк</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="bank">
+            </div>
+            <div class="ui-g-4">
+              <label>Р/С</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="paymentAccount">
+            </div>
+            <div class="ui-g-4">
+              <label>КОРР./С</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="correspondingAccount">
+            </div>
+            <div class="ui-g-4">
+              <label>БИК</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="bic">
+            </div>
+            <div class="ui-g-3">
+              <button
+                pButton
+                type="button"
+                label="Удалить реквизит"
+                class="ui-button-danger"
+                icon="pi pi-minus"
+                (click)="deletePaymentDetail(i)">
+              </button>
+            </div>
+          </div>
 
         </p-accordionTab>
       </p-accordion>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <button
-            pButton
-            type="button"
-            label="Добавить реквизит"
-            class="ui-button-success"
-            icon="pi pi-plus"
-            (click)="insertPaymentDetail()">
-          </button>
-        </div>
-      </div>
+
     </div>
   </p-tabPanel>
 

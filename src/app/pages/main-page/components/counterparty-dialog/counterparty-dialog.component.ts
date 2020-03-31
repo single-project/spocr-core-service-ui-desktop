@@ -1,25 +1,18 @@
-import {
-  AfterViewInit,
-  Component, ElementRef,
-  OnChanges,
-  OnInit, Renderer2,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AfterViewInit, Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {FormArray, FormBuilder, Validators} from "@angular/forms";
 import {
   Citizenship,
-  CounterpartyModel, Gender,
+  CounterpartyModel,
+  Gender,
   LegalRekv,
   PaymentDetails,
   PersonRekv
 } from '../../../../core/models/global-reference.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
-import * as _ from 'lodash';
 import {ConfigService} from '../../../../core/services/config.service';
 import {map, shareReplay} from 'rxjs/operators';
 import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
-import {forkJoin, noop} from 'rxjs';
+import {forkJoin} from 'rxjs';
 import {EntityCardModel} from "../../../../core/models/entity-card.model";
 import {ManufactureService} from "../../../../core/services/manufacture.service";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
@@ -210,7 +203,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if(this.entity.paymentDetails){
       this.entity.paymentDetails.forEach( pd => {
         this.pushPaymentDetails(pd)
-
       })
     }
   }
@@ -231,7 +223,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       paymentArray.push(this.formBuilder.group({
         ...values
       }))
-    } else {
+    } else if (!values) {
       paymentArray.push(this.formBuilder.group({
         id: null,
         paymentAccount: '',
@@ -269,9 +261,9 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (e.personRekv) {
       this.addPersonRekv();
     }
-    if (e.paymentDetails) {
+
       this.addPaymentDetails();
-    }
+
   }
 
   instantiate(): CounterpartyModel {
