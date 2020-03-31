@@ -15,7 +15,9 @@ export class ContractService extends IdentifiedEntityService<ContractModel> {
   }
 
   getConfig(configService: ConfigService) {
-    configService.fetchDataTypeEndpointURL(AppTableTypes.CONTRACTS_TABLE_TYPE).subscribe(d => this.config.url = d.url)
+    configService.fetchDataTypeEndpointURL(
+      AppTableTypes.CONTRACTS_TABLE_TYPE)
+      .subscribe(d => this.config.url = d.url)
   }
 
 }

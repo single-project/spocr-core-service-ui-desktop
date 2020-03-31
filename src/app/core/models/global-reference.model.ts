@@ -179,7 +179,7 @@ export interface PersonRekv extends IdentifiedEntity {
   phones?: any;
 }
 
-export interface Owner extends BaseIdentifiedEntity {
+export interface OwnerModel extends BaseIdentifiedEntity {
   name: string;
 }
 

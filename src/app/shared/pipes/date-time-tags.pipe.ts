@@ -10,7 +10,7 @@ export class DateTimeTagsPipe implements PipeTransform {
   }
 
   /**
-   * Метод вызывается из thml темплейта использует библиотеку
+   * Метод вызывается из html темплейта использует библиотеку
    * [moment.js](https://momentjs.com/docs/) для построения отформатированной даты
    * "2020-03-25T13:59:11+0300"
    * moment('10/02/2020', 'DD/MM/YYYY').format('YYYY-MM-DDTHH:mm:ssZZ')

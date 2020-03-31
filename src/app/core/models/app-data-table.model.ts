@@ -81,11 +81,6 @@ export abstract class  AppDataTableModel<T> {
 
   columnsChange(): void {
     this.messageService.clear();
-    this.messageService.add({
-      key: 'tr',
-      severity: 'error',
-      summary: 'Данная функция еще не реализована!'
-    });
   }
 
   notImplementedMessage() {
@@ -209,10 +204,14 @@ export abstract class  AppDataTableModel<T> {
    * @param matchMode
    * @returns {void} no return value
    */
-  cleanFilter(dt: Table, index: number, fieldId: string, matchMode: string) {
+  cleanFilter(dt: Table, index: number, fieldId: string, matchMode: string, field?: any) {
     const filterObj: AutoComplete = this.tableFilters.toArray()[index];
 
     filterObj.inputEL.nativeElement.value = '';
+
+    if (field) {
+      field.val = '';
+    }
 
     dt.filter(null, fieldId, matchMode);
   }
@@ -247,8 +246,21 @@ export abstract class  AppDataTableModel<T> {
     this.loadTableData(params, true);
   }
 
-  dateFormat(data: string) {
-    return moment(data, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
+  /**
+   *
+   * Метод вызывается из html темплейта использует библиотеку
+   * [moment.js](https://momentjs.com/docs/) для построения отформатированной даты
+   * "2020-03-25T13:59:11+0300"
+   * moment('10/02/2020', 'DD/MM/YYYY').format('YYYY-MM-DDTHH:mm:ssZZ')
+   * moment('10/02/2020', 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ssZZ')
+   *
+   * @param {string} date
+   * @returns {string} - ISO8601 date string [moment ISO8601](https://momentjs.com/docs/#/parsing/string/)
+   *
+   */
+  dateFormat(date: string): string{
+    // moment(data, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
+    return moment(date, 'DD/MM/YYYY').format('YYYY-MM-DDTHH:mm:ssZZ');
   }
 
   filterSearch(event, fieldName: string): void {

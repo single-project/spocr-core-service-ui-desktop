@@ -78,6 +78,13 @@
                        slotChar="dd/mm/yyyy"
                        (onComplete)="dt.filter({id: -1, name: dateFormat(col.val)}, col.field, 'contains');">
           </p-inputMask>
+          <button *ngIf="['startDate', 'endDate'].includes(col.field)"
+                  pButton
+                  type="button"
+                  icon="pi pi-times"
+                  class="ui-button-secondary"
+                  (click)="cleanFilter(dt, i, col.field, 'contains', col)">
+          </button>
           <p-autoComplete *ngIf="!['startDate', 'endDate'].includes(col.field)"
                           [suggestions]="searchItems"
                           field="name"
