@@ -132,6 +132,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     let legalRekv = this.entity.legalRekv;
     this.addNestedObjectIfNotContains('legalRekv', {
       id: legalRekv.id,
+      version: legalRekv.version,
       shortName: legalRekv.shortName,
       fullName: legalRekv.fullName,
       inn: legalRekv.inn,
@@ -168,6 +169,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     let personRekv = this.entity.personRekv;
     this.addNestedObjectIfNotContains('personRekv', {
       id: personRekv.id,
+      version: personRekv.version,
       name: [personRekv.name, Validators.required],
       lastName: personRekv.lastName,
       firstName: personRekv.firstName,

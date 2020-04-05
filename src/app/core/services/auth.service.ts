@@ -5,6 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import {Conf} from "../../../assets/config/conf";
 import {Observable} from "rxjs";
 import {Router} from "@angular/router";
+import {SESSIONSTORAGE_TOKEN} from "../models/session-storage.token";
 
 
 @Injectable({
@@ -16,7 +17,8 @@ export class AuthService {
   constructor(
      private cookies: CookieService,
      private http: HttpClient,
-     private router: Router
+     private router: Router,
+     @Inject(SESSIONSTORAGE_TOKEN) private sessionStorage
   ) {
   }
 
@@ -30,7 +32,7 @@ export class AuthService {
     });
   }
   logout(){
-    this.cookies.delete('auth_token');
+    this.sessionStorage.removeItem('auth_token');
     this.router.navigate(['/', 'signin']);
 
   }

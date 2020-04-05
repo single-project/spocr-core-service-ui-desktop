@@ -12,6 +12,7 @@ import {CookieService} from 'ngx-cookie-service';
 import {AuthInterceptorService} from './core/services/auth-interceptor.service';
 import {MessageService, ToastModule} from 'primeng';
 import {HttpErrorHandlerService} from "./core/services/http-error-handler.service";
+import {SESSIONSTORAGE_TOKEN} from "./core/models/session-storage.token";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,12 @@ import {HttpErrorHandlerService} from "./core/services/http-error-handler.servic
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorHandlerService,
       multi: true
-    }],
+    },
+    {
+      provide: SESSIONSTORAGE_TOKEN,
+      useFactory: () => sessionStorage
+    }
+  ],
 
   bootstrap: [AppComponent]
 })

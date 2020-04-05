@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {JwtModel} from "../../core/models/jwt.model";
 import {MessageServiceFacadeService} from "../../core/services/message-service-facade.service";
+import {SESSIONSTORAGE_TOKEN} from "../../core/models/session-storage.token";
 
 const jwtHelper = new JwtHelperService();
 
@@ -43,7 +44,8 @@ export class AuthPageComponent implements OnInit {
     private auth: AuthService,
     private cookies: CookieService,
     private router: Router,
-    private messageService: MessageServiceFacadeService) {
+    private messageService: MessageServiceFacadeService,
+    @Inject(SESSIONSTORAGE_TOKEN) private sessionStorage) {
   }
 
   ngOnInit() {
@@ -54,7 +56,7 @@ export class AuthPageComponent implements OnInit {
     if (this.username && this.password) {
       this.auth.login(this.username, this.password).subscribe((resp: AuthModel) => {
         let jwt: JwtModel = AuthPageComponent.parseToken(resp.token);
-        this.cookies.set('auth_token', resp.token, jwt.expAt);
+        this.sessionStorage.setItem('auth_token', resp.token);
         this.authorized = true;
         this.router.navigate(['/', 'main'])
       }, error => {
