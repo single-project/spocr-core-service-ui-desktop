@@ -23,6 +23,7 @@ import {ContractsDataTableComponent} from './components/contracts-data-table/con
 import { SalesChannelsDialogComponent } from './components/sales-channels-dialog/sales-channels-dialog.component';
 import { OwnerDataTableComponent } from './components/owner-data-table/owner-data-table.component';
 import { ExtRegSystemDataTableComponent } from './components/ext-reg-system-data-table/ext-reg-system-data-table.component';
+import { ShopDepartsDialogComponent } from './components/shop-departs-dialog/shop-departs-dialog.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { ExtRegSystemDataTableComponent } from './components/ext-reg-system-data
     ContractsDataTableComponent,
     SalesChannelsDialogComponent,
     OwnerDataTableComponent,
-    ExtRegSystemDataTableComponent
+    ExtRegSystemDataTableComponent,
+    ShopDepartsDialogComponent
   ],
   imports: [
     CommonModule,

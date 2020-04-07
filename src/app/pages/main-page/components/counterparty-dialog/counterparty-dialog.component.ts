@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormArray, FormBuilder, Validators} from "@angular/forms";
+import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { FormArray, FormBuilder, Validators } from "@angular/forms";
 import {
   Citizenship,
   CounterpartyModel,
@@ -8,15 +8,16 @@ import {
   PaymentDetails,
   PersonRekv
 } from '../../../../core/models/global-reference.model';
-import {CounterpartiesService} from '../../../../core/services/counterparties.service';
-import {ConfigService} from '../../../../core/services/config.service';
-import {map, shareReplay} from 'rxjs/operators';
-import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
-import {forkJoin} from 'rxjs';
-import {EntityCardModel} from "../../../../core/models/entity-card.model";
-import {ManufactureService} from "../../../../core/services/manufacture.service";
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
-import {MessageServiceFacadeService} from "../../../../core/services/message-service-facade.service";
+import { CounterpartiesService } from '../../../../core/services/counterparties.service';
+import { ConfigService } from '../../../../core/services/config.service';
+import { map, shareReplay } from 'rxjs/operators';
+import { PersonalRekvService } from '../../../../core/services/personal-rekv.service';
+import { forkJoin } from 'rxjs';
+import { EntityCardModel } from "../../../../core/models/entity-card.model";
+import { ManufactureService } from "../../../../core/services/manufacture.service";
+import { DynamicDialogConfig, DynamicDialogRef } from "primeng";
+import { MessageServiceFacadeService } from "../../../../core/services/message-service-facade.service";
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -174,7 +175,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       lastName: personRekv.lastName,
       firstName: personRekv.firstName,
       patronymic: personRekv.patronymic,
-      birthDate: personRekv.birthDate,
+      birthDate: moment(personRekv.birthDate),
       birthPlace: personRekv.birthPlace,
       docType: this.formBuilder.group([]),
       docSeriesNumber: personRekv.docSeriesNumber,
@@ -202,17 +203,18 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (!this.entity.paymentDetails) {
       this.pushPaymentDetails();
     }
-    if(this.entity.paymentDetails){
-      this.entity.paymentDetails.forEach( pd => {
+    if (this.entity.paymentDetails) {
+      this.entity.paymentDetails.forEach(pd => {
         this.pushPaymentDetails(pd)
       })
     }
   }
 
-  insertPaymentDetail(): void{
+  insertPaymentDetail(): void {
     this.pushPaymentDetails();
   }
-  deletePaymentDetail(index: number): void{
+
+  deletePaymentDetail(index: number): void {
     const paymentArray = this.entityDialogForm.get('paymentDetails') as FormArray;
     paymentArray.removeAt(index);
   }
@@ -237,11 +239,11 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
   }
 
-  get paymentDetails(){
+  get paymentDetails() {
     return this.entityDialogForm.get('paymentDetails') as FormArray;
   }
 
-  getBankName(detail: any): string{
+  getBankName(detail: any): string {
     return detail.get('bank').value
   }
 
@@ -264,7 +266,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       this.addPersonRekv();
     }
 
-      this.addPaymentDetails();
+    this.addPaymentDetails();
 
   }
 
