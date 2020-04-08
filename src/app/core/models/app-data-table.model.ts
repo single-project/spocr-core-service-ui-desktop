@@ -16,7 +16,7 @@ import moment from 'moment-timezone';
 export abstract class  AppDataTableModel<T> {
 
   loading: boolean;
-
+  calendarConf: any;
   entityKey: string;
   аppTableTypes: AppTableTypes;
   sortField: string;
@@ -73,8 +73,13 @@ export abstract class  AppDataTableModel<T> {
   оnInit(аppTableTypes: AppTableTypes): void {
     this.loading = true;
     this.аppTableTypes = аppTableTypes;
+
+    this.calendarConf = this.configService
+      .fetchCalendarConfig('ru');
+
     this.loadTableHeaders(
       аppTableTypes);
+
     this.initColumnFilter(() => {
       return []
     });
