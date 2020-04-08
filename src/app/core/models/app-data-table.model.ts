@@ -290,7 +290,8 @@ export abstract class  AppDataTableModel<T> {
   }
 
   onDateSelect(date: Date) {
-    console.log(date);
+    const val = moment(date).utc().format('YYYY-MM-DDTHH:mm:ssZZ');
+    console.log(val);
   }
 }
 
