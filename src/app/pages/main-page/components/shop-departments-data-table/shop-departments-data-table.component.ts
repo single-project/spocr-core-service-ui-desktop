@@ -10,7 +10,7 @@ import { ShopDepartsDialogComponent } from '../shop-departs-dialog/shop-departs-
 @Component({
   selector: 'app-shop-departments-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./shop-departments-data-table.component.scss'],
+  styleUrls: ['../templates/data-table.template.scss'],
 })
 export class ShopDepartmentsDataTableComponent extends AppDataTableModel<IdentifiedEntity> implements OnInit {
 

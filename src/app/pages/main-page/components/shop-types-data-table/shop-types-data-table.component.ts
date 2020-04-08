@@ -11,7 +11,7 @@ import {ConfigService} from '../../../../core/services/config.service';
 @Component({
   selector: 'app-shop-types-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./shop-types-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class ShopTypesDataTableComponent extends AppDataTableModel<ShopTypeModel> implements OnInit {
 

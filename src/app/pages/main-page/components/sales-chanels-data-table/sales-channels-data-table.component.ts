@@ -10,7 +10,7 @@ import {SalesChannelsDialogComponent} from "../sales-channels-dialog/sales-chann
 @Component({
   selector: 'app-sales-chanels-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./sales-channels-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class SalesChannelsDataTableComponent extends AppDataTableModel<SalesChannelModel> implements OnInit {
 

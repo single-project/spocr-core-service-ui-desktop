@@ -9,7 +9,7 @@ import {ContractModel} from 'src/app/core/models/global-reference.model';
 @Component({
   selector: 'app-contracts-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./contracts-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class ContractsDataTableComponent extends AppDataTableModel<ContractModel> implements OnInit {
 

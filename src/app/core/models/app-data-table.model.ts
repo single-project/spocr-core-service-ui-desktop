@@ -3,7 +3,7 @@ import {AppTableTypes} from './app-tabe-types.enum';
 import {ReferenceResponseModel} from './reference-response.model';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {AutoComplete, DialogService, LazyLoadEvent, Table} from 'primeng';
+import {AutoComplete, Calendar, DialogService, LazyLoadEvent, Table} from 'primeng';
 import {QueryList, Type, ViewChildren} from '@angular/core';
 import {MessageService} from 'primeng/api';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
@@ -23,6 +23,7 @@ export abstract class  AppDataTableModel<T> {
   sortOrder: number;
   totalElements: number;
   numberOfElements: number;
+  calendarValue:string;
 
   cols: Object[];
   selectedCols: Object[];
@@ -282,6 +283,14 @@ export abstract class  AppDataTableModel<T> {
   fetchFilterData(params: Object, fieldName: string): Observable<any> {
     const service = this.filterDataServices.get(fieldName) || this.filterDataServices.get('default');
     return service.get(params);
+  }
+
+  openCalendar(calendar: Calendar) {
+    calendar.showOverlay();
+  }
+
+  onDateSelect(date: Date) {
+    console.log(date);
   }
 }
 

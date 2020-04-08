@@ -10,7 +10,7 @@ import {ManufactureDialogComponent} from '../manufacture-dialog/manufacture-dial
 @Component({
   selector: 'app-manufacture-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./manufacture-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class ManufactureDataTableComponent extends AppDataTableModel<ManufacturerModel> implements OnInit {
 

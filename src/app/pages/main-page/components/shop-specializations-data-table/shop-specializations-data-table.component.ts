@@ -10,7 +10,7 @@ import { ShopSpecializationDialogComponent } from '../shop-specialization-dialog
 @Component({
   selector: 'app-shop-specializations-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./shop-specializations-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class ShopSpecializationsDataTableComponent extends AppDataTableModel<ShopSpecializationModel> implements OnInit {
 
