@@ -23,7 +23,6 @@ export abstract class  AppDataTableModel<T> {
   sortOrder: number;
   totalElements: number;
   numberOfElements: number;
-  calendarValue:string;
 
   cols: Object[];
   selectedCols: Object[];
