@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {ShopDepartsService} from '../../../../core/services/shop-departs.service';
-import {ConfigService} from '../../../../core/services/config.service';
-import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
-import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
-import {MessageService} from 'primeng';
-import {IdentifiedEntity} from '../../../../core/models/identified.entity';
+import { Component, OnInit } from '@angular/core';
+import { ShopDepartsService } from '../../../../core/services/shop-departs.service';
+import { ConfigService } from '../../../../core/services/config.service';
+import { AppDataTableModel } from '../../../../core/models/app-data-table.model';
+import { AppTableTypes } from '../../../../core/models/app-tabe-types.enum';
+import { DialogService, MessageService } from 'primeng';
+import { IdentifiedEntity } from '../../../../core/models/identified.entity';
+import { ShopDepartsDialogComponent } from '../shop-departs-dialog/shop-departs-dialog.component';
 
 @Component({
   selector: 'app-shop-departments-data-table',
@@ -16,10 +17,14 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel<Identif
   constructor(
     messageService: MessageService,
     configService: ConfigService,
-    shopDepartsService: ShopDepartsService) {
+    shopDepartsService: ShopDepartsService,
+    dialogService: DialogService,) {
     super(messageService,
       configService,
-      shopDepartsService);
+      shopDepartsService,
+      dialogService,
+      ShopDepartsDialogComponent
+    )
   }
 
   ngOnInit(): void {

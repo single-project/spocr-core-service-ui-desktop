@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {MessageService} from 'primeng';
+import { DialogService, MessageService } from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ShopSpecializationsService} from '../../../../core/services/shop-specializations.service';
 import {ShopSpecializationModel} from 'src/app/core/models/global-reference.model';
+import { ShopSpecializationDialogComponent } from '../shop-specialization-dialog/shop-specialization-dialog.component';
 
 @Component({
   selector: 'app-shop-specializations-data-table',
@@ -16,10 +17,13 @@ export class ShopSpecializationsDataTableComponent extends AppDataTableModel<Sho
   constructor(
     messageService: MessageService,
     configService: ConfigService,
-    shopspecializationsService: ShopSpecializationsService) {
+    shopspecializationsService: ShopSpecializationsService,
+    dialogService: DialogService,) {
     super(messageService,
       configService,
-      shopspecializationsService);
+      shopspecializationsService,
+      dialogService,
+      ShopSpecializationDialogComponent);
   }
 
   ngOnInit(): void {
