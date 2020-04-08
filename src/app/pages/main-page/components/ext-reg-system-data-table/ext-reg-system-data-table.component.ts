@@ -9,7 +9,7 @@ import {ExtRegSystemService} from "../../../../core/services/ext-reg-system.serv
 @Component({
   selector: 'app-ext-reg-system-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./ext-reg-system-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class ExtRegSystemDataTableComponent extends AppDataTableModel<ExtRegSystemModel> implements OnInit {
 

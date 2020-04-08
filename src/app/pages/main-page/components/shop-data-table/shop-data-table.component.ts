@@ -11,7 +11,7 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 @Component({
   selector: 'app-shop-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./shop-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class ShopDataTableComponent extends AppDataTableModel<ShopModel> implements OnInit {
 

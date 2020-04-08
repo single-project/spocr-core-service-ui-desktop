@@ -9,7 +9,7 @@ import {OwnerService} from '../../../../core/services/owner.service';
 @Component({
   selector: 'app-owner-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./owner-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class OwnerDataTableComponent extends AppDataTableModel<OwnerModel> implements OnInit {
 

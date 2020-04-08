@@ -10,7 +10,7 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 @Component({
   selector: 'app-counterparties-data-table',
   templateUrl: '../templates/data-table.template.html',
-  styleUrls: ['./counterparties-data-table.component.scss']
+  styleUrls: ['../templates/data-table.template.scss']
 })
 export class CounterpartiesDataTableComponent extends AppDataTableModel<CounterpartyModel> implements OnInit {
 

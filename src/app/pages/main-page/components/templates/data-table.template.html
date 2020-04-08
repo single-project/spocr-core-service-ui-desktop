@@ -70,22 +70,38 @@
     </tr>
     <tr [hidden]="!isFilterShown">
       <th *ngFor="let col of columns; let i = index">
-        <div>
-          <p-inputMask *ngIf="['startDate', 'endDate'].includes(col.field)"
+        <div class="ui-inputgroup">
+          <span *ngIf="['startDate', 'endDate'].includes(col.field)"
+                class="ui-inputgroup-addon">
+            <i class="pi pi-calendar calendar-filter-button"
+               (click)="openCalendar(calendar)">
+            </i>
+            <p-calendar #calendar
+                        [(ngModel)]="calendarValue"
+                        (onSelect)="onDateSelect($event)"
+                        [inputStyle]="{'width': '0','padding': '0','height': '0', 'border': '0'}"
+                        [style]="{'position': 'fixed'}"
+                        appendTo="body">
+            </p-calendar>
+          </span>
+          <p-inputMask class="ui-inputgroup-addon"
+                       *ngIf="['startDate', 'endDate'].includes(col.field)"
+                       [style]="{'width':'100%'}"
                        [(ngModel)]="col.val"
                        mask="99/99/9999"
                        placeholder="dd/mm/yyyy"
                        slotChar="dd/mm/yyyy"
                        (onComplete)="dt.filter({id: -1, name: dateFormat(col.val)}, col.field, 'contains');">
           </p-inputMask>
-          <button *ngIf="['startDate', 'endDate'].includes(col.field)"
-                  pButton
-                  type="button"
-                  icon="pi pi-times"
-                  class="ui-button-secondary"
-                  (click)="cleanFilter(dt, i, col.field, 'contains', col)">
-          </button>
-          <p-autoComplete *ngIf="!['startDate', 'endDate'].includes(col.field)"
+          <span *ngIf="['startDate', 'endDate'].includes(col.field)"
+                class="ui-inputgroup-addon">
+            <i class="pi pi-times clean-filter-button"
+               (click)="cleanFilter(dt, i, col.field, 'contains', col)">
+            </i>
+          </span>
+          <p-autoComplete class="ui-inputgroup-addon table-filter"
+                          *ngIf="!['startDate', 'endDate'].includes(col.field)"
+                          [inputStyle]="{'width':'100%'}"
                           [suggestions]="searchItems"
                           field="name"
                           (onSelect)="dt.filter($event, col.field, 'contains')"
@@ -93,13 +109,12 @@
                           (completeMethod)="filterSearch($event, col.field)"
                           appendTo="body">
           </p-autoComplete>
-          <button *ngIf="!['startDate', 'endDate'].includes(col.field)"
-                  pButton
-                  type="button"
-                  icon="pi pi-times"
-                  class="ui-button-secondary"
-                  (click)="cleanFilter(dt, i, col.field, 'contains')">
-          </button>
+          <span *ngIf="!['startDate', 'endDate'].includes(col.field)"
+                class="ui-inputgroup-addon">
+            <i class="pi pi-times clean-filter-button"
+               (click)="cleanFilter(dt, i, col.field, 'contains')">
+            </i>
+          </span>
         </div>
       </th>
     </tr>
