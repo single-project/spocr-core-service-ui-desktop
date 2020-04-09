@@ -68,6 +68,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
     this.loadSalesChannels();
     this.loadShopSpecialization();
     this.loadShopDeparts();
+    console.dir(this.entity);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -71,9 +71,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.loadAvailableLegalTypes();
     this.loadCounterpartiesList();
     this.loadStatusesList();
-    this.loadAvailablePersonalData();
-
-
   }
 
   ngAfterViewInit(): void {
@@ -163,7 +160,13 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   addPersonRekv(): void {
     if (!this.entity.personRekv) {
       this.entity.personRekv = {} as PersonRekv;
+    }
+
+    if (!this.entity.personRekv.citizenship) {
       this.entity.personRekv.citizenship = {} as Citizenship;
+    }
+    if (!this.entity.personRekv.gender) {
+
       this.entity.personRekv.gender = {} as Gender;
     }
     this.removeLegalRekv();
@@ -175,7 +178,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       lastName: personRekv.lastName,
       firstName: personRekv.firstName,
       patronymic: personRekv.patronymic,
-      birthDate: moment(personRekv.birthDate),
+      birthDate: moment(personRekv.birthDate).toDate(),
       birthPlace: personRekv.birthPlace,
       docType: this.formBuilder.group([]),
       docSeriesNumber: personRekv.docSeriesNumber,
