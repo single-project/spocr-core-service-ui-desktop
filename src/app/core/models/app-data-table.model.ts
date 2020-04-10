@@ -19,6 +19,7 @@ export abstract class  AppDataTableModel<T> {
   calendarConf: any;
   entityKey: string;
   аppTableTypes: AppTableTypes;
+  calendarVal: any;
   sortField: string;
   sortOrder: number;
   totalElements: number;
@@ -175,6 +176,23 @@ export abstract class  AppDataTableModel<T> {
           this.numberOfElements = data.numberOfElements;
         }
         this.loading = false;
+      },
+        (err) => {
+          this.dataItems = [];
+
+          if (updatePageInfo) {
+            this.totalElements = 0;
+            this.numberOfElements = 0;
+          }
+          console.log(err);
+          this.loading = false;
+
+          this.messageService.clear();
+          this.messageService.add({
+            key: 'tr',
+            severity: 'error',
+            summary: err.error.message
+          });
       });
   }
 
@@ -212,10 +230,10 @@ export abstract class  AppDataTableModel<T> {
   cleanFilter(dt: Table, index: number, fieldId: string, matchMode: string, field?: any) {
     const filterObj: AutoComplete = this.tableFilters.toArray()[index];
 
-    filterObj.inputEL.nativeElement.value = '';
-
     if (field) {
       field.val = '';
+    } else {
+      filterObj.inputEL.nativeElement.value = '';
     }
 
     dt.filter(null, fieldId, matchMode);
@@ -264,8 +282,10 @@ export abstract class  AppDataTableModel<T> {
    *
    */
   dateFormat(date: string): string{
-    // moment(data, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
-    return moment(date, 'DD/MM/YYYY').format('YYYY-MM-DDTHH:mm:ssZZ');
+    let datePart = moment(date, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ss');
+    let tzPart = encodeURIComponent(moment(date, 'DD/MM/YYYY').utc().format('ZZ'));
+    let val = `${datePart}${tzPart}`;
+    return val;
   }
 
   filterSearch(event, fieldName: string): void {
@@ -293,9 +313,9 @@ export abstract class  AppDataTableModel<T> {
     calendar.showOverlay();
   }
 
-  onDateSelect(date: Date) {
-    const val = moment(date).utc().format('YYYY-MM-DDTHH:mm:ssZZ');
-    console.log(val);
+  onDateSelect(dt: Table, date: Date, col: any) {
+    col.val = moment(date).format('DD/MM/YYYY');
+    dt.filter({id: -1, name: this.dateFormat(col.val)}, col.field, 'contains');
   }
 }
 
