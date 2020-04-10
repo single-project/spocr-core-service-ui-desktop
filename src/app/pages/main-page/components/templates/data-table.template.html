@@ -77,11 +77,12 @@
                (click)="openCalendar(calendar)">
             </i>
             <p-calendar #calendar
-                        [(ngModel)]="col.val"
-                        (onSelect)="onDateSelect($event)"
+                        [(ngModel)]="calendarVal"
+                        (onSelect)="onDateSelect(dt, $event, col)"
                         [inputStyle]="{'width': '0','padding': '0','height': '0', 'border': '0'}"
                         [style]="{'position': 'fixed'}"
                         [locale]="calendarConf"
+                        dateFormat="dd/mm/yy"
                         appendTo="body">
             </p-calendar>
           </span>
