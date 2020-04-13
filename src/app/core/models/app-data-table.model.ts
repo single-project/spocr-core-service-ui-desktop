@@ -283,7 +283,7 @@ export abstract class  AppDataTableModel<T> {
    */
   dateFormat(date: string): string{
     let datePart = moment(date, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ss');
-    let tzPart = encodeURIComponent(moment(date, 'DD/MM/YYYY').utc().format('ZZ'));
+    let tzPart = ' UTC';
     let val = `${datePart}${tzPart}`;
     return val;
   }
