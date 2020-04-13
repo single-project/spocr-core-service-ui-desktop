@@ -31,7 +31,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   public dropDownShow = false;
   public parentsList = [];
   public statusesList = [];
-  public citizenships = [];
+  public citizenship = [];
   public genders = [];
   public docTypes = [];
   public personReq = false;
@@ -48,7 +48,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
     today: 'Сегодня',
     clear: 'Очист.',
-    dateFormat: 'dd.mm.yy',
+    dateFormat: 'dd/mm/yy',
     weekHeader: 'Нед'
   };
 
@@ -71,6 +71,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.loadAvailableLegalTypes();
     this.loadCounterpartiesList();
     this.loadStatusesList();
+    this.loadAvailablePersonalData();
   }
 
   ngAfterViewInit(): void {
@@ -96,7 +97,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       this.personalService.fetchDocTypes(),
       this.personalService.fetchGender()])
       .subscribe(data => {
-        this.citizenships = data[0]['content'];
+        this.citizenship = data[0]['content'];
 
         this.docTypes = data[1]['content'];
 
@@ -178,7 +179,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       lastName: personRekv.lastName,
       firstName: personRekv.firstName,
       patronymic: personRekv.patronymic,
-      birthDate: moment(personRekv.birthDate).toDate(),
+      birthDate: moment(personRekv.birthDate).format('DD/MM/YYYY'),
       birthPlace: personRekv.birthPlace,
       docType: this.formBuilder.group([]),
       docSeriesNumber: personRekv.docSeriesNumber,
@@ -297,6 +298,9 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   }
 
   save(): void {
+    if(this.entityDialogForm.contains('personRekv')){
+      this.entityDialogForm.patchValue({'personRekv.birthDate': moment(this.entityDialogForm.get('personRekv').get('birthDate').value).format('YYYY-MM-DDTHH:mm:ssZZ')}) ;
+    }
     this.entityDialogForm.removeControl('innSug');
     super.save();
   }
