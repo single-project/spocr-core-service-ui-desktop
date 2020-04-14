@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ExtRegSystemModel} from '../../../../core/models/global-reference.model';
-import {MessageService} from 'primeng';
+import {DialogService, MessageService} from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
-import {ExtRegSystemService} from "../../../../core/services/ext-reg-system.service";
+import {ExtRegSystemService} from '../../../../core/services/ext-reg-system.service';
+import {ExtRegSystemDialogComponent} from "../ext-reg-system-dialog/ext-reg-system-dialog.component";
 
 @Component({
   selector: 'app-ext-reg-system-data-table',
@@ -16,10 +17,13 @@ export class ExtRegSystemDataTableComponent extends AppDataTableModel<ExtRegSyst
   constructor(
     messageService: MessageService,
     configService: ConfigService,
-    extRegSystemService: ExtRegSystemService) {
+    extRegSystemService: ExtRegSystemService,
+    dialogService: DialogService,) {
     super(messageService,
       configService,
-      extRegSystemService);
+      extRegSystemService,
+      dialogService,
+      ExtRegSystemDialogComponent);
   }
 
   ngOnInit(): void {

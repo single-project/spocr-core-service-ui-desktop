@@ -26,6 +26,7 @@ import { ExtRegSystemDataTableComponent } from './components/ext-reg-system-data
 import { ShopDepartsDialogComponent } from './components/shop-departs-dialog/shop-departs-dialog.component';
 import { ShopSpecializationDialogComponent } from './components/shop-specialization-dialog/shop-specialization-dialog.component';
 import { OwnerDialogComponent } from './components/owner-dialog/owner-dialog.component';
+import {ExtRegSystemDialogComponent} from './components/ext-reg-system-dialog/ext-reg-system-dialog.component';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { OwnerDialogComponent } from './components/owner-dialog/owner-dialog.com
     ExtRegSystemDataTableComponent,
     ShopDepartsDialogComponent,
     ShopSpecializationDialogComponent,
-    OwnerDialogComponent
+    OwnerDialogComponent,
+    ExtRegSystemDialogComponent
   ],
   imports: [
     CommonModule,
