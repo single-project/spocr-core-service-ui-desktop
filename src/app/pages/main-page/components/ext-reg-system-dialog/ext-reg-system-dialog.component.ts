@@ -32,6 +32,10 @@ export class ExtRegSystemDialogComponent extends EntityCardModel<ExtRegSystemMod
   ngOnInit(): void {
   }
 
+  /**
+   * [reactive-forms](https://angular.io/guide/reactive-forms)<br/>
+   * [reactive-form-validation](https://angular.io/guide/form-validation#reactive-form-validation)
+   */
   buildFormGroup() {
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
