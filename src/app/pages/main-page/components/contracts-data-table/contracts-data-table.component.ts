@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {MessageService} from 'primeng';
+import {DialogService, MessageService} from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {ContractService} from '../../../../core/services/contract.service';
 import {ContractModel} from 'src/app/core/models/global-reference.model';
+import {ContractsDialogComponent} from '../contracts-dialog/contracts-dialog.component';
 
 @Component({
   selector: 'app-contracts-data-table',
@@ -16,10 +17,13 @@ export class ContractsDataTableComponent extends AppDataTableModel<ContractModel
   constructor(
     messageService: MessageService,
     configService: ConfigService,
-    contractService: ContractService) {
+    contractService: ContractService,
+    dialogService: DialogService) {
     super(messageService,
       configService,
-      contractService);
+      contractService,
+      dialogService,
+      ContractsDialogComponent);
   }
 
   ngOnInit(): void {
