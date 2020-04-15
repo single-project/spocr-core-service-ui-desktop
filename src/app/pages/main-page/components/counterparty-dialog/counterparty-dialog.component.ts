@@ -310,7 +310,11 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
   formTransform(obj?: any): any {
     const deepClone = cloneDeep(obj);
-    deepClone['personRekv']['birthDate'] = moment(deepClone['personRekv']['birthDate'], 'YYYY-MM-DD').utc().format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+    if (obj['personRekv']) {
+      deepClone['personRekv']['birthDate'] = moment(deepClone['personRekv']['birthDate'], 'YYYY-MM-DD')
+        .utc()
+        .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+    }
     return deepClone;
   }
 
