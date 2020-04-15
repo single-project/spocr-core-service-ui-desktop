@@ -52,7 +52,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     weekHeader: 'Нед'
   };
 
-  constructor(private configService: ConfigService,
+  constructor(configService: ConfigService,
               private personalService: PersonalRekvService,
               private manufacturerService: ManufactureService,
               public dialogRef: DynamicDialogRef,
@@ -61,7 +61,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
               private counterpartyService: CounterpartiesService,
               private messageService: MessageServiceFacadeService,
   ) {
-    super(formBuilder, dialogRef, dialogConfig, counterpartyService, messageService);
+    super(formBuilder, dialogRef, dialogConfig, counterpartyService, messageService, configService);
     this.paymentReqs = !!this.entity.paymentDetails;
     this.personReq = !!this.entity.personRekv;
     this.legalReq = !!this.entity.legalRekv;

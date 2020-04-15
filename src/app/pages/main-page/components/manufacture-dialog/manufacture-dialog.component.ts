@@ -15,13 +15,13 @@ import {MessageServiceFacadeService} from "../../../../core/services/message-ser
 export class ManufactureDialogComponent extends EntityCardModel<ManufacturerModel> implements OnInit {
 
 
-  constructor(private configService: ConfigService,
+  constructor(configService: ConfigService,
               private manufacturerService: ManufactureService,
               public dialogRef: DynamicDialogRef,
               public dialogConfig: DynamicDialogConfig,
               public formBuilder: FormBuilder,
               private messageService: MessageServiceFacadeService) {
-    super(formBuilder, dialogRef, dialogConfig, manufacturerService, messageService);
+    super(formBuilder, dialogRef, dialogConfig, manufacturerService, messageService, configService);
   }
 
 

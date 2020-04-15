@@ -184,6 +184,7 @@ export interface OwnerModel extends BaseIdentifiedEntity {
 }
 
 export interface ExtRegSystemModel extends BaseIdentifiedEntity {
+  name: string;
 }
 
 export interface CounterpartyModel extends BaseIdentifiedEntity {
@@ -197,9 +198,39 @@ export interface CounterpartyModel extends BaseIdentifiedEntity {
   paymentDetails?: PaymentDetails[];
 }
 
+export interface Type {
+  id: number;
+  name: string;
+  ident: string;
+  properties?: any;
+}
+
+interface Status {
+  id: number;
+  name: string;
+  ident: string;
+  properties?: any;
+}
+
+interface Counterparty {
+  id: number;
+  name: string;
+}
 
 export interface ContractModel extends BaseIdentifiedEntity {
-
+  name: string;
+  link?: any;
+  endDate: Date;
+  startDate: Date;
+  comment?: any;
+  contractNumber: string;
+  type: Type;
+  status: Status;
+  commodityCredit?: any;
+  autoprolongation: boolean;
+  counterparty1: Counterparty;
+  counterparty2: Counterparty;
+  subContracts: any[];
 }
 
 export interface ShopSpecializationModel extends ShopClassifierModel {

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {EntityCardModel} from '../../../../core/models/entity-card.model';
-import {ExtRegSystemModel, ShopDepartModel} from '../../../../core/models/global-reference.model';
+import {ExtRegSystemModel} from '../../../../core/models/global-reference.model';
 import {FormBuilder, Validators} from '@angular/forms';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
 import {ExtRegSystemService} from '../../../../core/services/ext-reg-system.service';
@@ -34,19 +34,25 @@ export class ExtRegSystemDialogComponent extends EntityCardModel<ExtRegSystemMod
 
   /**
    * [reactive-forms](https://angular.io/guide/reactive-forms)<br/>
+   * [dynamic-form](https://angular.io/guide/dynamic-form)<br/>
    * [reactive-form-validation](https://angular.io/guide/form-validation#reactive-form-validation)
    */
   buildFormGroup() {
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e['id'],
+      ...(e['version'] === undefined ? {} : {version: e['version'] }),
+      active: e['active'],
       name: [e['name'], Validators.required],
-      active: [e['active']]
     });
   }
 
-  instantiate(options?): ShopDepartModel {
-    return {active: true};
+  instantiate(options?): ExtRegSystemModel {
+    return {
+      version: null,
+      active: true,
+      name: ''
+    };
   }
 
   populateFormGroup() {

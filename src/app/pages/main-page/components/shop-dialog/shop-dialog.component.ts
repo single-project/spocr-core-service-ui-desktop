@@ -1,15 +1,12 @@
 import {
   Component,
-  EventEmitter,
-  Input,
   OnChanges,
   OnInit,
-  Output,
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AddressSuggestion} from "../../../../core/models/suggestion-address.model";
+import {FormBuilder, Validators} from '@angular/forms';
+import {AddressSuggestion} from '../../../../core/models/suggestion-address.model';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 import {ShopTypesService} from '../../../../core/services/shop-types.service';
 import {SalesChannelService} from '../../../../core/services/sales-channel.service';
@@ -24,13 +21,12 @@ import {
   ShopSpecializationModel,
   ShopTypeModel
 } from '../../../../core/models/global-reference.model';
-import {EntityCardModel} from "../../../../core/models/entity-card.model";
-import {ConfigService} from "../../../../core/services/config.service";
-import {PersonalRekvService} from "../../../../core/services/personal-rekv.service";
-import {ManufactureService} from "../../../../core/services/manufacture.service";
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
-import {MessageServiceFacadeService} from "../../../../core/services/message-service-facade.service";
-
+import {EntityCardModel} from '../../../../core/models/entity-card.model';
+import {ConfigService} from '../../../../core/services/config.service';
+import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
+import {ManufactureService} from '../../../../core/services/manufacture.service';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
+import {MessageServiceFacadeService} from '../../../../core/services/message-service-facade.service';
 
 @Component({
   selector: 'app-shop-dialog',
@@ -44,7 +40,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   public shopSpecializationList: ShopSpecializationModel[] = [];
   public shopDepartsList: ShopDepartModel[] = [];
 
-  constructor(private configService: ConfigService,
+  constructor(configService: ConfigService,
               private personalService: PersonalRekvService,
               private manufacturerService: ManufactureService,
               public dialogRef: DynamicDialogRef,
@@ -58,7 +54,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
               private shopService: ShopsService,
               private messageService: MessageServiceFacadeService,
               private renderer: Renderer2) {
-    super(formBuilder, dialogRef, dialogConfig, shopService, messageService);
+    super(formBuilder, dialogRef, dialogConfig, shopService, messageService, configService);
 
   }
 
@@ -172,7 +168,6 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       }))
     ).subscribe(departs => this.shopDepartsList = departs)
   }
-
 
   instantiate(options?): ShopModel {
     return {active: true} as ShopModel;

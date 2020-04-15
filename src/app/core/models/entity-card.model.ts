@@ -2,11 +2,10 @@ import {AbstractControl, FormBuilder, FormGroup, ValidationErrors} from "@angula
 import {IdentifiedEntity} from './identified.entity';
 import {ErrorModel} from './error.model';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
-import {MessageServiceFacadeService} from "../services/message-service-facade.service";
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
-import {OnInit} from "@angular/core";
-import {cloneDeep} from 'lodash'
-import moment from 'moment-timezone';
+import {MessageServiceFacadeService} from '../services/message-service-facade.service';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
+import {OnInit} from '@angular/core';
+import {ConfigService} from "../services/config.service";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
 
@@ -17,13 +16,19 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
                         public dialogRef: DynamicDialogRef,
                         public dialogConfig: DynamicDialogConfig,
                         private _entityService: IdentifiedEntityService<T>,
-                        private _messageService: MessageServiceFacadeService) {
+                        private _messageService: MessageServiceFacadeService,
+                        public configService?: ConfigService) {
     this.setEntity();
     this.build();
   }
 
   abstract ngOnInit(): void;
 
+  /**
+   * [reactive-forms](https://angular.io/guide/reactive-forms)<br/>
+   * [dynamic-form](https://angular.io/guide/dynamic-form)<br/>
+   * [reactive-form-validation](https://angular.io/guide/form-validation#reactive-form-validation)
+   */
   abstract buildFormGroup();
 
   //TODO: ранее требовалось создать форму, потом обновить значения их полей теперь не требуется - возможно метод не нужен
@@ -42,7 +47,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   patch(): void {
     this.entityDialogForm.patchValue({updatedFields: this.getUpdatedFields()});
     const clonedValue = this.formTransform(this.entityDialogForm.value);
-       this._entityService.patch(clonedValue).subscribe(e => {
+    this._entityService.patch(clonedValue).subscribe(e => {
       console.log("patch success");
       this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
@@ -78,7 +83,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     this.close(true);
   }
 
-  formTransform(obj?: any){
+  formTransform(obj?: any) {
     return obj
   };
 
