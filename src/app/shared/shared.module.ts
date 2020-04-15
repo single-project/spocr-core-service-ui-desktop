@@ -37,6 +37,7 @@ import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
 import { AddRequisiteButtonComponent } from './components/add-requisite-button/add-requisite-button.component';
 import {NameTagsPipe} from "./pipes/name-tags.pipe";
 import {DateTimeTagsPipe} from "./pipes/date-time-tags.pipe";
+import { ContactPersonsComponent } from './components/contact-persons/contact-persons.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {DateTimeTagsPipe} from "./pipes/date-time-tags.pipe";
     DadataAddressComponent,
     DadataPartyComponent,
     DadataFioComponent,
-    AddRequisiteButtonComponent
+    AddRequisiteButtonComponent,
+    ContactPersonsComponent
   ],
   imports: [
     CommonModule,

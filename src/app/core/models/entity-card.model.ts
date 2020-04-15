@@ -5,6 +5,8 @@ import {IdentifiedEntityService} from '../services/identified-entity.service';
 import {MessageServiceFacadeService} from "../services/message-service-facade.service";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng";
 import {OnInit} from "@angular/core";
+import {cloneDeep} from 'lodash'
+import moment from 'moment-timezone';
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
 
@@ -30,7 +32,8 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   abstract instantiate(options?): T;
 
   post(): void {
-    this._entityService.post(this.entityDialogForm.value).subscribe(e => {
+    const clonedValue = this.formTransform(this.entityDialogForm.value);
+    this._entityService.post(clonedValue).subscribe(e => {
       console.log("post success");
       this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
@@ -38,7 +41,8 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
 
   patch(): void {
     this.entityDialogForm.patchValue({updatedFields: this.getUpdatedFields()});
-    this._entityService.patch(this.entityDialogForm.value).subscribe(e => {
+    const clonedValue = this.formTransform(this.entityDialogForm.value);
+       this._entityService.patch(clonedValue).subscribe(e => {
       console.log("patch success");
       this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
@@ -73,6 +77,10 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
     }
     this.close(true);
   }
+
+  formTransform(obj?: any){
+    return obj
+  };
 
   isNew() {
     return (!this.entity.id);

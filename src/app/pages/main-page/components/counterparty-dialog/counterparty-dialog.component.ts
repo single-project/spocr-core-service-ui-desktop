@@ -17,7 +17,8 @@ import { EntityCardModel } from "../../../../core/models/entity-card.model";
 import { ManufactureService } from "../../../../core/services/manufacture.service";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng";
 import { MessageServiceFacadeService } from "../../../../core/services/message-service-facade.service";
-import * as moment from 'moment';
+import moment from 'moment-timezone';
+import { cloneDeep } from 'lodash'
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -48,7 +49,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
     today: 'Сегодня',
     clear: 'Очист.',
-    dateFormat: 'dd/mm/yy',
     weekHeader: 'Нед'
   };
 
@@ -72,6 +72,8 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.loadCounterpartiesList();
     this.loadStatusesList();
     this.loadAvailablePersonalData();
+    console.dir(this.entity);
+
   }
 
   ngAfterViewInit(): void {
@@ -170,6 +172,10 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
       this.entity.personRekv.gender = {} as Gender;
     }
+    if (!this.entity.personRekv.docType) {
+
+      this.entity.personRekv.docType = {};
+    }
     this.removeLegalRekv();
     let personRekv = this.entity.personRekv;
     this.addNestedObjectIfNotContains('personRekv', {
@@ -179,23 +185,28 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       lastName: personRekv.lastName,
       firstName: personRekv.firstName,
       patronymic: personRekv.patronymic,
-      birthDate: moment(personRekv.birthDate).format('DD/MM/YYYY'),
+      birthDate: moment(personRekv.birthDate).toDate(),
       birthPlace: personRekv.birthPlace,
-      docType: this.formBuilder.group([]),
+      docType: {
+        id: personRekv.docType.id,
+        name: personRekv.docType.name,
+        ident: personRekv.docType.ident,
+        properties: personRekv.docType.properties
+      },
       docSeriesNumber: personRekv.docSeriesNumber,
       inn: [personRekv.inn, Validators.compose([Validators.maxLength(12), Validators.minLength(12)])],
-      citizenship: this.formBuilder.group({
+      citizenship: {
         id: personRekv.citizenship.id,
         name: personRekv.citizenship.name,
         ident: personRekv.citizenship.ident,
         properties: personRekv.citizenship.properties
-      }),
-      gender: this.formBuilder.group({
+      },
+      gender: {
         id: personRekv.gender.id,
         name: personRekv.gender.name,
         ident: personRekv.gender.ident,
         properties: personRekv.gender.properties
-      }),
+      },
       email: [personRekv.email, Validators.email],
       phones: [personRekv.phones,],
     });
@@ -227,7 +238,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
     const paymentArray = this.entityDialogForm.get('paymentDetails') as FormArray;
     if (values) {
-      console.dir(values);
       paymentArray.push(this.formBuilder.group({
         ...values
       }))
@@ -252,6 +262,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   }
 
   buildFormGroup() {
+
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
@@ -297,10 +308,13 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.removePersonRekv();
   }
 
+  formTransform(obj?: any): any {
+    const deepClone = cloneDeep(obj);
+    deepClone['personRekv']['birthDate'] = moment(deepClone['personRekv']['birthDate'], 'YYYY-MM-DD').utc().format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+    return deepClone;
+  }
+
   save(): void {
-    if(this.entityDialogForm.contains('personRekv')){
-      this.entityDialogForm.patchValue({'personRekv.birthDate': moment(this.entityDialogForm.get('personRekv').get('birthDate').value).format('YYYY-MM-DDTHH:mm:ssZZ')}) ;
-    }
     this.entityDialogForm.removeControl('innSug');
     super.save();
   }

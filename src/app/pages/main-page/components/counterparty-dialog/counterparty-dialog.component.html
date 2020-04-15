@@ -124,6 +124,7 @@
               [monthNavigator]="true"
               [yearNavigator]="true"
               yearRange="1914:2114"
+              dateFormat="dd/mm/yy"
               [locale]="ruCalLocale"></p-calendar>
           </div>
           <div class="ui-g-4">
@@ -132,7 +133,7 @@
           <div class="ui-g-8">
             <p-dropdown
               appendTo="body"
-              formGroupName="docType"
+              formControlName="docType"
               optionLabel="name"
               dataKey="id"
               [options]="docTypes"
@@ -151,7 +152,7 @@
           <div class="ui-g-8">
             <p-dropdown
               appendTo="body"
-              formGroupName="citizenship"
+              formControlName="citizenship"
               optionLabel="name"
               dataKey="id"
               [options]="citizenship"
@@ -164,7 +165,7 @@
           <div class="ui-g-8">
             <p-dropdown
               appendTo="body"
-              formGroupName="gender"
+              formControlName="gender"
               optionLabel="name"
               dataKey="id"
               [options]="genders"
