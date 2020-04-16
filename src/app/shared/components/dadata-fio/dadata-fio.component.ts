@@ -13,6 +13,7 @@ import {FioSuggestion} from '../../../core/models/suggestion-fio.model';
 })
 export class DadataFioComponent implements OnInit {
   @Input() parentForm: FormGroup;
+  @Input() keyName: string;
 
   public results: any;
   public suggestions: FioSuggestion[];
@@ -55,7 +56,7 @@ export class DadataFioComponent implements OnInit {
   onAddressClean(): void {
     this.suggestionReset();
     this.parentForm.patchValue({
-      personRekv: {
+      [this.keyName]: {
         name: '',
         lastName: '',
         firstName: '',

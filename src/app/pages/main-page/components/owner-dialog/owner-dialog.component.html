@@ -22,26 +22,11 @@
             formControlName="active"></p-checkbox>
         </div>
       </div>
-      <div class="ui-g-12">
-        <div class="ui-g-4">
-          <label for="manufacturer">ПРОИЗВОДИТЕЛЬ</label>
-        </div>
-        <div class="ui-g-8">
-<!--          <p-dropdown-->
-<!--            id="manufacturer"-->
-<!--            formControlName="manufacturer"-->
-<!--            filter="true"-->
-<!--            placeholder="Выберите производителя (обязательно)"-->
-<!--            [options]="manufactureList"-->
-<!--            optionLabel="name"-->
-<!--            dataKey="id"-->
-<!--            appendTo="body">-->
-<!--          </p-dropdown>-->
-        </div>
       </div>
-    </div>
   </p-tabPanel>
   <p-tabPanel header="Конт. лица" leftIcon="fas fa-file-alt">
+
+    <app-contact-persons [formBuilder]="formBuilder" [parentForm]="entityDialogForm" [parentEntity]="entity"></app-contact-persons>
 
   </p-tabPanel>
 </p-tabView>

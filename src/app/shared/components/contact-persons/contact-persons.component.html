@@ -1,4 +1,5 @@
-<p-accordion formArrayName="paymentDetails">
+<div [formGroup]="parentForm">
+<p-accordion formArrayName="contacts">
   <div class="ui-g">
     <div class="ui-g-12">
       <div class="ui-g-4">
@@ -15,7 +16,7 @@
   </div>
   <p-accordionTab *ngFor="let contact of contacts.controls; let i = index"
                   [header]="getContactName(contact)" [formGroupName]="i">
-    <ng-container formGroupName="contact">
+    <ng-container formGroupName="person">
       <div class="ui-g-12">
         <div class="ui-g-4">
           <label>ФИО контрагента</label>
@@ -23,6 +24,7 @@
         <div class="ui-g-8">
           <app-dadata-fio
             [parentForm]="parentForm"
+            [keyName]="'person'"
           >
           </app-dadata-fio>
         </div>
@@ -119,3 +121,4 @@
     </div>
   </p-accordionTab>
 </p-accordion>
+</div>

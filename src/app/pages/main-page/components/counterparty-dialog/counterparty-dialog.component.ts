@@ -220,8 +220,8 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     }
     if (this.entity.paymentDetails) {
       this.entity.paymentDetails.forEach(pd => {
-        this.pushPaymentDetails(pd)
-      })
+        this.pushPaymentDetails(pd);
+      });
     }
   }
 
