@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {OwnerModel} from '../../../../core/models/global-reference.model';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
-import {MessageService} from 'primeng';
+import { DialogService, MessageService } from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {OwnerService} from '../../../../core/services/owner.service';
+import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
 
 @Component({
   selector: 'app-owner-data-table',
@@ -16,10 +17,13 @@ export class OwnerDataTableComponent extends AppDataTableModel<OwnerModel> imple
   constructor(
     messageService: MessageService,
     configService: ConfigService,
-    ownerService: OwnerService) {
+    ownerService: OwnerService,
+    dialogService: DialogService) {
     super(messageService,
       configService,
-      ownerService);
+      ownerService,
+      dialogService,
+      OwnerDialogComponent);
   }
 
   ngOnInit(): void {

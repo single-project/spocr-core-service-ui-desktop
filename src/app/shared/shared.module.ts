@@ -112,6 +112,7 @@ import { ContactPersonsComponent } from './components/contact-persons/contact-pe
     DynamicDialogModule,
     AccordionModule,
     AddRequisiteButtonComponent,
+    ContactPersonsComponent,
   ],
   providers: [DialogService, DynamicDialogRef, DynamicDialogConfig]
 })
