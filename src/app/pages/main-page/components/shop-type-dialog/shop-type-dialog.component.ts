@@ -33,7 +33,6 @@ export class ShopTypeDialogComponent extends EntityCardModel<ShopTypeModel> {
     });
   }
 
-
   populateFormGroup() {
 
   }

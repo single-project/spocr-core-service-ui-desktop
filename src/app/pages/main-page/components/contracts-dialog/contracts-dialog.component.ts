@@ -6,7 +6,10 @@ import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
 import {MessageServiceFacadeService} from '../../../../core/services/message-service-facade.service';
 import {ContractService} from '../../../../core/services/contract.service';
 import moment from 'moment-timezone';
-import {ConfigService} from "../../../../core/services/config.service";
+import {ConfigService} from '../../../../core/services/config.service';
+import {cloneDeep} from 'lodash';
+import {map} from 'rxjs/operators';
+import {CounterpartiesService} from '../../../../core/services/counterparties.service';
 
 @Component({
   selector: 'app-contracts-dialog',
@@ -16,8 +19,11 @@ import {ConfigService} from "../../../../core/services/config.service";
 export class ContractsDialogComponent extends EntityCardModel<ContractModel> implements OnInit {
 
   static tz: string;
+  calendarConf: any;
+  counterParties: any[] = [];
 
   constructor(
+    private counterpartyService: CounterpartiesService,
     configService: ConfigService,
     formBuilder: FormBuilder,
     dialogRef: DynamicDialogRef,
@@ -36,6 +42,31 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   }
 
   ngOnInit(): void {
+    this.calendarConf = this.configService
+      .fetchCalendarConfig('ru');
+    this.loadCounterPartiesList();
+  }
+
+  loadCounterPartiesList(): void {
+    this.counterpartyService.get().pipe(
+      map(p => p.content),
+    ).subscribe(party => {
+      this.counterParties = party
+    });
+  }
+
+  formTransform(obj?: any): any {
+    const deepClone = cloneDeep(obj);
+
+    deepClone['startDate'] = moment(deepClone['startDate'], 'YYYY-MM-DD')
+      .utc()
+      .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+
+    deepClone['endDate'] = moment(deepClone['endDate'], 'YYYY-MM-DD')
+      .utc()
+      .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+
+    return deepClone;
   }
 
   /**
@@ -45,9 +76,22 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   buildFormGroup() {
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
-      id: e['id'],
+      id: [e['id']],
+      version: [e['version']],
+      active: [e['active']],
       name: [e['name'], Validators.required],
-      active: [e['active']]
+      link: [e['link']],
+      endDate: [moment(e['endDate'], 'YYYY-MM-DD').toDate()],
+      startDate: [moment(e['startDate'], 'YYYY-MM-DD').toDate()],
+      comment: [e['comment']],
+      contractNumber: [e['contractNumber'], Validators.required],
+      type: this.formBuilder.group({}),
+      status: this.formBuilder.group({}),
+      commodityCredit: [e['commodityCredit']],
+      autoprolongation: [e['autoprolongation']],
+      counterparty1: [{...e['counterparty1']}, Validators.required],
+      counterparty2: [{...e['counterparty2']}, Validators.required],
+      subContracts: this.formBuilder.array([])
     });
   }
 
@@ -56,7 +100,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     const tz = this.configService.fetchDateTimeConfig().tz;
 
     return {
-      id: 1,
+      id: null,
       version: 0,
       active: true,
       name: '',
@@ -80,12 +124,12 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       commodityCredit: null,
       autoprolongation: false,
       counterparty1: {
-        id: 1,
-        name: "Контагент1"
+        id: null,
+        name: null
       },
       counterparty2: {
-        id: 2,
-        name: "Контагент2"
+        id: null,
+        name: null
       },
       subContracts: []
     };
