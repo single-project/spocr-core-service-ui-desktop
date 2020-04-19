@@ -109,8 +109,8 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       startDate: [moment(e['startDate'], 'YYYY-MM-DD').toDate()],
       comment: [e['comment']],
       contractNumber: [e['contractNumber'], Validators.required],
-      type: this.formBuilder.group({}),
-      status: this.formBuilder.group({}),
+      type: [{...e['type']}],
+      status: [{...e['status']}],
       commodityCredit: [e['commodityCredit']],
       autoprolongation: [e['autoprolongation']],
       counterparty1: [{...e['counterparty1']}, Validators.required],
@@ -134,18 +134,18 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       comment: null,
       contractNumber: '',
       type: {
-        id: 11,
-        name: "Goods",
-        ident: "CONTRACT-TYPE",
+        id: null,
+        name: null,
+        ident: null,
         properties: null
       },
       status: {
-        id: 13,
-        name: "Active",
-        ident: "CONTRACT-STATUS",
+        id: null,
+        name: null,
+        ident: null,
         properties: null
       },
-      commodityCredit: null,
+      commodityCredit: 0,
       autoprolongation: false,
       counterparty1: {
         id: null,

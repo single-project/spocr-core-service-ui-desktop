@@ -3,138 +3,194 @@
     <p-tabPanel
       header="Основные"
       leftIcon="fas fa-file-alt">
-      <div class="ui-g ui-fluid">
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="name">Имя:</label>
+      <p-scrollPanel [style]="{width: '100%', height: '400px'}">
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="name">ИМЯ</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="name"
+                     formControlName="name"
+                     autofocus/>
+            </div>
+            <div class="ui-g-4">
+            </div>
+            <div class="ui-grid-col-8">
+              <p-message severity="error"
+                         text="Имя должно быть заполнено"
+                         *ngIf="!entityDialogForm.controls['name'].valid && entityDialogForm.controls['name'].dirty">
+              </p-message>
+            </div>
           </div>
-          <div class="ui-g-8">
-            <input pInputText id="name"
-                   formControlName="name"
-                   autofocus/>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="link">ССЫЛКА</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="link"
+                     formControlName="link"
+                     autofocus/>
+            </div>
           </div>
-          <div class="ui-g-4">
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label>ДАТА НАЧАЛА</label>
+            </div>
+            <div class="ui-g-8">
+              <p-calendar
+                appendTo="body"
+                formControlName="startDate"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1914:2114"
+                dateFormat="dd/mm/yy"
+                [locale]="calendarConf"></p-calendar>
+            </div>
           </div>
-          <div class="ui-grid-col-8">
-            <p-message severity="error"
-                       text="Имя должно быть заполнено"
-                       *ngIf="!entityDialogForm.controls['name'].valid && entityDialogForm.controls['name'].dirty">
-            </p-message>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label>ДАТА ОКОНЧАНИЯ</label>
+            </div>
+            <div class="ui-g-8">
+              <p-calendar
+                appendTo="body"
+                formControlName="endDate"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1914:2114"
+                dateFormat="dd/mm/yy"
+                [locale]="calendarConf"></p-calendar>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="comment">КОММЕНТАРИЙ</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="comment"
+                     formControlName="comment"
+                     autofocus/>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="comment">НОМЕР</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="contractNumber"
+                     formControlName="contractNumber"
+                     autofocus/>
+            </div>
+            <div class="ui-g-4">
+            </div>
+            <div class="ui-grid-col-8">
+              <p-message severity="error"
+                         text="Номер должен быть заполнен"
+                         *ngIf="!entityDialogForm.controls['contractNumber'].valid && entityDialogForm.controls['contractNumber'].dirty">
+              </p-message>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="type">ТИП</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="type"
+                          [options]="contractTypes"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите тип (обязательно)"
+                          formControlName="type"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="status">СТАТУС</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="status"
+                          [options]="contractStatuses"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите статус (обязательно)"
+                          formControlName="status"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="commodityCredit">РАССРОЧКА</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText
+                     id="commodityCredit"
+                     formControlName="commodityCredit"
+                     autofocus/>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="autoprolongation">АВТОПРОЛОНГАЦИЯ</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText
+                     id="autoprolongation"
+                     formControlName="autoprolongation"
+                     autofocus/>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="counterparty1">КОНТРАГЕНТ1</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="counterparty1"
+                          [options]="counterParties"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите контрагента (обязательно)"
+                          formControlName="counterparty1"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="counterparty2">КОНТРАГЕНТ2</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="counterparty2"
+                          [options]="counterParties"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите контрагента (обязательно)"
+                          formControlName="counterparty2"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label for="active">АКТИВНЫЙ</label>
+            </div>
+            <div class="ui-g-8">
+              <p-checkbox
+                id="active"
+                binary="true"
+                formControlName="active">
+              </p-checkbox>
+            </div>
           </div>
         </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="link">Ссылка:</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText id="link"
-                   formControlName="link"
-                   autofocus/>
-          </div>
-        </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label>Дата начала:</label>
-          </div>
-          <div class="ui-g-8">
-            <p-calendar
-              appendTo="body"
-              formControlName="startDate"
-              [monthNavigator]="true"
-              [yearNavigator]="true"
-              yearRange="1914:2114"
-              dateFormat="dd/mm/yy"
-              [locale]="calendarConf"></p-calendar>
-          </div>
-        </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label>Дата окончания:</label>
-          </div>
-          <div class="ui-g-8">
-            <p-calendar
-              appendTo="body"
-              formControlName="endDate"
-              [monthNavigator]="true"
-              [yearNavigator]="true"
-              yearRange="1914:2114"
-              dateFormat="dd/mm/yy"
-              [locale]="calendarConf"></p-calendar>
-          </div>
-        </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="comment">Комментарий:</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText id="comment"
-                   formControlName="comment"
-                   autofocus/>
-          </div>
-        </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="comment">Номер:</label>
-          </div>
-          <div class="ui-g-8">
-            <input pInputText id="contractNumber"
-                   formControlName="contractNumber"
-                   autofocus/>
-          </div>
-          <div class="ui-g-4">
-          </div>
-          <div class="ui-grid-col-8">
-            <p-message severity="error"
-                       text="Номер должно быть заполнен"
-                       *ngIf="!entityDialogForm.controls['contractNumber'].valid && entityDialogForm.controls['contractNumber'].dirty">
-            </p-message>
-          </div>
-        </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="counterparty1">Контрагент1:</label>
-          </div>
-          <div  class="ui-g-8">
-            <p-dropdown appendTo="body"
-                        id="counterparty1"
-                        [options]="counterParties"
-                        optionLabel="name"
-                        dataKey="id"
-                        placeholder="Выберите контрагента (обязательно)"
-                        formControlName="counterparty1"
-                        [filter]="true">
-            </p-dropdown>
-          </div>
-        </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="counterparty2">Контрагент2:</label>
-          </div>
-          <div  class="ui-g-8">
-            <p-dropdown appendTo="body"
-                        id="counterparty2"
-                        [options]="counterParties"
-                        optionLabel="name"
-                        dataKey="id"
-                        placeholder="Выберите контрагента (обязательно)"
-                        formControlName="counterparty2"
-                        [filter]="true">
-            </p-dropdown>
-          </div>
-        </div>
-        <div class="ui-g-12">
-          <div class="ui-g-4">
-            <label for="active">Активный:</label>
-          </div>
-          <div class="ui-g-8">
-            <p-checkbox
-              id="active"
-              binary="true"
-              formControlName="active">
-            </p-checkbox>
-          </div>
-        </div>
-      </div>
+      </p-scrollPanel>
     </p-tabPanel>
   </p-tabView>
   <p-footer>
@@ -145,7 +201,6 @@
               pButton
               icon="fa fa-check"
               (click)="save()"
-              [disabled]="(entityDialogForm.invalid && entityDialogForm.dirty) || (!entityDialogForm.invalid && !entityDialogForm.dirty)|| (entityDialogForm.invalid && !entityDialogForm.dirty)"
               label="Сохранить">
       </button>
       <button type="button"

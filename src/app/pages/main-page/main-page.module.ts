@@ -28,6 +28,7 @@ import { ShopSpecializationDialogComponent } from './components/shop-specializat
 import { OwnerDialogComponent } from './components/owner-dialog/owner-dialog.component';
 import {ExtRegSystemDialogComponent} from './components/ext-reg-system-dialog/ext-reg-system-dialog.component';
 import { ContractsDialogComponent } from './components/contracts-dialog/contracts-dialog.component';
+import {ScrollPanelModule} from 'primeng';
 
 
 @NgModule({
@@ -56,14 +57,15 @@ import { ContractsDialogComponent } from './components/contracts-dialog/contract
     ExtRegSystemDialogComponent,
     ContractsDialogComponent
   ],
-  imports: [
-    CommonModule,
-    MainPageRoutingModule,
-    LayoutModule,
-    SharedModule,
-    ReactiveFormsModule,
-    AutoCompleteModule,
-  ]
+    imports: [
+        CommonModule,
+        MainPageRoutingModule,
+        LayoutModule,
+        SharedModule,
+        ReactiveFormsModule,
+        AutoCompleteModule,
+        ScrollPanelModule,
+    ]
 })
 export class MainPageModule {
 }
