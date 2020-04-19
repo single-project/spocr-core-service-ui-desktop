@@ -15,6 +15,8 @@ export class Conf {
   private _DOC_TYPES_URL = '/api/enumerations?ident=DOC-TYPE';
   private _CITIZENSHIP_URL = '/api/enumerations?ident=CITIZENSHIP';
   private _GENDER_URL = '/api/enumerations?ident=GENDER';
+  private _CONTRACT_TYPE_URL = '/api/enumerations?ident=CONTRACT-TYPE';
+  private _CONTRACT_STATUS_URL = '/api/enumerations?ident=CONTRACT-STATUS';
 
   get LEGAL_TYPES_URL(): string {
     return this._LEGAL_TYPES_URL;
@@ -46,6 +48,14 @@ export class Conf {
 
   get APP_SETTINGS_URL(): string {
     return this._APP_SETTINGS_URL;
+  }
+
+  get CONTRACT_TYPE_URL(): string {
+    return this._CONTRACT_TYPE_URL;
+  }
+
+  get CONTRACT_STATUS_URL(): string {
+    return this._CONTRACT_STATUS_URL;
   }
 
 }

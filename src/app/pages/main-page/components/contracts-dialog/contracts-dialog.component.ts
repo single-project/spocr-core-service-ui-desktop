@@ -10,6 +10,7 @@ import {ConfigService} from '../../../../core/services/config.service';
 import {cloneDeep} from 'lodash';
 import {map} from 'rxjs/operators';
 import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import {EnumerationService} from '../../../../core/services/enumeration.service';
 
 @Component({
   selector: 'app-contracts-dialog',
@@ -21,9 +22,13 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   static tz: string;
   calendarConf: any;
   counterParties: any[] = [];
+  contractTypes: any[] = [];
+  contractStatuses: any[] = [];
+
 
   constructor(
     private counterpartyService: CounterpartiesService,
+    private enumerationService: EnumerationService,
     configService: ConfigService,
     formBuilder: FormBuilder,
     dialogRef: DynamicDialogRef,
@@ -44,14 +49,33 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   ngOnInit(): void {
     this.calendarConf = this.configService
       .fetchCalendarConfig('ru');
+
     this.loadCounterPartiesList();
+    this.loadContractTypes();
+    this.loadContractStatuses();
   }
 
   loadCounterPartiesList(): void {
     this.counterpartyService.get().pipe(
       map(p => p.content),
     ).subscribe(party => {
-      this.counterParties = party
+      this.counterParties = party;
+    });
+  }
+
+  loadContractTypes(): void {
+    this.enumerationService.fetchContractTypes().pipe(
+      map(p => p.content),
+    ).subscribe(ct => {
+      this.contractTypes = ct;
+    });
+  }
+
+  loadContractStatuses(): void {
+    this.enumerationService.fetchContractStatuses().pipe(
+      map(p => p.content),
+    ).subscribe(cs => {
+      this.contractStatuses = cs;
     });
   }
 
