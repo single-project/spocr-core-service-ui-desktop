@@ -134,6 +134,8 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
 
 }
 
+
+
 interface EntityCardModelI extends OnInit {
 
   save(): void;

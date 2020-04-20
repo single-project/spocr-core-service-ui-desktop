@@ -1,10 +1,8 @@
-import {Component, Inject, Input, OnInit, SimpleChanges} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {AddressSuggestion} from '../../../core/models/suggestion-address.model';
-import {DadataService} from '../../../core/services/dadata.service';
-import * as _ from 'lodash';
-import {map, switchMap, tap} from 'rxjs/operators';
-import {FioSuggestion} from '../../../core/models/suggestion-fio.model';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { DadataService } from '../../../core/services/dadata.service';
+import { map, tap } from 'rxjs/operators';
+import { FioSuggestion } from '../../../core/models/suggestion-fio.model';
 
 @Component({
   selector: 'app-dadata-fio',
@@ -32,11 +30,9 @@ export class DadataFioComponent implements OnInit {
 
 
   select(e: string) {
-    console.dir(e);
-    console.dir(this.suggestions);
     let sug = this.suggestions[0];
     this.parentForm.patchValue({
-      personRekv: {
+      [this.keyName]: {
         name: e,
         lastName: sug.data.surname,
         firstName: sug.data.name,
