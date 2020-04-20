@@ -210,7 +210,17 @@
                  (click)="removeSubContract($event)">
               </i>
             </p-header>
-            Content 1
+            <div class="ui-g" [formGroup]="subContracts.controls[i]">
+              <div class="ui-g-4">
+                <label for="subContractName{{i}}">ИМЯ</label>
+              </div>
+              <div class="ui-g-8">
+                <input pInputText
+                       id="subContractName{{i}}"
+                       formControlName="name"
+                       autofocus/>
+              </div>
+            </div>
           </p-accordionTab>
         </p-accordion>
       </p-scrollPanel>
