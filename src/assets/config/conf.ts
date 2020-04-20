@@ -15,6 +15,11 @@ export class Conf {
   private _DOC_TYPES_URL = '/api/enumerations?ident=DOC-TYPE';
   private _CITIZENSHIP_URL = '/api/enumerations?ident=CITIZENSHIP';
   private _GENDER_URL = '/api/enumerations?ident=GENDER';
+  private _ROLES = '/api/contact-roles';
+
+  get ROLES(): string {
+    return this._ROLES;
+  }
 
   get LEGAL_TYPES_URL(): string {
     return this._LEGAL_TYPES_URL;

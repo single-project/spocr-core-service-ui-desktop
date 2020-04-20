@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PaymentDetails } from '../../../core/models/global-reference.model';
 import { forkJoin } from 'rxjs';
 import { PersonalRekvService } from '../../../core/services/personal-rekv.service';
 import { ConfigService } from '../../../core/services/config.service';
@@ -18,6 +17,7 @@ export class ContactPersonsComponent implements OnInit {
   public citizenship = [];
   public genders = [];
   public docTypes = [];
+  public roles = [];
   public ruCalLocale = {};
 
   constructor(
@@ -29,6 +29,7 @@ export class ContactPersonsComponent implements OnInit {
     this.loadAvailablePersonalData();
     this.loadConfig();
     this.addContatcs();
+    console.dir(this.parentEntity);
   }
 
 
@@ -36,13 +37,16 @@ export class ContactPersonsComponent implements OnInit {
     forkJoin([
       this.personalService.fetchCitizenship(),
       this.personalService.fetchDocTypes(),
-      this.personalService.fetchGender()])
+      this.personalService.fetchGender(),
+      this.personalService.fetchRoles()])
+
       .subscribe(data => {
         this.citizenship = data[0]['content'];
 
         this.docTypes = data[1]['content'];
 
         this.genders = data[2]['content'];
+        this.roles = data[3]['content'];
 
       })
 
@@ -76,6 +80,7 @@ export class ContactPersonsComponent implements OnInit {
   pushContact(values?: any) {
     const contactArray = this.parentForm.get('contacts') as FormArray;
     if (values) {
+      values['person']['birthDate']? values['person']['birthDate'] = moment( values['person']['birthDate']).toDate(): moment().toDate();
       values['person'] = this.formBuilder.group({...values['person']});
       contactArray.push(this.formBuilder.group({
         ...values
@@ -85,6 +90,7 @@ export class ContactPersonsComponent implements OnInit {
         id: null,
         version: null,
         active: true,
+        comment: '',
         role:{
           id: null,
           version: null,
@@ -123,10 +129,6 @@ export class ContactPersonsComponent implements OnInit {
           email: ['', Validators.email],
           phones: [],
         }),
-        name: '',
-        lastName: '',
-        firstName: '',
-        patronymic: '',
       }));
     }
 
@@ -137,7 +139,6 @@ export class ContactPersonsComponent implements OnInit {
   }
 
   getContactName(contact: any): string {
-    console.dir(contact);
     return `${contact.get('person').value['name']} / ${contact.get('role').value['name']}`;
   }
 

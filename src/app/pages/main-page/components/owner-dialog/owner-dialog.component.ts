@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EntityCardModel } from '../../../../core/models/entity-card.model';
-import { CounterpartyModel, OwnerModel } from '../../../../core/models/global-reference.model';
+import { OwnerModel } from '../../../../core/models/global-reference.model';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng';
 import { FormBuilder, Validators } from '@angular/forms';
-import { CounterpartiesService } from '../../../../core/services/counterparties.service';
 import { MessageServiceFacadeService } from '../../../../core/services/message-service-facade.service';
 import { OwnerService } from '../../../../core/services/owner.service';
 
@@ -26,21 +25,29 @@ export class OwnerDialogComponent extends EntityCardModel<OwnerModel> implements
   }
 
   buildFormGroup() {
-    let e = this.entity;
+    let e;
+    if(this.entity){
+      e = this.entity
+    }else{
+      e = {} as OwnerModel
+    }
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
       name: [e.name, Validators.required],
       active: e.active,
       version: e.version,
-      updatedFields: null
+      updatedFields: null,
+
     });
   }
 
   instantiate(options?): OwnerModel {
-    return undefined;
+    return { active: true} as OwnerModel;
   }
 
   populateFormGroup() {
   }
+
+
 
 }
