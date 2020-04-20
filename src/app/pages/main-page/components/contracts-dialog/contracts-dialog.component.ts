@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {EntityCardModel} from '../../../../core/models/entity-card.model';
 import {ContractModel} from '../../../../core/models/global-reference.model';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, Validators} from '@angular/forms';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
 import {MessageServiceFacadeService} from '../../../../core/services/message-service-facade.service';
 import {ContractService} from '../../../../core/services/contract.service';
@@ -119,6 +119,32 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     });
   }
 
+  get subContracts() {
+    return this.entityDialogForm.get('subContracts') as FormArray;
+  }
+
+  addSubContract() {
+    const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
+
+    paymentArray.push(this.formBuilder.group({
+      active: [false],
+      comment: [null],
+      contract: [null],
+      id: [null],
+      link: [null],
+      name: [null],
+      status: [null],
+      subContractDate: [null],
+      subContractNumber: [null],
+      version: [0]
+    }))
+  }
+
+  removeSubContract($event) {
+    $event.stopPropagation();
+    $event.preventDefault();
+  }
+
   instantiate(options?): ContractModel {
 
     const tz = this.configService.fetchDateTimeConfig().tz;
@@ -155,7 +181,20 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
         id: null,
         name: null
       },
-      subContracts: []
+      subContracts: [
+        {
+          active: false,
+          comment: null,
+          contract: null,
+          id: null,
+          link: null,
+          name: null,
+          status: null,
+          subContractDate: null,
+          subContractNumber: null,
+          version: 0
+        }
+      ]
     };
   }
 
