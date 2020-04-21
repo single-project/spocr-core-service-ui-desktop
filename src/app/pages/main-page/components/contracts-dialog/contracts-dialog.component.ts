@@ -25,7 +25,6 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   contractTypes: any[] = [];
   contractStatuses: any[] = [];
 
-
   constructor(
     private counterpartyService: CounterpartiesService,
     private enumerationService: EnumerationService,
@@ -115,7 +114,20 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       autoprolongation: [e['autoprolongation']],
       counterparty1: [{...e['counterparty1']}, Validators.required],
       counterparty2: [{...e['counterparty2']}, Validators.required],
-      subContracts: this.formBuilder.array([])
+      subContracts: this.formBuilder.array(
+        e['subContracts'].map((subContract)=>(
+          this.formBuilder.group({
+            active: [subContract.active],
+            comment: [subContract.comment],
+            id: [subContract.id],
+            link: [subContract.link],
+            name: [subContract.name],
+            status: [subContract.status],
+            subContractDate: [ moment(subContract.subContractDate, 'YYYY-MM-DD').toDate()],
+            subContractNumber: [subContract.subContractNumber],
+            version: [subContract.version]
+          })
+        )))
     });
   }
 
@@ -128,12 +140,12 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
 
     paymentArray.push(this.formBuilder.group({
-      active: [false],
-      comment: [null],
-      contract: [null],
+      active: [false], // Доп.соглашения заголовок таба
+      comment: [null], // опционален
+      contract: [null], // убрать из формы
       id: [null],
       link: [null],
-      name: [null],
+      name: [null], // 'Описание' обязательно
       status: [null],
       subContractDate: [moment().tz(tz).toDate()],
       subContractNumber: [null],

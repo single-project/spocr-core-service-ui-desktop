@@ -190,6 +190,12 @@
             </div>
           </div>
         </div>
+      </p-scrollPanel>
+    </p-tabPanel>
+    <p-tabPanel
+      header="Доп.соглашения"
+      leftIcon="fas fa-file-alt">
+      <p-scrollPanel [style]="{width: '100%', height: '400px'}">
         <div class="ui-g">
           <div class="ui-g-4">
             <button pButton
@@ -204,7 +210,7 @@
         <p-accordion formArrayName="subContracts">
           <p-accordionTab *ngFor="let item of subContracts.controls; let i = index;">
             <p-header>
-              <span>Суб-контракт {{i + 1}}</span>
+              <span>Доп.соглашениe {{i + 1}}</span>
               <i class="pi pi-trash"
                  style="float: right"
                  (click)="removeSubContract($event, i)">
@@ -218,15 +224,6 @@
                 <input class="ui-g-8" pInputText
                        id="subContractName{{i}}"
                        formControlName="name"
-                       autofocus/>
-              </div>
-              <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractContract{{i}}">КОНТРАКТ
-                </label>
-                <input class="ui-g-8" pInputText
-                       id="subContractContract{{i}}"
-                       formControlName="contract"
                        autofocus/>
               </div>
               <div class="ui-g-12">
@@ -295,6 +292,7 @@
             </div>
           </p-accordionTab>
         </p-accordion>
+
       </p-scrollPanel>
     </p-tabPanel>
   </p-tabView>
