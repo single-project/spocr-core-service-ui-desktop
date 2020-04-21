@@ -20,16 +20,16 @@ import {ShopDepartmentsDataTableComponent} from './components/shop-departments-d
 import {SalesChannelsDataTableComponent} from './components/sales-chanels-data-table/sales-channels-data-table.component';
 import {ShopSpecializationsDataTableComponent} from './components/shop-specializations-data-table/shop-specializations-data-table.component';
 import {ContractsDataTableComponent} from './components/contracts-data-table/contracts-data-table.component';
-import { SalesChannelsDialogComponent } from './components/sales-channels-dialog/sales-channels-dialog.component';
-import { OwnerDataTableComponent } from './components/owner-data-table/owner-data-table.component';
-import { ExtRegSystemDataTableComponent } from './components/ext-reg-system-data-table/ext-reg-system-data-table.component';
-import { ShopDepartsDialogComponent } from './components/shop-departs-dialog/shop-departs-dialog.component';
-import { ShopSpecializationDialogComponent } from './components/shop-specialization-dialog/shop-specialization-dialog.component';
-import { OwnerDialogComponent } from './components/owner-dialog/owner-dialog.component';
+import {SalesChannelsDialogComponent} from './components/sales-channels-dialog/sales-channels-dialog.component';
+import {OwnerDataTableComponent} from './components/owner-data-table/owner-data-table.component';
+import {ExtRegSystemDataTableComponent} from './components/ext-reg-system-data-table/ext-reg-system-data-table.component';
+import {ShopDepartsDialogComponent} from './components/shop-departs-dialog/shop-departs-dialog.component';
+import {ShopSpecializationDialogComponent} from './components/shop-specialization-dialog/shop-specialization-dialog.component';
+import {OwnerDialogComponent} from './components/owner-dialog/owner-dialog.component';
 import {ExtRegSystemDialogComponent} from './components/ext-reg-system-dialog/ext-reg-system-dialog.component';
-import { ContractsDialogComponent } from './components/contracts-dialog/contracts-dialog.component';
+import {ContractsDialogComponent} from './components/contracts-dialog/contracts-dialog.component';
 import {ScrollPanelModule} from 'primeng';
-
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -57,15 +57,16 @@ import {ScrollPanelModule} from 'primeng';
     ExtRegSystemDialogComponent,
     ContractsDialogComponent
   ],
-    imports: [
-        CommonModule,
-        MainPageRoutingModule,
-        LayoutModule,
-        SharedModule,
-        ReactiveFormsModule,
-        AutoCompleteModule,
-        ScrollPanelModule,
-    ]
+  imports: [
+    ConfirmDialogModule,
+    CommonModule,
+    MainPageRoutingModule,
+    LayoutModule,
+    SharedModule,
+    ReactiveFormsModule,
+    AutoCompleteModule,
+    ScrollPanelModule,
+  ]
 })
 export class MainPageModule {
 }

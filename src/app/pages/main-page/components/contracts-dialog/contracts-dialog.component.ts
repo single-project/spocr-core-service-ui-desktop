@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EntityCardModel} from '../../../../core/models/entity-card.model';
 import {ContractModel} from '../../../../core/models/global-reference.model';
 import {FormArray, FormBuilder, Validators} from '@angular/forms';
-import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
+import {ConfirmationService, DynamicDialogConfig, DynamicDialogRef} from 'primeng';
 import {MessageServiceFacadeService} from '../../../../core/services/message-service-facade.service';
 import {ContractService} from '../../../../core/services/contract.service';
 import moment from 'moment-timezone';
@@ -15,7 +15,8 @@ import {EnumerationService} from '../../../../core/services/enumeration.service'
 @Component({
   selector: 'app-contracts-dialog',
   templateUrl: './contracts-dialog.component.html',
-  styleUrls: ['./contracts-dialog.component.scss']
+  styleUrls: ['./contracts-dialog.component.scss'],
+  providers: [ConfirmationService]
 })
 export class ContractsDialogComponent extends EntityCardModel<ContractModel> implements OnInit {
 
@@ -26,6 +27,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   contractStatuses: any[] = [];
 
   constructor(
+    private confirmationService: ConfirmationService,
     private counterpartyService: CounterpartiesService,
     private enumerationService: EnumerationService,
     configService: ConfigService,
@@ -115,7 +117,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       counterparty1: [{...e['counterparty1']}, Validators.required],
       counterparty2: [{...e['counterparty2']}, Validators.required],
       subContracts: this.formBuilder.array(
-        e['subContracts'].map((subContract)=>(
+        e['subContracts'].map((subContract) => (
           this.formBuilder.group({
             active: [subContract.active],
             comment: [subContract.comment],
@@ -123,7 +125,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
             link: [subContract.link],
             name: [subContract.name],
             status: [subContract.status],
-            subContractDate: [ moment(subContract.subContractDate, 'YYYY-MM-DD').toDate()],
+            subContractDate: [moment(subContract.subContractDate, 'YYYY-MM-DD').toDate()],
             subContractNumber: [subContract.subContractNumber],
             version: [subContract.version]
           })
@@ -157,7 +159,18 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     $event.stopPropagation();
     $event.preventDefault();
     const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
-    paymentArray.removeAt(i);
+
+    this.confirmationService.confirm({
+      header: 'Предупреждение',
+      icon: 'pi pi-exclamation-triangle',
+      message: `Удалить "Доп.соглашениe ${i}"?`,
+      acceptLabel: 'Да',
+      rejectLabel: 'Нет',
+      accept: () => {
+        paymentArray.removeAt(i);
+      },
+      key: 'positionDialog',
+    });
   }
 
   instantiate(options?): ContractModel {
