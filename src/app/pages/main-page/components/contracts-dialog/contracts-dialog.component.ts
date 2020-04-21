@@ -148,7 +148,12 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       id: [null],
       link: [null],
       name: [null], // 'Описание' обязательно
-      status: [null],
+      status: [{
+        id: null,
+        name: null,
+        ident: null,
+        properties: null
+      }],
       subContractDate: [moment().tz(tz).toDate()],
       subContractNumber: [null],
       version: [0]

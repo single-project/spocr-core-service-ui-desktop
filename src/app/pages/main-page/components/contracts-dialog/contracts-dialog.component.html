@@ -235,10 +235,15 @@
                   </label>
                 </div>
                 <div class="ui-g-8">
-                  <input pInputText
-                         id="subContractStatus{{i}}"
-                         formControlName="status"
-                         autofocus/>
+                  <p-dropdown appendTo="body"
+                              id="subContractStatus{{i}}"
+                              [options]="contractStatuses"
+                              optionLabel="name"
+                              dataKey="id"
+                              placeholder="Выберите статус (обязательно)"
+                              formControlName="status"
+                              [filter]="true">
+                  </p-dropdown>
                 </div>
               </div>
               <div class="ui-g-12">
@@ -310,7 +315,6 @@
             </div>
           </p-accordionTab>
         </p-accordion>
-
       </p-scrollPanel>
     </p-tabPanel>
   </p-tabView>
