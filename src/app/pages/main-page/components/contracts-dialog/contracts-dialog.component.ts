@@ -124,6 +124,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   }
 
   addSubContract() {
+    const tz = this.configService.fetchDateTimeConfig().tz;
     const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
 
     paymentArray.push(this.formBuilder.group({
@@ -134,7 +135,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       link: [null],
       name: [null],
       status: [null],
-      subContractDate: [null],
+      subContractDate: [moment().tz(tz).toDate()],
       subContractNumber: [null],
       version: [0]
     }))
@@ -192,7 +193,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
           link: null,
           name: null,
           status: null,
-          subContractDate: null,
+          subContractDate: moment().tz(tz).toDate(),
           subContractNumber: null,
           version: 0
         }
