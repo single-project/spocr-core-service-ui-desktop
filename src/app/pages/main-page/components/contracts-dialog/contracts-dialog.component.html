@@ -204,10 +204,10 @@
         <p-accordion formArrayName="subContracts">
           <p-accordionTab *ngFor="let item of subContracts.controls; let i = index;">
             <p-header>
-              <span>Some card title</span>
+              <span>Суб-контракт {{i + 1}}</span>
               <i class="pi pi-trash"
                  style="float: right"
-                 (click)="removeSubContract($event)">
+                 (click)="removeSubContract($event, i)">
               </i>
             </p-header>
             <div class="ui-g" [formGroup]="subContracts.controls[i]">

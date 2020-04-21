@@ -140,9 +140,11 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     }))
   }
 
-  removeSubContract($event) {
+  removeSubContract($event, i) {
     $event.stopPropagation();
     $event.preventDefault();
+    const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
+    paymentArray.removeAt(i);
   }
 
   instantiate(options?): ContractModel {
