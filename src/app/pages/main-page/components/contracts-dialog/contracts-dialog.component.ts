@@ -137,6 +137,11 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     return this.entityDialogForm.get('subContracts') as FormArray;
   }
 
+  getSubContractName(item: any, index: number) {
+    const name = item.get('name').value ? item.get('name').value : `Доп.соглашениe * ${index + 1}`;
+    return name;
+  }
+
   addSubContract() {
     const tz = this.configService.fetchDateTimeConfig().tz;
     const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
