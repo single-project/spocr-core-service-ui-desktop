@@ -216,78 +216,96 @@
                  (click)="removeSubContract($event, i)">
               </i>
             </p-header>
-            <div class="ui-g" [formGroup]="subContracts.controls[i]">
+            <div class="ui-g ui-fluid" [formGroup]="subContracts.controls[i]">
               <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractName{{i}}">ИМЯ
-                </label>
-                <input class="ui-g-8" pInputText
-                       id="subContractName{{i}}"
-                       formControlName="name"
-                       autofocus/>
-              </div>
-              <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractStatus{{i}}">СТАТУС
-                </label>
-                <input class="ui-g-8" pInputText
-                       id="subContractStatus{{i}}"
-                       formControlName="status"
-                       autofocus/>
-              </div>
-              <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractComment{{i}}">КОММЕНТАРИЙ
-                </label>
-                <input class="ui-g-8" pInputText
-                       id="subContractComment{{i}}"
-                       formControlName="comment"
-                       autofocus/>
-              </div>
-              <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractLink{{i}}">ССЫЛКА
-                </label>
-                <input class="ui-g-8" pInputText
-                       id="subContractLink{{i}}"
-                       formControlName="link"
-                       autofocus/>
-              </div>
-              <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractActive{{i}}">АКТИВНЫЙ
-                </label>
+                <div class="ui-g-4">
+                  <label for="subContractName{{i}}">ИМЯ
+                  </label>
+                </div>
                 <div class="ui-g-8">
-                  <!--                  <p-checkbox-->
-                  <!--                    id="subContractActive{{i}}"-->
-                  <!--                    binary="true"-->
-                  <!--                    formControlName="active">-->
-                  <!--                  </p-checkbox>-->
+                  <input pInputText
+                         id="subContractName{{i}}"
+                         formControlName="name"
+                         autofocus/>
                 </div>
               </div>
               <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractDate{{i}}">ДАТА</label>
-                <p-calendar class="ui-g-8"
-                            id="subContractDate{{i}}"
-                            appendTo="body"
-                            formControlName="subContractDate"
-                            [monthNavigator]="true"
-                            [yearNavigator]="true"
-                            yearRange="1914:2114"
-                            dateFormat="dd/mm/yy"
-                            [locale]="calendarConf">
-                </p-calendar>
+                <div class="ui-g-4">
+                  <label for="subContractStatus{{i}}">СТАТУС
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractStatus{{i}}"
+                         formControlName="status"
+                         autofocus/>
+                </div>
               </div>
               <div class="ui-g-12">
-                <label class="ui-g-4"
-                       for="subContractNumber{{i}}">НОМЕР
-                </label>
-                <input class="ui-g-8"
-                       pInputText
-                       id="subContractNumber{{i}}"
-                       formControlName="subContractNumber"
-                       autofocus/>
+                <div class="ui-g-4">
+                  <label for="subContractComment{{i}}">КОММЕНТАРИЙ
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractComment{{i}}"
+                         formControlName="comment"
+                         autofocus/>
+                </div>
+              </div>
+              <div class="ui-g-12">
+                <div class="ui-g-4">
+                  <label for="subContractLink{{i}}">ССЫЛКА
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractLink{{i}}"
+                         formControlName="link"
+                         autofocus/>
+                </div>
+              </div>
+              <div class="ui-g-12">
+                <div class="ui-g-4">
+                  <label for="subContractActive{{i}}">АКТИВНЫЙ
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <p-checkbox
+                    id="subContractActive{{i}}"
+                    binary="true"
+                    formControlName="active">
+                  </p-checkbox>
+                </div>
+              </div>
+              <div class="ui-g-12">
+                <div class="ui-g-4">
+                  <label
+                    for="subContractDate{{i}}">ДАТА</label>
+                </div>
+                <div class="ui-g-8">
+                  <p-calendar id="subContractDate{{i}}"
+                              appendTo="body"
+                              formControlName="subContractDate"
+                              [monthNavigator]="true"
+                              [yearNavigator]="true"
+                              yearRange="1914:2114"
+                              dateFormat="dd/mm/yy"
+                              [locale]="calendarConf">
+                  </p-calendar>
+                </div>
+              </div>
+              <div class="ui-g-12">
+                <div class="ui-g-4">
+                  <label for="subContractNumber{{i}}">НОМЕР
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractNumber{{i}}"
+                         formControlName="subContractNumber"
+                         autofocus/>
+                </div>
               </div>
             </div>
           </p-accordionTab>
