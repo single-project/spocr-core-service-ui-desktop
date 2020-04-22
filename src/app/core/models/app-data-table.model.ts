@@ -122,6 +122,7 @@ export abstract class  AppDataTableModel<T> {
       data: {entity: item, entityKey: this.entityKey},
       header: header,
       width: '70%',
+      height: '600px'
     });
 
     ref.onClose.subscribe((e: boolean) => {
