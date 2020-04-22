@@ -5,6 +5,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MessageServiceFacadeService } from '../../../../core/services/message-service-facade.service';
 import { OwnerService } from '../../../../core/services/owner.service';
+import * as _ from 'lodash';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'app-owner-dialog',
@@ -25,31 +27,37 @@ export class OwnerDialogComponent extends EntityCardModel<OwnerModel> implements
   }
 
   buildFormGroup() {
-    let e;
-    if(this.entity){
-      e = this.entity
-    }else{
-      e = {} as OwnerModel
-    }
+    const e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
       name: [e.name, Validators.required],
       active: e.active,
       version: e.version,
       updatedFields: null,
-
     });
   }
 
   instantiate(options?): OwnerModel {
-    return { active: true} as OwnerModel;
+    return { active: true } as OwnerModel;
   }
 
   populateFormGroup() {
   }
-close(refresh?: boolean): void {
-  super.close(true);
+
+  formTransform(obj?: any): any {
+    if (obj['contacts']) {
+      const clonedObject = _.cloneDeep(obj);
+      console.dir(clonedObject);
+      clonedObject['contacts'].map(cp => {
+        console.dir(cp);
+        cp['person']['birthDate'] = moment(cp['person']['birthDate'], 'YYYY-MM-DD')
+          .utc()
+          .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+      });
+      return clonedObject;
+    }
+
+  }
 }
 
 
-}

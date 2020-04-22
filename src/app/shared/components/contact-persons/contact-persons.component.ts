@@ -4,6 +4,7 @@ import { forkJoin } from 'rxjs';
 import { PersonalRekvService } from '../../../core/services/personal-rekv.service';
 import { ConfigService } from '../../../core/services/config.service';
 import moment from 'moment-timezone';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-contact-persons',
@@ -27,10 +28,11 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    console.dir(this.parentEntity);
     this.loadAvailablePersonalData();
     this.loadConfig();
     this.addContatcs();
-    console.dir(this.parentEntity);
+
   }
 
   ngAfterViewInit(): void {
@@ -59,6 +61,7 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
   }
 
   addContatcs(): void {
+    console.log('Call addContacts');
     this.parentForm.addControl('contacts', this.formBuilder.array([]));
     const contacts = this.parentEntity['contacts'];
     if (!contacts) {
@@ -84,18 +87,20 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
     contacts.removeAt(index);
   }
 
-  pushContact(values?: any) {
+  pushContact(contactPerson?: any) {
+
+    console.log('Call pushContacts');
     const contactArray = this.parentForm.get('contacts') as FormArray;
-    if (values) {
-      console.log(`values: ${values['person']['name']}`);
-      values['person']['birthDate'] ? values['person']['birthDate'] = moment(values['person']['birthDate']).toDate() : moment().toDate();
-      values['person'] = this.formBuilder.group({ ...values['person'] });
-      const bd = values['person'].get('birthDate').value;
-      values['person'].patchValue({'birthDate': bd? moment(bd).toDate() : moment().toDate()});
+    if (contactPerson) {
+      const contactClone = _.cloneDeep(contactPerson);
+      contactClone['person']['birthDate'] ? contactClone['person']['birthDate'] = moment(contactClone['person']['birthDate']).toDate() : moment().toDate();
+      contactClone['person'] = this.formBuilder.group(contactClone['person']);
+      const bd = contactClone['person'].get('birthDate').value;
+      contactClone['person'].patchValue({ 'birthDate': bd ? moment(bd).toDate() : moment().toDate() });
       contactArray.push(this.formBuilder.group({
-        ...values
+        ...contactClone
       }));
-    } else if (!values) {
+    } else if (!contactPerson) {
       contactArray.push(this.formBuilder.group({
         id: null,
         version: null,
