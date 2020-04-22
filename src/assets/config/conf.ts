@@ -22,6 +22,11 @@ export class Conf {
   }
   private _CONTRACT_TYPE_URL = '/api/enumerations?ident=CONTRACT-TYPE';
   private _CONTRACT_STATUS_URL = '/api/enumerations?ident=CONTRACT-STATUS';
+  private _ROLES = '/api/contact-roles';
+
+  get ROLES(): string {
+    return this._ROLES;
+  }
 
   get LEGAL_TYPES_URL(): string {
     return this._LEGAL_TYPES_URL;
