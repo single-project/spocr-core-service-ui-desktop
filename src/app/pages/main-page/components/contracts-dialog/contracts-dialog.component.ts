@@ -173,7 +173,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     this.confirmationService.confirm({
       header: 'Предупреждение',
       icon: 'pi pi-exclamation-triangle',
-      message: `Удалить "Доп.соглашениe ${i}"?`,
+      message: `Удалить "${this.getSubContractName(paymentArray.controls[i], i)}"?`,
       acceptLabel: 'Да',
       rejectLabel: 'Нет',
       accept: () => {

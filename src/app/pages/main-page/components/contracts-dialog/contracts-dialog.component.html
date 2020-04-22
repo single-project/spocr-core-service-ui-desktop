@@ -312,6 +312,18 @@
                          autofocus/>
                 </div>
               </div>
+              <div class="ui-g-12">
+                <div class="ui-g-3">
+                  <button
+                    pButton
+                    type="button"
+                    label="Удалить Доп. соглашение"
+                    class="ui-button-danger"
+                    icon="pi pi-minus"
+                    (click)="removeSubContract($event, i)">
+                  </button>
+                </div>
+              </div>
             </div>
           </p-accordionTab>
         </p-accordion>
