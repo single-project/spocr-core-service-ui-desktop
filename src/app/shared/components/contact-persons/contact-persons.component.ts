@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { PersonalRekvService } from '../../../core/services/personal-rekv.service';
@@ -10,7 +10,7 @@ import moment from 'moment-timezone';
   templateUrl: './contact-persons.component.html',
   styleUrls: ['./contact-persons.component.scss']
 })
-export class ContactPersonsComponent implements OnInit {
+export class ContactPersonsComponent implements OnInit, AfterViewInit {
   @Input() public parentForm: FormGroup;
   @Input() formBuilder: FormBuilder;
   @Input() parentEntity: any;
@@ -23,6 +23,7 @@ export class ContactPersonsComponent implements OnInit {
   constructor(
     private personalService: PersonalRekvService,
     private config: ConfigService) {
+
   }
 
   ngOnInit(): void {
@@ -30,6 +31,10 @@ export class ContactPersonsComponent implements OnInit {
     this.loadConfig();
     this.addContatcs();
     console.dir(this.parentEntity);
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
 
@@ -46,6 +51,7 @@ export class ContactPersonsComponent implements OnInit {
         this.docTypes = data[1]['content'];
 
         this.genders = data[2]['content'];
+
         this.roles = data[3]['content'];
 
       })
@@ -54,17 +60,18 @@ export class ContactPersonsComponent implements OnInit {
 
   addContatcs(): void {
     this.parentForm.addControl('contacts', this.formBuilder.array([]));
-    if(!this.parentEntity['contacts']){
+    const contacts = this.parentEntity['contacts'];
+    if (!contacts) {
       this.pushContact();
-    }else if(this.parentEntity['contacts']){
-      this.parentEntity['contacts'].forEach(cp => {
+    }
+    if (contacts) {
+      contacts.forEach(cp => {
         this.pushContact(cp);
       })
     }
-
   }
 
-  loadConfig(): void{
+  loadConfig(): void {
     this.ruCalLocale = this.config.fetchCalendarConfig();
   }
 
@@ -80,8 +87,11 @@ export class ContactPersonsComponent implements OnInit {
   pushContact(values?: any) {
     const contactArray = this.parentForm.get('contacts') as FormArray;
     if (values) {
-      values['person']['birthDate']? values['person']['birthDate'] = moment( values['person']['birthDate']).toDate(): moment().toDate();
-      values['person'] = this.formBuilder.group({...values['person']});
+      console.log(`values: ${values['person']['name']}`);
+      values['person']['birthDate'] ? values['person']['birthDate'] = moment(values['person']['birthDate']).toDate() : moment().toDate();
+      values['person'] = this.formBuilder.group({ ...values['person'] });
+      const bd = values['person'].get('birthDate').value;
+      values['person'].patchValue({'birthDate': bd? moment(bd).toDate() : moment().toDate()});
       contactArray.push(this.formBuilder.group({
         ...values
       }));
@@ -91,7 +101,7 @@ export class ContactPersonsComponent implements OnInit {
         version: null,
         active: true,
         comment: '',
-        role:{
+        role: {
           id: null,
           version: null,
           active: true,
@@ -123,7 +133,7 @@ export class ContactPersonsComponent implements OnInit {
           gender: {
             id: null,
             name: '',
-            ident:'',
+            ident: '',
             properties: {}
           },
           email: ['', Validators.email],
@@ -131,7 +141,6 @@ export class ContactPersonsComponent implements OnInit {
         }),
       }));
     }
-
   }
 
   get contacts() {

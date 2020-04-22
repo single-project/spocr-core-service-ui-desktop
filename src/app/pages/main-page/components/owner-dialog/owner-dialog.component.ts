@@ -47,7 +47,9 @@ export class OwnerDialogComponent extends EntityCardModel<OwnerModel> implements
 
   populateFormGroup() {
   }
-
+close(refresh?: boolean): void {
+  super.close(true);
+}
 
 
 }
