@@ -2,7 +2,10 @@
 @import "~primeflex/primeflex.css";
 @import "~primeicons/primeicons.css";
 @import "~primeng/resources/primeng.min.css";
-@import "~primeng/resources/themes/nova-colored/theme.css";
+
+/* primeng serenity theme*/
+@import "assets/theme/theme-bluegrey.css";
+@import "assets/layout/css/layout-moody.css";
 
 .ui-dialog-titlebar-icon {
   float: right;
