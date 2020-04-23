@@ -81,17 +81,20 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   }
 
   formTransform(obj?: any): any {
-    const deepClone = cloneDeep(obj);
+    const contractClone = cloneDeep(obj);
 
-    deepClone['startDate'] = moment(deepClone['startDate'], 'YYYY-MM-DD')
-      .utc()
-      .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+    contractClone.startDate = moment(contractClone.startDate, 'YYYY-MM-DD')
+      .utc().format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
 
-    deepClone['endDate'] = moment(deepClone['endDate'], 'YYYY-MM-DD')
-      .utc()
-      .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+    contractClone.endDate = moment(contractClone.endDate, 'YYYY-MM-DD')
+      .utc().format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
 
-    return deepClone;
+    contractClone.subContracts.forEach((subContract) => {
+      subContract.subContractDate = moment(contractClone.endDate, 'YYYY-MM-DD')
+        .utc().format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+    });
+
+    return contractClone;
   }
 
   /**
@@ -110,8 +113,8 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       startDate: [moment(e['startDate'], 'YYYY-MM-DD').toDate()],
       comment: [e['comment']],
       contractNumber: [e['contractNumber'], Validators.required],
-      type: [{...e['type']}],
-      status: [{...e['status']}],
+      type: [{...e['type']}, Validators.required],
+      status: [{...e['status']}, Validators.required],
       commodityCredit: [e['commodityCredit']],
       autoprolongation: [e['autoprolongation']],
       counterparty1: [{...e['counterparty1']}, Validators.required],
@@ -121,11 +124,12 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
           this.formBuilder.group({
             active: [subContract.active],
             comment: [subContract.comment],
+            contract: [subContract.comment], // на форме не показывать
             id: [subContract.id],
             link: [subContract.link],
-            name: [subContract.name],
-            status: [subContract.status],
-            subContractDate: [moment(subContract.subContractDate, 'YYYY-MM-DD').toDate()],
+            name: [subContract.name, Validators.required],
+            status: [subContract.status, Validators.required],
+            subContractDate: [moment(subContract.subContractDate, 'YYYY-MM-DD').toDate(), Validators.required],
             subContractNumber: [subContract.subContractNumber],
             version: [subContract.version]
           })
@@ -147,12 +151,12 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
 
     paymentArray.push(this.formBuilder.group({
-      active: [false], // Доп.соглашения заголовок таба
-      comment: [null], // опционален
-      contract: [null], // убрать из формы
+      active: [false],
+      comment: [null],
+      contract: [null],
       id: [null],
       link: [null],
-      name: [null], // 'Описание' обязательно
+      name: [null],
       status: [{
         id: null,
         name: null,
@@ -191,7 +195,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       id: null,
       version: 0,
       active: true,
-      name: '',
+      name: null,
       link: null,
       endDate: moment().tz(tz).toDate(),
       startDate: moment().tz(tz).toDate(),

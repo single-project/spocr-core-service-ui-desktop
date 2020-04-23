@@ -5,7 +5,8 @@
       leftIcon="fas fa-file-alt">
       <p-scrollPanel [style]="{width: '100%', height: '400px'}">
         <div class="ui-g ui-fluid">
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['name'].validator}">
             <div class="ui-g-4">
               <label for="name">ИМЯ</label>
             </div>
@@ -23,7 +24,8 @@
               </p-message>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['link'].validator}">
             <div class="ui-g-4">
               <label for="link">ССЫЛКА</label>
             </div>
@@ -33,7 +35,8 @@
                      autofocus/>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['startDate'].validator}">
             <div class="ui-g-4">
               <label>ДАТА НАЧАЛА</label>
             </div>
@@ -48,7 +51,8 @@
                 [locale]="calendarConf"></p-calendar>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['endDate'].validator}">
             <div class="ui-g-4">
               <label>ДАТА ОКОНЧАНИЯ</label>
             </div>
@@ -63,7 +67,8 @@
                 [locale]="calendarConf"></p-calendar>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['comment'].validator}">
             <div class="ui-g-4">
               <label for="comment">КОММЕНТАРИЙ</label>
             </div>
@@ -73,7 +78,8 @@
                      autofocus/>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['contractNumber'].validator}">
             <div class="ui-g-4">
               <label for="comment">НОМЕР</label>
             </div>
@@ -91,7 +97,8 @@
               </p-message>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['type'].validator}">
             <div class="ui-g-4">
               <label for="type">ТИП</label>
             </div>
@@ -107,7 +114,8 @@
               </p-dropdown>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['status'].validator}">
             <div class="ui-g-4">
               <label for="status">СТАТУС</label>
             </div>
@@ -123,7 +131,8 @@
               </p-dropdown>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['commodityCredit'].validator}">
             <div class="ui-g-4">
               <label for="commodityCredit">РАССРОЧКА</label>
             </div>
@@ -134,7 +143,8 @@
                      autofocus/>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['autoprolongation'].validator}">
             <div class="ui-g-4">
               <label for="autoprolongation">АВТОПРОЛОНГАЦИЯ</label>
             </div>
@@ -145,7 +155,8 @@
                      autofocus/>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['counterparty1'].validator}">
             <div class="ui-g-4">
               <label for="counterparty1">КОНТРАГЕНТ1</label>
             </div>
@@ -161,7 +172,8 @@
               </p-dropdown>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['counterparty2'].validator}">
             <div class="ui-g-4">
               <label for="counterparty2">КОНТРАГЕНТ2</label>
             </div>
@@ -177,7 +189,8 @@
               </p-dropdown>
             </div>
           </div>
-          <div class="ui-g-12">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['active'].validator}">
             <div class="ui-g-4">
               <label for="active">АКТИВНЫЙ</label>
             </div>
@@ -217,7 +230,8 @@
               </i>
             </p-header>
             <div class="ui-g ui-fluid" [formGroup]="subContracts.controls[i]">
-              <div class="ui-g-12">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('name').validator}">
                 <div class="ui-g-4">
                   <label for="subContractName{{i}}">ИМЯ
                   </label>
@@ -229,7 +243,8 @@
                          autofocus/>
                 </div>
               </div>
-              <div class="ui-g-12">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('status').validator}">
                 <div class="ui-g-4">
                   <label for="subContractStatus{{i}}">СТАТУС
                   </label>
@@ -246,7 +261,8 @@
                   </p-dropdown>
                 </div>
               </div>
-              <div class="ui-g-12">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('comment').validator}">
                 <div class="ui-g-4">
                   <label for="subContractComment{{i}}">КОММЕНТАРИЙ
                   </label>
@@ -258,7 +274,8 @@
                          autofocus/>
                 </div>
               </div>
-              <div class="ui-g-12">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('link').validator}">
                 <div class="ui-g-4">
                   <label for="subContractLink{{i}}">ССЫЛКА
                   </label>
@@ -270,7 +287,8 @@
                          autofocus/>
                 </div>
               </div>
-              <div class="ui-g-12">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('active').validator}">
                 <div class="ui-g-4">
                   <label for="subContractActive{{i}}">АКТИВНЫЙ
                   </label>
@@ -283,7 +301,8 @@
                   </p-checkbox>
                 </div>
               </div>
-              <div class="ui-g-12">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('subContractDate').validator}">
                 <div class="ui-g-4">
                   <label
                     for="subContractDate{{i}}">ДАТА</label>
@@ -300,7 +319,8 @@
                   </p-calendar>
                 </div>
               </div>
-              <div class="ui-g-12">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('subContractNumber').validator}">
                 <div class="ui-g-4">
                   <label for="subContractNumber{{i}}">НОМЕР
                   </label>
