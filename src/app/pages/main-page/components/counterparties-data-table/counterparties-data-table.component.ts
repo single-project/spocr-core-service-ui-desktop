@@ -29,6 +29,7 @@ export class CounterpartiesDataTableComponent extends AppDataTableModel<Counterp
   }
 
   ngOnInit(): void {
+    this.entityKey = "counterparty";
     this.оnInit(
       AppTableTypes.COUNTER_PARTIES_TABLE_TYPE);
   }

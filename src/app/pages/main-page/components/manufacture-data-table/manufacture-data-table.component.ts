@@ -30,6 +30,7 @@ export class ManufactureDataTableComponent extends AppDataTableModel<Manufacture
   }
 
   ngOnInit(): void {
+    this.entityKey = "manufacturer";
     this.оnInit(
       AppTableTypes.MANUFACTURE_TABLE_TYPE);
   }

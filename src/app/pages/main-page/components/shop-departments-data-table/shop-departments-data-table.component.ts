@@ -28,6 +28,7 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel<Identif
   }
 
   ngOnInit(): void {
+    this.entityKey = "shop-depart";
     this.оnInit(
       AppTableTypes.SHOP_DEPARTMENTS_TABLE_TYPE);
   }

@@ -73,6 +73,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
   save(): void {
     if (this.entityDialogForm.invalid) {
       this.showFormValidationErrors();
+      return;
     }
 
     if (this.isNew()) {
@@ -106,7 +107,7 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
       const controlErrors: ValidationErrors = this.entityDialogForm.get(key).errors;
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
-          this.error(new ErrorModel(`Key control: ${key}, keyError: ${keyError} , err value: ${controlErrors[keyError]}`));
+          this.error(new ErrorModel(`Поле: ${this._messageService.getMessage(key)}, Ошибка: ${this._messageService.getMessage(keyError) }`));
         });
       }
     });
