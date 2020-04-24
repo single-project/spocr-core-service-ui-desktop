@@ -48,8 +48,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   }
 
   ngOnInit(): void {
-    this.calendarConf = this.configService
-      .fetchCalendarConfig('ru');
+    this.calendarConf = this.configService.getCalendarConfig();
 
     this.loadCounterPartiesList();
     this.loadContractTypes();
@@ -147,8 +146,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   }
 
   addSubContract() {
-    let dateTimeConfig = this.configService.fetchDateTimeConfig();
-    const tz = dateTimeConfig.tz;
+    const tz = this.configService.getDateTimeConfig().tz;
     const paymentArray = this.entityDialogForm.get('subContracts') as FormArray;
 
     paymentArray.push(this.formBuilder.group({
@@ -189,8 +187,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   }
 
   instantiate(options?): ContractModel {
-    let dateTimeConfig = this.configService.fetchDateTimeConfig();
-    const tz = dateTimeConfig.tz;
+    const tz = this.configService.getDateTimeConfig().tz;
 
     return {
       id: null,

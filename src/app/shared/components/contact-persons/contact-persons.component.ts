@@ -75,7 +75,7 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
   }
 
   loadConfig(): void {
-    this.ruCalLocale = this.config.fetchCalendarConfig();
+    this.ruCalLocale = this.config.getCalendarConfig();
   }
 
   insertContactDetail(): void {

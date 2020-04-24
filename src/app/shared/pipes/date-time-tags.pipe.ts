@@ -21,7 +21,7 @@ export class DateTimeTagsPipe implements PipeTransform {
    * @param args
    */
   transform(value: any, ...args: any[]): string {
-    let dateTimeConfig = this.configService;
+    let dateTimeConfig = this.configService.getDateTimeConfig();
     if(moment(value, moment.ISO_8601).isValid()) {
       return moment
         .tz(value,dateTimeConfig.tz)

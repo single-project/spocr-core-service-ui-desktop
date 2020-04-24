@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Conf} from '../../../assets/config/conf';
 import {Observable} from 'rxjs';
 import {map, publishReplay, refCount} from 'rxjs/operators';
+import {CalendarConfig, DateTimeConfig} from '../models/config.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,18 @@ export class ConfigService {
   private configSettings = new Conf();
   private shopUrl: string = this.configSettings.BASE_URL + this.configSettings.APP_SETTINGS_URL;
   private appConfigs: Observable<Object>;
+  private dateTimeConfig: DateTimeConfig;
+  private calendarConfig: CalendarConfig;
 
   constructor(private http: HttpClient) {
+  }
+
+  getDateTimeConfig(): DateTimeConfig {
+    return this.dateTimeConfig
+  }
+
+  getCalendarConfig(): CalendarConfig {
+    return this.calendarConfig
   }
 
   fetchAppSettings() {
@@ -21,6 +32,17 @@ export class ConfigService {
         publishReplay(1),
         refCount(),
       );
+
+      this.fetchDateTimeConfig()
+        .subscribe((dateTimeConfig) => {
+          this.dateTimeConfig = dateTimeConfig;
+        })
+
+      this.fetchCalendarConfig()
+        .subscribe((calendarConfig: CalendarConfig) => {
+          this.calendarConfig = calendarConfig;
+
+        })
     }
 
     return this.appConfigs;
@@ -87,7 +109,7 @@ export class ConfigService {
     );
   }
 
-  fetchDateTimeConfig() {
+  fetchDateTimeConfig(): Observable<DateTimeConfig> {
     return this.fetchAppSettings().pipe(
       map((data: any) => {
         return data.dateTimeConfig;
@@ -95,7 +117,7 @@ export class ConfigService {
     );
   }
 
-  fetchCalendarConfig(locale: string = 'ru') {
+  fetchCalendarConfig(locale: string = 'ru'): Observable<CalendarConfig> {
     return this.fetchAppSettings().pipe(
       map((data: any) => {
         return data.calendarConfiguration;

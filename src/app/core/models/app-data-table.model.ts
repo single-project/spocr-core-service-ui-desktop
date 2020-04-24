@@ -74,8 +74,7 @@ export abstract class  AppDataTableModel<T> {
     this.loading = true;
     this.аppTableTypes = аppTableTypes;
 
-    this.calendarConf = this.configService
-      .fetchCalendarConfig('ru');
+    this.calendarConf = this.configService.getCalendarConfig();
 
     this.loadTableHeaders(
       аppTableTypes);
