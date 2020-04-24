@@ -88,25 +88,18 @@ export class ConfigService {
   }
 
   fetchDateTimeConfig() {
-    return {
-      tz: 'Europe/Moscow',
-      format: 'DD.MM.YYYY',
-      locale: 'ru'
-    };
+    return this.fetchAppSettings().pipe(
+      map((data: any) => {
+        return data.dateTimeConfig;
+      }),
+    );
   }
 
   fetchCalendarConfig(locale: string = 'ru') {
-    return {
-      firstDayOfWeek: 0,
-      dayNames: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресение'],
-      dayNamesShort: ['Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт', 'Вск'],
-      dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-      monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-      monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-      today: 'Сегодня',
-      clear: 'Очист.',
-      dateFormat: 'dd.mm.yy',
-      weekHeader: 'Нед'
-    };
+    return this.fetchAppSettings().pipe(
+      map((data: any) => {
+        return data.calendarConfiguration;
+      }),
+    );
   }
 }
