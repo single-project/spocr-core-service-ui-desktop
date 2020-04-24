@@ -315,6 +315,12 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
         .utc()
         .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
     }
+    deepClone['contacts'].map(cp => {
+      console.dir(cp);
+      cp['person']['birthDate'] = moment(cp['person']['birthDate'], 'YYYY-MM-DD')
+        .utc()
+        .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+    });
     return deepClone;
   }
 

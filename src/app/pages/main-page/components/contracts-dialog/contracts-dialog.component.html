@@ -350,23 +350,15 @@
       </p-scrollPanel>
     </p-tabPanel>
   </p-tabView>
-  <p-footer>
-    <div>
-      <button type="button"
-              style="margin: 0 5px 0 5px"
-              class="ui-button-success"
-              pButton
-              icon="fa fa-check"
-              (click)="save()"
-              label="Сохранить">
-      </button>
-      <button type="button"
-              class="ui-button-secondary"
-              pButton icon="pi pi-times"
-              (click)="close(false)"
-              label="Отмена">
-      </button>
-    </div>
-  </p-footer>
+  <div class="ui-dialog-footer" [ngStyle]="{border: 'none'}">
+    <button type="button" class="ui-button-success" pButton
+            icon="fa fa-check"
+            (click)="save()"
+            label="Сохранить"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+            (click)="close(false)"
+            label="Отмена"></button>
+
+  </div>
   <p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [baseZIndex]="10000"></p-confirmDialog>
 </div>

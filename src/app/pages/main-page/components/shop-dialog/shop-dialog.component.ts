@@ -27,6 +27,8 @@ import {PersonalRekvService} from '../../../../core/services/personal-rekv.servi
 import {ManufactureService} from '../../../../core/services/manufacture.service';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
 import {MessageServiceFacadeService} from '../../../../core/services/message-service-facade.service';
+import * as _ from 'lodash';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'app-shop-dialog',
@@ -174,6 +176,20 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   populateFormGroup() {
+  }
+
+  formTransform(obj?: any): any {
+    if (obj['contacts']) {
+      const clonedObject = _.cloneDeep(obj);
+      clonedObject['contacts'].map(cp => {
+        console.dir(cp);
+        cp['person']['birthDate'] = moment(cp['person']['birthDate'], 'YYYY-MM-DD')
+          .utc()
+          .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
+      });
+      return clonedObject;
+    }
+
   }
 
 }

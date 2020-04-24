@@ -26,17 +26,17 @@
     </div>
   </p-tabPanel>
 </p-tabView>
-<p-footer>
-  <div class="ui-dialog-buttonpane ui-helper-clearfix">
 
-    <button type="button" class="ui-button-success" pButton icon="fa fa-check"
-            (click)="save()"
-            label="Сохранить"></button>
-    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
-            (click)="close(false)"
-            label="Отмена"></button>
-  </div>
-</p-footer>
+<div class="ui-dialog-footer" [ngStyle]="{border: 'none'}">
+  <button type="button" class="ui-button-success" pButton
+          icon="fa fa-check"
+          (click)="save()"
+          label="Сохранить"></button>
+  <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+          (click)="close(false)"
+          label="Отмена"></button>
+
+</div>
 
 
 

@@ -298,7 +298,12 @@
 
     </div>
   </p-tabPanel>
+  <p-tabPanel header="Конт. лица" leftIcon="fas fa-file-alt">
 
+
+    <app-contact-persons [formBuilder]="formBuilder" [parentForm]="entityDialogForm" [parentEntity]="entity"></app-contact-persons>
+
+  </p-tabPanel>
 
 </p-tabView>
 

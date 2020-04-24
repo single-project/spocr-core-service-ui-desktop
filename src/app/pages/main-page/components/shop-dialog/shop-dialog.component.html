@@ -164,18 +164,23 @@
       </ng-container>
     </div>
   </p-tabPanel>
-</p-tabView>
-<p-footer>
-  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+  <p-tabPanel header="Конт. лица" leftIcon="fas fa-file-alt">
 
-    <button type="button" class="ui-button-success" pButton icon="fa fa-check"
-            (click)="save()"
-            label="Сохранить"></button>
-    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
-            (click)="close(false)"
-            label="Отмена"></button>
-  </div>
-</p-footer>
+
+    <app-contact-persons [formBuilder]="formBuilder" [parentForm]="entityDialogForm" [parentEntity]="entity"></app-contact-persons>
+
+  </p-tabPanel>
+</p-tabView>
+<div class="ui-dialog-footer" [ngStyle]="{border: 'none'}">
+  <button type="button" class="ui-button-success" pButton
+          icon="fa fa-check"
+          (click)="save()"
+          label="Сохранить"></button>
+  <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+          (click)="close(false)"
+          label="Отмена"></button>
+
+</div>
 
 
 
