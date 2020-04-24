@@ -26,6 +26,7 @@ export class MessageServiceFacadeService {
 
     //401
     this.messagesMap.set("401", "Неправильное имя или пароль");
+    this.messagesMap.set("authorization-timed-out", "Истекло время авторизации. Повторите вход в программу...");
 
     //500
     this.messagesMap.set("500", "Что-то пошло не так...Обратитесь к администратору");

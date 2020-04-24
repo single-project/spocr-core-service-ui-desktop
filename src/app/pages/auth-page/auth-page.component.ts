@@ -57,11 +57,11 @@ export class AuthPageComponent implements OnInit {
       this.auth.login(this.username, this.password).subscribe((resp: AuthModel) => {
         let jwt: JwtModel = AuthPageComponent.parseToken(resp.token);
         this.sessionStorage.setItem('auth_token', resp.token);
-        this.authorized = true;
+        this.auth.authorized = true;
         this.router.navigate(['/', 'main'])
       }, error => {
-        this.authorized = false;
-        this.cookies.delete('auth_token');
+        this.auth.authorized = false;
+        this.sessionStorage.delete('auth_token');
         this.onError(error.status);
 
       });

@@ -5,6 +5,7 @@ import {catchError} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {AuthInterceptorService} from "./auth-interceptor.service";
 import {AuthService} from "./auth.service";
+import {MessageServiceFacadeService} from "./message-service-facade.service";
 
 
 @Injectable({
@@ -12,7 +13,7 @@ import {AuthService} from "./auth.service";
 })
 export class HttpErrorHandlerService implements HttpInterceptor {
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private messageService: MessageServiceFacadeService) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -23,7 +24,14 @@ export class HttpErrorHandlerService implements HttpInterceptor {
         error.status = 501;
       }
       if (error.status === 401) {
-        this.authService.logout();
+
+        if (this.authService.authorized) {
+          this.messageService.showErrMsg("authorization-timed-out");
+          this.authService.logout();
+          location.reload(true);
+        } else {
+          this.messageService.showErrMsg("401");
+        }
       }
       return throwError(error);
     }));

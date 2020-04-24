@@ -21,11 +21,12 @@ export class DateTimeTagsPipe implements PipeTransform {
    * @param args
    */
   transform(value: any, ...args: any[]): string {
+    let dateTimeConfig = this.configService;
     if(moment(value, moment.ISO_8601).isValid()) {
       return moment
-        .tz(value,this.configService.fetchDateTimeConfig().tz)
-        .locale(this.configService.fetchDateTimeConfig().locale)
-        .format(this.configService.fetchDateTimeConfig().format);
+        .tz(value,dateTimeConfig.tz)
+        .locale(value,dateTimeConfig.locale)
+        .format(value,dateTimeConfig.format);
     } else {
       return value
     }
