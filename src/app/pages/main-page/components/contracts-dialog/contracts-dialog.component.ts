@@ -79,6 +79,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     });
   }
 
+  //TODO вынести в конфиг формат даты, UTC
   formTransform(obj?: any): any {
     const contractClone = cloneDeep(obj);
 
@@ -100,6 +101,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
    * [reactive-forms](https://angular.io/guide/reactive-forms)<br/>
    * [reactive-form-validation](https://angular.io/guide/form-validation#reactive-form-validation)
    */
+  //TODO вынести в конфиг формат даты
   buildFormGroup() {
     let e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
@@ -141,8 +143,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
   }
 
   getSubContractName(item: any, index: number) {
-    const name = item.get('name').value ? item.get('name').value : `Доп.соглашениe * ${index + 1}`;
-    return name;
+    return item.get('name').value ? item.get('name').value : `Доп.соглашениe * ${index + 1}`;
   }
 
   addSubContract() {

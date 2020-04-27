@@ -44,6 +44,7 @@ export class OwnerDialogComponent extends EntityCardModel<OwnerModel> implements
   populateFormGroup() {
   }
 
+  //TODO вынести в конфиг формат даты, UTC
   formTransform(obj?: any): any {
     if (obj['contacts']) {
       const clonedObject = _.cloneDeep(obj);

@@ -18,7 +18,7 @@ export abstract class  AppDataTableModel<T> {
   loading: boolean;
   calendarConf: any;
   entityKey: string;
-  аppTableTypes: AppTableTypes;
+  appTableTypes: AppTableTypes;
   calendarVal: any;
   sortField: string;
   sortOrder: number;
@@ -70,14 +70,14 @@ export abstract class  AppDataTableModel<T> {
       'default', this.tableDataService);
   }
 
-  оnInit(аppTableTypes: AppTableTypes): void {
+  onInit(appTableTypes: AppTableTypes): void {
     this.loading = true;
-    this.аppTableTypes = аppTableTypes;
+    this.appTableTypes = appTableTypes;
 
     this.calendarConf = this.configService.getCalendarConfig();
 
     this.loadTableHeaders(
-      аppTableTypes);
+      appTableTypes);
 
     this.initColumnFilter(() => {
       return []
@@ -108,6 +108,7 @@ export abstract class  AppDataTableModel<T> {
   /**
    * Открывает динамическое диалоговое окно
    * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
+   * @param dt - код таблицы
    * @param item
    */
   onItemCreate(dt: Table, item?): void {
@@ -121,15 +122,11 @@ export abstract class  AppDataTableModel<T> {
       data: {entity: item, entityKey: this.entityKey},
       header: header,
       width: '70%',
-
     });
 
     ref.onClose.subscribe((e: boolean) => {
       if (e) {
-        console.log("need to refresh page");
         dt.filter(null, 'dialog', null);
-      } else {
-        console.log("no need to refresh page");
       }
     });
   }
@@ -225,6 +222,7 @@ export abstract class  AppDataTableModel<T> {
    * @param {number} index
    * @param fieldId
    * @param matchMode
+   * @param field - ссылка на элемент
    * @returns {void} no return value
    */
   cleanFilter(dt: Table, index: number, fieldId: string, matchMode: string, field?: any) {
@@ -281,11 +279,11 @@ export abstract class  AppDataTableModel<T> {
    * @returns {string} - ISO8601 date string [moment ISO8601](https://momentjs.com/docs/#/parsing/string/)
    *
    */
+  //TODO: вынести в конфиг формат даты, UTC
   dateFormat(date: string): string{
     let datePart = moment(date, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ss');
     let tzPart = ' UTC';
-    let val = `${datePart}${tzPart}`;
-    return val;
+    return `${datePart}${tzPart}`;
   }
 
   filterSearch(event, fieldName: string): void {

@@ -117,7 +117,7 @@ export class ConfigService {
     );
   }
 
-  fetchCalendarConfig(locale: string = 'ru'): Observable<CalendarConfig> {
+  fetchCalendarConfig(): Observable<CalendarConfig> {
     return this.fetchAppSettings().pipe(
       map((data: any) => {
         return data.calendarConfiguration;

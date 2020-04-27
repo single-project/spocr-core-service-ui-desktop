@@ -28,7 +28,7 @@ export class ShopSpecializationsDataTableComponent extends AppDataTableModel<Sho
 
   ngOnInit(): void {
     this.entityKey = "shop-specialization";
-    this.оnInit(
+    this.onInit(
       AppTableTypes.SHOP_SPECIALIZATIONS_TABLE_TYPE);
   }
 }

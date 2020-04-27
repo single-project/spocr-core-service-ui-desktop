@@ -28,7 +28,7 @@ export class SalesChannelsDataTableComponent extends AppDataTableModel<SalesChan
 
   ngOnInit(): void {
     this.entityKey = "sales-channel";
-    this.оnInit(
+    this.onInit(
       AppTableTypes.SALES_CHANELS_TABLE_TYPE);
   }
 }

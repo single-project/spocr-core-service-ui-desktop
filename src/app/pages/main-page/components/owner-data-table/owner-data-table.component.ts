@@ -28,7 +28,7 @@ export class OwnerDataTableComponent extends AppDataTableModel<OwnerModel> imple
 
   ngOnInit(): void {
     this.entityKey = "owner";
-    this.оnInit(
+    this.onInit(
       AppTableTypes.OWNER_TABLE_TYPE);
   }
 

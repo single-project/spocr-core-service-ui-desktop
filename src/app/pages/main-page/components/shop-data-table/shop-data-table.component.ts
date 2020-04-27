@@ -31,7 +31,7 @@ export class ShopDataTableComponent extends AppDataTableModel<ShopModel> impleme
 
   ngOnInit() {
     this.entityKey = "shop";
-    this.оnInit(
+    this.onInit(
       AppTableTypes.SHOP_TABLE_TYPE);
   }
 }

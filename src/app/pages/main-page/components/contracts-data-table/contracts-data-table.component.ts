@@ -28,7 +28,7 @@ export class ContractsDataTableComponent extends AppDataTableModel<ContractModel
 
   ngOnInit(): void {
     this.entityKey = "contract";
-    this.оnInit(
+    this.onInit(
       AppTableTypes.CONTRACTS_TABLE_TYPE);
   }
 }

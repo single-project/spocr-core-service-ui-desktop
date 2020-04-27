@@ -28,7 +28,7 @@ export class ExtRegSystemDataTableComponent extends AppDataTableModel<ExtRegSyst
 
   ngOnInit(): void {
     this.entityKey = "ext-system";
-    this.оnInit(
+    this.onInit(
       AppTableTypes.EXT_REG_SYSTEM_TABLE_TYPE);
   }
 

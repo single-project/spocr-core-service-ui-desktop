@@ -19,13 +19,4 @@ export class ShopsService extends IdentifiedEntityService<ShopModel> {
     configService.fetchDataTypeEndpointURL(AppTableTypes.SHOP_TABLE_TYPE).subscribe(d => this.config.url = d.url)
   }
 
-
-  editItem(updateData: ShopModel, id: number): Observable<any> {
-    return this.patch(updateData);
-  }
-
-  newItem(shopData: ShopModel): Observable<any> {
-    return this.post(shopData)
-  }
-
 }

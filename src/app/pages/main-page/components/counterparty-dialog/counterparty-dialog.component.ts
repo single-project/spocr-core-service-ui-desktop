@@ -308,6 +308,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.removePersonRekv();
   }
 
+  //TODO вынести в конфиг формат даты, UTC
   formTransform(obj?: any): any {
     const deepClone = cloneDeep(obj);
     if (obj['personRekv']) {
