@@ -1,25 +1,6 @@
-.cell-active {
-  background: green;
-  color: white;
-  padding: 0 8px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  border-radius: 6px;
-}
-
-.cell-passive {
-  background: red;
-  color: white;
-  padding: 0 8px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  border-radius: 6px;
-}
-
-
 .clean-filter-button {
   margin-top: 7px;
-  color: darkred;
+  color: darkred !important;
 
   &:hover {
     cursor: pointer;
@@ -28,7 +9,7 @@
 
 .calendar-filter-button {
   margin-top: 7px;
-  color: darkblue;
+  color: #607D8B !important;
 
   &:hover {
     cursor: pointer;

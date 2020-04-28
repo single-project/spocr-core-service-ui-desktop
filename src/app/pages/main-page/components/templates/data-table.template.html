@@ -19,15 +19,15 @@
                let-rowData>
     <div style="text-align:left"
          class="p-align-center">
-      <p-multiSelect (onChange)="columnsChange()"
-                     [options]="cols"
-                     [(ngModel)]="selectedCols"
-                     optionLabel="header"
-                     selectedItemsLabel="{0} колонок выбрано"
-                     [style]="{minWidth: '200px'}"
-                     defaultLabel="Выбрать колонки">
+      <p-multiSelect
+        (onChange)="columnsChange()"
+        [options]="cols"
+        [(ngModel)]="selectedCols"
+        optionLabel="header"
+        selectedItemsLabel="{0} колонок выбрано"
+        [style]="{minWidth: '200px'}"
+        defaultLabel="Выбрать колонки">
       </p-multiSelect>
-
       <button (click)="onItemCreate(dt)"
               style="margin-left: 1em; top: -10px"
               type="button"
@@ -53,66 +53,76 @@
               label="Очистить фильтры">
       </button>
     </div>
-
   </ng-template>
-  <ng-template pTemplate="header"
-               let-columns>
+  <ng-template
+    pTemplate="header"
+    let-columns>
     <tr>
-      <th *ngFor="let col of columns"
-          [pSortableColumn]="col.field">
+      <th
+        *ngFor="let col of columns"
+        [pSortableColumn]="col.field">
         {{col.header}}
-        <p-sortIcon [field]="col.field"
-                    ariaLabel="Activate to sort"
-                    ariaLabelDesc="Activate to sort in descending order"
-                    ariaLabelAsc="Activate to sort in ascending order">
+        <p-sortIcon
+          [field]="col.field"
+          ariaLabel="Activate to sort"
+          ariaLabelDesc="Activate to sort in descending order"
+          ariaLabelAsc="Activate to sort in ascending order">
         </p-sortIcon>
       </th>
     </tr>
     <tr [hidden]="!isFilterShown">
-      <th *ngFor="let col of columns; let i = index">
-        <div class="ui-inputgroup">
-          <span *ngIf="['startDate', 'endDate'].includes(col.field)"
-                class="ui-inputgroup-addon">
+      <th
+        *ngFor="let col of columns; let i = index">
+        <div
+          class="ui-g"
+          *ngIf="['startDate', 'endDate'].includes(col.field)">
+          <div class="ui-g-2">
             <i class="pi pi-calendar calendar-filter-button"
                (click)="openCalendar(calendar)">
             </i>
-            <p-calendar #calendar
-                        [(ngModel)]="calendarVal"
-                        (onSelect)="onDateSelect(dt, $event, col)"
-                        [inputStyle]="{'width': '0','padding': '0','height': '0', 'border': '0'}"
-                        [style]="{'position': 'fixed'}"
-                        [locale]="calendarConf"
-                        dateFormat="dd/mm/yy"
-                        appendTo="body">
+            <p-calendar
+              #calendar
+              [(ngModel)]="calendarVal"
+              (onSelect)="onDateSelect(dt, $event, col)"
+              [inputStyle]="{'width': '0','padding': '0','height': '0', 'border': '0'}"
+              [style]="{'position': 'fixed'}"
+              [locale]="calendarConf"
+              dateFormat="dd/mm/yy"
+              appendTo="body">
             </p-calendar>
-          </span>
-          <p-inputMask class="ui-inputgroup-addon"
-                       *ngIf="['startDate', 'endDate'].includes(col.field)"
-                       [style]="{'width':'100%'}"
-                       [(ngModel)]="col.val"
-                       mask="99/99/9999"
-                       placeholder="dd/mm/yyyy"
-                       slotChar="dd/mm/yyyy"
-                       (onComplete)="dt.filter({id: -1, name: dateFormat(col.val)}, col.field, 'contains');">
+          </div>
+          <p-inputMask
+            class="ui-g-8 ui-fluid"
+            [style]="{'color': 'black','background-image':'linear-gradient(to bottom, #607D8B, #607D8B), linear-gradient(to bottom, #bdbdbd, #bdbdbd)'}"
+            [(ngModel)]="col.val"
+            mask="99/99/9999"
+            placeholder="dd/mm/yyyy"
+            slotChar="dd/mm/yyyy"
+            (onComplete)="dt.filter({id: -1, name: dateFormat(col.val)}, col.field, 'contains');">
           </p-inputMask>
-          <span *ngIf="['startDate', 'endDate'].includes(col.field)"
-                class="ui-inputgroup-addon">
-            <i class="pi pi-times clean-filter-button"
-               (click)="cleanFilter(dt, i, col.field, 'contains', col)">
-            </i>
+          <span
+            class="ui-g-2">
+              <i class="pi pi-times clean-filter-button"
+                 (click)="cleanFilter(dt, i, col.field, 'contains', col)">
+              </i>
           </span>
-          <p-autoComplete class="ui-inputgroup-addon table-filter"
-                          *ngIf="!['startDate', 'endDate'].includes(col.field)"
-                          [inputStyle]="{'width':'100%'}"
-                          [suggestions]="searchItems"
-                          field="name"
-                          (onSelect)="dt.filter($event, col.field, 'contains')"
-                          (keydown.enter)="dt.filter({id: -1, name: $event.target.value}, col.field, 'contains');searchItems = []"
-                          (completeMethod)="filterSearch($event, col.field)"
-                          appendTo="body">
+        </div>
+        <div
+          class="ui-g"
+          *ngIf="!['startDate', 'endDate'].includes(col.field)">
+          <p-autoComplete
+            class="ui-g-10 ui-fluid"
+            [inputStyle]="{'color': 'black','background-image':'linear-gradient(to bottom, #607D8B, #607D8B), linear-gradient(to bottom, #bdbdbd, #bdbdbd)'}"
+            [suggestions]="searchItems"
+            placeholder="Найти"
+            field="name"
+            (onSelect)="dt.filter($event, col.field, 'contains')"
+            (keydown.enter)="dt.filter({id: -1, name: $event.target.value}, col.field, 'contains');searchItems = []"
+            (completeMethod)="filterSearch($event, col.field)"
+            appendTo="body">
           </p-autoComplete>
-          <span *ngIf="!['startDate', 'endDate'].includes(col.field)"
-                class="ui-inputgroup-addon">
+          <span
+            class="ui-g-2">
             <i class="pi pi-times clean-filter-button"
                (click)="cleanFilter(dt, i, col.field, 'contains')">
             </i>
@@ -121,22 +131,24 @@
       </th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body"
-               let-dataItem
-               let-columns="columns"
-               let-rowData>
+  <ng-template
+    pTemplate="body"
+    let-dataItem
+    let-columns="columns"
+    let-rowData>
     <tr [pSelectableRow]="rowData">
       <td *ngFor="let col of columns"
           style="text-align: center">
         <span
-              [ngClass]="{'cell-active': col.field === 'active' && dataItem[col.field], 'cell-passive': col.field === 'active' && !dataItem[col.field]}">
+          [ngClass]="{'cell-active': col.field === 'active' && dataItem[col.field], 'cell-passive': col.field === 'active' && !dataItem[col.field]}">
           {{dataItem[col.field] | activeTags | nameTags | dateTimeTags  }}
         </span>
       </td>
     </tr>
   </ng-template>
-  <ng-template pTemplate="summary"
-               let-rowData>
+  <ng-template
+    pTemplate="summary"
+    let-rowData>
     Всего {{dataItems?.length}} объектов
   </ng-template>
 </p-table>

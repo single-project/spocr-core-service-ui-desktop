@@ -5,7 +5,7 @@ import {DialogService, MessageService} from 'primeng';
 import {ConfigService} from '../../../../core/services/config.service';
 import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {ExtRegSystemService} from '../../../../core/services/ext-reg-system.service';
-import {ExtRegSystemDialogComponent} from "../ext-reg-system-dialog/ext-reg-system-dialog.component";
+import {ExtRegSystemDialogComponent} from '../ext-reg-system-dialog/ext-reg-system-dialog.component';
 
 @Component({
   selector: 'app-ext-reg-system-data-table',
