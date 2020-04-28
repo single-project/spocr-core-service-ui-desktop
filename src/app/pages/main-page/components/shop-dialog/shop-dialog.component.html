@@ -12,6 +12,20 @@
           <p-message severity="error" text="Имя должно быть заполнено"
                      *ngIf="!entityDialogForm.controls['name'].valid&&entityDialogForm.controls['name'].dirty"></p-message>
         </div>
+        <div class="ui-g-4">
+          <label>ПРОИЗВОДИТЕЛИ</label>
+        </div>
+        <div  class="ui-g-8">
+          <p-multiSelect appendTo="body"
+                      [options]="manufacturerList"
+                      optionLabel="name"
+                      dataKey="id"
+                      defaultLabel="Выберите производителя (обязательно)"
+                      formControlName="manufacturers"
+                      [filter]="true">
+          </p-multiSelect>
+
+        </div>
       </div>
       <div class="ui-g-12">
         <div class="ui-g-4">
@@ -29,7 +43,6 @@
           </p-dropdown>
 
         </div>
-
       </div>
       <div class="ui-g-12">
         <div class="ui-g-4">

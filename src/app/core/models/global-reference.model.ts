@@ -258,6 +258,7 @@ export interface ShopModel extends BaseIdentifiedEntity {
   salesChannels?: SalesChannelModel[];
   shopDeparts?: ShopDepartModel[];
   shopSpecializations?: ShopSpecializationModel[];
+  manufacturers?: []
 }
 
 
