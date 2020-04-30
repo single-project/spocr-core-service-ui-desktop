@@ -31,12 +31,12 @@ import {
 import {ActiveTagsPipe} from './pipes/active-tags.pipe';
 import {NgxDadataModule} from '@kolkov/ngx-dadata';
 import {DadataAddressComponent} from './components/dadata-address/dadata-address.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule} from '@angular/forms';
 import {DadataPartyComponent} from './components/dadata-party/dadata-party.component';
 import {DadataFioComponent} from './components/dadata-fio/dadata-fio.component';
 import { AddRequisiteButtonComponent } from './components/add-requisite-button/add-requisite-button.component';
-import {NameTagsPipe} from "./pipes/name-tags.pipe";
-import {DateTimeTagsPipe} from "./pipes/date-time-tags.pipe";
+import {NameTagsPipe} from './pipes/name-tags.pipe';
+import {DateTimeTagsPipe} from './pipes/date-time-tags.pipe';
 import { ContactPersonsComponent } from './components/contact-persons/contact-persons.component';
 
 @NgModule({

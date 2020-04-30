@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { PersonalRekvService } from '../../../core/services/personal-rekv.service';
@@ -24,7 +24,6 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
   constructor(
     private personalService: PersonalRekvService,
     private config: ConfigService) {
-
   }
 
   ngOnInit(): void {
@@ -32,13 +31,11 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
     this.loadAvailablePersonalData();
     this.loadConfig();
     this.addContatcs();
-
   }
 
   ngAfterViewInit(): void {
 
   }
-
 
   loadAvailablePersonalData(): void {
     forkJoin([
@@ -48,29 +45,28 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
       this.personalService.fetchRoles()])
 
       .subscribe(data => {
-        this.citizenship = data[0]['content'];
+        this.citizenship = data[0].content;
 
-        this.docTypes = data[1]['content'];
+        this.docTypes = data[1].content;
 
-        this.genders = data[2]['content'];
+        this.genders = data[2].content;
 
-        this.roles = data[3]['content'];
+        this.roles = data[3].content;
 
-      })
-
+      });
   }
 
   addContatcs(): void {
     console.log('Call addContacts');
     this.parentForm.addControl('contacts', this.formBuilder.array([]));
-    const contacts = this.parentEntity['contacts'];
+    const contacts = this.parentEntity.contacts;
     if (!contacts) {
       this.pushContact();
     }
     if (contacts) {
       contacts.forEach(cp => {
         this.pushContact(cp);
-      })
+      });
     }
   }
 
@@ -93,10 +89,18 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
     const contactArray = this.parentForm.get('contacts') as FormArray;
     if (contactPerson) {
       const contactClone = _.cloneDeep(contactPerson);
-      contactClone['person']['birthDate'] ? contactClone['person']['birthDate'] = moment(contactClone['person']['birthDate']).toDate() : moment().toDate();
-      contactClone['person'] = this.formBuilder.group(contactClone['person']);
-      const bd = contactClone['person'].get('birthDate').value;
-      contactClone['person'].patchValue({ 'birthDate': bd ? moment(bd).toDate() : moment().toDate() });
+
+      contactClone.person.birthDate ?
+        contactClone.person.birthDate = moment(contactClone.person.birthDate).toDate() :
+        moment().toDate();
+
+      contactClone.person = this.formBuilder.group(contactClone.person);
+
+      const bd = contactClone.person.get('birthDate').value;
+
+      contactClone.person.patchValue({
+        birthDate: bd ? moment(bd).toDate() : moment().toDate()
+      });
       contactArray.push(this.formBuilder.group({
         ...contactClone
       }));
@@ -128,7 +132,12 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
             properties: {}
           },
           docSeriesNumber: '',
-          inn: ['', Validators.compose([Validators.maxLength(12), Validators.minLength(12)])],
+          inn: ['', Validators.compose(
+            [
+              Validators.maxLength(12),
+              Validators.minLength(12)
+            ])
+          ],
           citizenship: {
             id: null,
             name: '',
@@ -153,7 +162,7 @@ export class ContactPersonsComponent implements OnInit, AfterViewInit {
   }
 
   getContactName(contact: any): string {
-    return `${contact.get('person').value['name']} / ${contact.get('role').value['name']}`;
+    return `${contact.get('person').value.name} / ${contact.get('role').value.name}`;
   }
 
 }

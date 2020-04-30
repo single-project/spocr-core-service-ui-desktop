@@ -1,4 +1,4 @@
-import {RoleModel} from "./role.model";
+import {RoleModel} from './role.model';
 
 export interface AuthModel {
   token: string;

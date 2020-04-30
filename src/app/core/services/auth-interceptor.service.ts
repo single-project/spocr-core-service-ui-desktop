@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { CookieService } from "ngx-cookie-service";
-import { SESSIONSTORAGE_TOKEN } from "../models/session-storage.token";
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { SESSIONSTORAGE_TOKEN } from '../models/session-storage.token';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -15,16 +15,14 @@ export class AuthInterceptorService implements HttpInterceptor {
     const dadataURL = /suggestions/gi;
     let token = '';
     if (req.url.search(dadataURL) === -1) {
-      token = `Bearer ${this.sessionStorage.getItem('auth_token')}`
+      token = `Bearer ${this.sessionStorage.getItem('auth_token')}`;
     } else {
-      token = `Token 23c98edeae3d036484034a201a493bb418139a7c`
+      token = `Token 23c98edeae3d036484034a201a493bb418139a7c`;
     }
 
     const authReq = req.clone({
       headers: req.headers.set('Authorization', token),
-
     });
     return next.handle(authReq);
   }
-
 }

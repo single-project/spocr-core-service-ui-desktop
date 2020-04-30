@@ -1,5 +1,3 @@
-import {IdentifiedEntity} from "./identified.entity";
-
 export interface ReferenceResponseModel<T> {
   content: T[];
   pageable?: {};

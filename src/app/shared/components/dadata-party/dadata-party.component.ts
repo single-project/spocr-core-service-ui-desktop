@@ -1,8 +1,8 @@
-import {Component, Inject, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {DadataService} from "../../../core/services/dadata.service";
-import {FormGroup} from "@angular/forms";
-import {PartySuggestion} from "../../../core/models/suggestion-party.model";
-import {tap} from "rxjs/operators";
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {DadataService} from '../../../core/services/dadata.service';
+import {FormGroup} from '@angular/forms';
+import {PartySuggestion} from '../../../core/models/suggestion-party.model';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dadata-party',
@@ -44,13 +44,13 @@ export class DadataPartyComponent implements OnInit, OnChanges {
         kpp: e.data.kpp,
         suggestion: e,
       }
-    })
+    });
   }
 
   find(e: any) {
     this.dadata.partySuggest(e.query).pipe(
       tap(su => this.suggestions = su),
-    ).subscribe(v => this.results = v)
+    ).subscribe(v => this.results = v);
   }
 
 

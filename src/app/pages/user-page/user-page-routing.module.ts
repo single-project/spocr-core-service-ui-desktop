@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {RouterModule, Routes} from "@angular/router";
-import {UserPageComponent} from "./user-page.component";
+import {RouterModule, Routes} from '@angular/router';
+import {UserPageComponent} from './user-page.component';
 
-const routes: Routes =[
+const routes: Routes = [
   {path: '', component: UserPageComponent}
 ];
 

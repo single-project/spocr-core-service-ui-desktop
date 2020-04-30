@@ -44,7 +44,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       contractService,
       messageService,
       configService
-    )
+    );
   }
 
   ngOnInit(): void {
@@ -79,7 +79,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
     });
   }
 
-  //TODO вынести в конфиг формат даты, UTC
+  // TODO вынести в конфиг формат даты, UTC
   formTransform(obj?: any): any {
     const contractClone = cloneDeep(obj);
 
@@ -101,27 +101,27 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
    * [reactive-forms](https://angular.io/guide/reactive-forms)<br/>
    * [reactive-form-validation](https://angular.io/guide/form-validation#reactive-form-validation)
    */
-  //TODO вынести в конфиг формат даты
+  // TODO вынести в конфиг формат даты
   buildFormGroup() {
-    let e = this.entity;
+    const e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
-      id: [e['id']],
-      version: [e['version']],
-      active: [e['active']],
-      name: [e['name'], Validators.required],
-      link: [e['link']],
-      endDate: [moment(e['endDate'], 'YYYY-MM-DD').toDate()],
-      startDate: [moment(e['startDate'], 'YYYY-MM-DD').toDate()],
-      comment: [e['comment']],
-      contractNumber: [e['contractNumber'], Validators.required],
-      type: [{...e['type']}, Validators.required],
-      status: [{...e['status']}, Validators.required],
-      commodityCredit: [e['commodityCredit']],
-      autoprolongation: [e['autoprolongation']],
-      counterparty1: [{...e['counterparty1']}, Validators.required],
-      counterparty2: [{...e['counterparty2']}, Validators.required],
+      id: [e.id],
+      version: [e.version],
+      active: [e.active],
+      name: [e.name, Validators.required],
+      link: [e.link],
+      endDate: [moment(e.endDate, 'YYYY-MM-DD').toDate()],
+      startDate: [moment(e.startDate, 'YYYY-MM-DD').toDate()],
+      comment: [e.comment],
+      contractNumber: [e.contractNumber, Validators.required],
+      type: [{...e.type}, Validators.required],
+      status: [{...e.status}, Validators.required],
+      commodityCredit: [e.commodityCredit],
+      autoprolongation: [e.autoprolongation],
+      counterparty1: [{...e.counterparty1}, Validators.required],
+      counterparty2: [{...e.counterparty2}, Validators.required],
       subContracts: this.formBuilder.array(
-        e['subContracts'].map((subContract) => (
+        e.subContracts.map((subContract) => (
           this.formBuilder.group({
             active: [subContract.active],
             comment: [subContract.comment],
@@ -166,7 +166,7 @@ export class ContractsDialogComponent extends EntityCardModel<ContractModel> imp
       subContractDate: [moment().tz(tz).toDate()],
       subContractNumber: [null],
       version: [0]
-    }))
+    }));
   }
 
   removeSubContract($event, i) {

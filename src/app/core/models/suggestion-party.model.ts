@@ -1,4 +1,4 @@
-import {AddressData} from "./suggestion-address.model";
+import {AddressData} from './suggestion-address.model';
 
 export interface PartyManagement {
   name: string;

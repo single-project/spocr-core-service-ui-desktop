@@ -1,7 +1,7 @@
 import {Injector, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {RouterModule, Routes} from "@angular/router";
-import {MainPageComponent} from "./main-page.component";
+import {RouterModule, Routes} from '@angular/router';
+import {MainPageComponent} from './main-page.component';
 
 export let MainPageInjector: Injector;
 

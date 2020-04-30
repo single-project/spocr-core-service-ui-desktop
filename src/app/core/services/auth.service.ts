@@ -1,12 +1,10 @@
 import {Inject, Injectable} from '@angular/core';
-import {ConfigService} from "./config.service";
-import {CookieService} from "ngx-cookie-service";
-import {HttpClient} from "@angular/common/http";
-import {Conf} from "../../../assets/config/conf";
-import {Observable} from "rxjs";
-import {Router} from "@angular/router";
-import {SESSIONSTORAGE_TOKEN} from "../models/session-storage.token";
-
+import {CookieService} from 'ngx-cookie-service';
+import {HttpClient} from '@angular/common/http';
+import {Conf} from '../../../assets/config/conf';
+import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
+import {SESSIONSTORAGE_TOKEN} from '../models/session-storage.token';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +43,4 @@ export class AuthService {
     this.sessionStorage.removeItem('auth_token');
     this.router.navigate(['/', 'signin']);
   }
-
-
 }

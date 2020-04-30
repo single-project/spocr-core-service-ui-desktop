@@ -2,18 +2,17 @@ import {
   Component,
   OnChanges,
   OnInit,
-  Renderer2,
   SimpleChanges
 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { AddressSuggestion } from '../../../../core/models/suggestion-address.model';
-import { CounterpartiesService } from '../../../../core/services/counterparties.service';
-import { ShopTypesService } from '../../../../core/services/shop-types.service';
-import { SalesChannelService } from '../../../../core/services/sales-channel.service';
-import { ShopDepartsService } from '../../../../core/services/shop-departs.service';
-import { ShopSpecializationsService } from '../../../../core/services/shop-specializations.service';
-import { map, take } from 'rxjs/operators';
-import { ShopsService } from '../../../../core/services/shops.service';
+import {FormBuilder, Validators} from '@angular/forms';
+import {AddressSuggestion} from '../../../../core/models/suggestion-address.model';
+import {CounterpartiesService} from '../../../../core/services/counterparties.service';
+import {ShopTypesService} from '../../../../core/services/shop-types.service';
+import {SalesChannelService} from '../../../../core/services/sales-channel.service';
+import {ShopDepartsService} from '../../../../core/services/shop-departs.service';
+import {ShopSpecializationsService} from '../../../../core/services/shop-specializations.service';
+import {map, take} from 'rxjs/operators';
+import {ShopsService} from '../../../../core/services/shops.service';
 import {
   AddressModel, ManufacturerModel,
   SalesChannelModel, ShopDepartModel,
@@ -21,12 +20,12 @@ import {
   ShopSpecializationModel,
   ShopTypeModel
 } from '../../../../core/models/global-reference.model';
-import { EntityCardModel } from '../../../../core/models/entity-card.model';
-import { ConfigService } from '../../../../core/services/config.service';
-import { PersonalRekvService } from '../../../../core/services/personal-rekv.service';
-import { ManufactureService } from '../../../../core/services/manufacture.service';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng';
-import { MessageServiceFacadeService } from '../../../../core/services/message-service-facade.service';
+import {EntityCardModel} from '../../../../core/models/entity-card.model';
+import {ConfigService} from '../../../../core/services/config.service';
+import {PersonalRekvService} from '../../../../core/services/personal-rekv.service';
+import {ManufactureService} from '../../../../core/services/manufacture.service';
+import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
+import {MessageServiceFacadeService} from '../../../../core/services/message-service-facade.service';
 import * as _ from 'lodash';
 import moment from 'moment-timezone';
 
@@ -43,22 +42,28 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   public shopDepartsList: ShopDepartModel[] = [];
   public manufacturerList: ManufacturerModel[] = [];
 
-  constructor(configService: ConfigService,
-              private personalService: PersonalRekvService,
-              private manufacturerService: ManufactureService,
-              public dialogRef: DynamicDialogRef,
-              public dialogConfig: DynamicDialogConfig,
-              public formBuilder: FormBuilder,
-              private counterpartyService: CounterpartiesService,
-              private shopTypeService: ShopTypesService,
-              private salesChanelService: SalesChannelService,
-              private shopdepartsService: ShopDepartsService,
-              private shopSpecializationsService: ShopSpecializationsService,
-              private shopService: ShopsService,
-              private messageService: MessageServiceFacadeService,
+  constructor(
+    configService: ConfigService,
+    private personalService: PersonalRekvService,
+    private manufacturerService: ManufactureService,
+    dialogRef: DynamicDialogRef,
+    dialogConfig: DynamicDialogConfig,
+    formBuilder: FormBuilder,
+    private counterpartyService: CounterpartiesService,
+    private shopTypeService: ShopTypesService,
+    private salesChanelService: SalesChannelService,
+    private shopdepartsService: ShopDepartsService,
+    private shopSpecializationsService: ShopSpecializationsService,
+    shopService: ShopsService,
+    messageService: MessageServiceFacadeService,
   ) {
-    super(formBuilder, dialogRef, dialogConfig, shopService, messageService, configService);
-
+    super(
+      formBuilder,
+      dialogRef,
+      dialogConfig,
+      shopService,
+      messageService,
+      configService);
   }
 
   ngOnInit() {
@@ -74,13 +79,11 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
         if (this.getUpdatedFields().find(dv => dv === 'manufacturers')) {
           const chosenManufacturers = this.entityDialogForm.get('manufacturers').value;
           chosenManufacturers.forEach(cm => {
-            console.dir(cm);
-            console.dir(this.shopDepartsList);
-           this.shopDepartsList =  [...this.shopDepartsList.filter(sd => sd['mId'] === cm.id)];
-          })
+            this.shopDepartsList = [...this.shopDepartsList.filter(sd => sd['mId'] === cm.id)];
+          });
         }
       }
-    )
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -88,7 +91,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   buildFormGroup() {
-    let e = this.entity;
+    const e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
       name: [e.name, Validators.required],
@@ -107,14 +110,14 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
   }
 
   addAddress() {
-    let e = this.entity;
-    //TODO: может вообще никакой entity как свойства не требуется? И опираться в шаблоне на некий набор свойств
+    const e = this.entity;
+    // TODO: может вообще никакой entity как свойства не требуется? И опираться в шаблоне на некий набор свойств
     if (!this.entity.address) {
-      this.entity.address = { active: true } as AddressModel;
+      this.entity.address = {active: true} as AddressModel;
     }
 
     if (e.address) {
-      this.addNestedObjectIfNotContains("address", {
+      this.addNestedObjectIfNotContains('address', {
         id: e.address.id,
         version: e.address.version,
         active: e.address.active,
@@ -122,20 +125,20 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
         comment: e.address.comment,
         latitude: e.address.latitude,
         longitude: e.address.longitude,
-        suggestion: <AddressSuggestion>{},
+        suggestion: {} as AddressSuggestion,
       });
     }
   }
 
   removeAddress() {
-    this.removeNestedObjectIfContains("address");
+    this.removeNestedObjectIfContains('address');
   }
 
   loadCounterpartiesList(): void {
     this.counterpartyService.get().pipe(
       map(p => p.content),
     ).subscribe(party => {
-      this.counterpartiesList = party
+      this.counterpartiesList = party;
     });
   }
 
@@ -143,7 +146,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
     this.shopTypeService.get().pipe(
       map(tp => tp.content),
       map(tp => tp.map(t => {
-        return { id: t.id, name: `${t.name} / ${t.manufacturer.name}` }
+        return {id: t.id, name: `${t.name} / ${t.manufacturer.name}`};
       }))
     ).subscribe(type => {
       this.shopTypesList = type;
@@ -155,11 +158,11 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       .pipe(
         map(sc => sc.content),
         map((sc: SalesChannelModel[]) => sc.map(s => {
-          return { id: s.id, name: `${s.name} / ${s.manufacturer.name}` }
+          return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`};
         }))
       ).subscribe(channels => {
       this.salesChannelsList = channels;
-    })
+    });
   }
 
   loadShopSpecialization(): void {
@@ -167,11 +170,11 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       .pipe(
         map(ss => ss.content),
         map((ss: ShopSpecializationModel[]) => ss.map(s => {
-          return { id: s.id, name: `${s.name} / ${s.manufacturer.name}` }
+          return {id: s.id, name: `${s.name} / ${s.manufacturer.name}`};
         }))
       ).subscribe(spec => {
       this.shopSpecializationList = spec;
-    })
+    });
   }
 
   loadShopDeparts(): void {
@@ -179,9 +182,9 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       .pipe(
         map(sd => sd.content),
         map((sd: ShopDepartModel[]) => sd.map(d => {
-          return { id: d.id, name: `${d.name} / ${d.manufacturer.name}`, mId: d.manufacturer.id }
+          return {id: d.id, name: `${d.name} / ${d.manufacturer.name}`, mId: d.manufacturer.id};
         }))
-      ).subscribe(departs => this.shopDepartsList = departs)
+      ).subscribe(departs => this.shopDepartsList = departs);
   }
 
   loadManufacturers(): void {
@@ -189,28 +192,26 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
       .pipe(take(1))
       .subscribe(m => {
         this.manufacturerList = m.content;
-      })
+      });
   }
 
   instantiate(options?): ShopModel {
-    return { active: true, manufacturers: [] } as ShopModel;
+    return {active: true, manufacturers: []} as ShopModel;
   }
 
   populateFormGroup() {
   }
 
   formTransform(obj?: any): any {
-    if (obj['contacts']) {
+    if (obj.contacts) {
       const clonedObject = _.cloneDeep(obj);
-      clonedObject['contacts'].map(cp => {
+      clonedObject.contacts.map(cp => {
         console.dir(cp);
-        cp['person']['birthDate'] = moment(cp['person']['birthDate'], 'YYYY-MM-DD')
+        cp.person.birthDate = moment(cp.person.birthDate, 'YYYY-MM-DD')
           .utc()
           .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
       });
       return clonedObject;
     }
-
   }
-
 }

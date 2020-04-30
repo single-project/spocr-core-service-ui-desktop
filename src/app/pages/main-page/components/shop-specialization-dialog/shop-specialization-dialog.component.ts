@@ -20,14 +20,19 @@ export class ShopSpecializationDialogComponent extends EntityCardModel<ShopSpeci
 public manufactureList: ManufacturerModel[];
 
   constructor(
-    public dialogRef: DynamicDialogRef,
-    public dialogConfig: DynamicDialogConfig,
-    private messageService: MessageServiceFacadeService,
-    public formBuilder: FormBuilder,
-    private shopSpecializationsService: ShopSpecializationsService,
+    dialogRef: DynamicDialogRef,
+    dialogConfig: DynamicDialogConfig,
+    messageService: MessageServiceFacadeService,
+    formBuilder: FormBuilder,
+    shopSpecializationsService: ShopSpecializationsService,
     private manufactureService: ManufactureService,
 ) {
-    super(formBuilder, dialogRef, dialogConfig, shopSpecializationsService, messageService);
+    super(
+      formBuilder,
+      dialogRef,
+      dialogConfig,
+      shopSpecializationsService,
+      messageService);
   }
 
   ngOnInit(): void {
@@ -35,12 +40,12 @@ public manufactureList: ManufacturerModel[];
 }
 
   buildFormGroup() {
-    let e = this.entity;
+    const e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
-      id: e['id'],
-      name: [e['name'], Validators.required],
-      active: [e['active']],
-      manufacturer: [e['manufacturer'], Validators.required]
+      id: e.id,
+      name: [e.name, Validators.required],
+      active: [e.active],
+      manufacturer: [e.manufacturer, Validators.required]
     });
   }
 

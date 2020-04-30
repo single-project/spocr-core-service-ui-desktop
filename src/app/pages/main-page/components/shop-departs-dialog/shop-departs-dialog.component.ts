@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EntityCardModel } from '../../../../core/models/entity-card.model';
-import { ManufacturerModel, ShopDepartModel, ShopModel } from '../../../../core/models/global-reference.model';
+import { ManufacturerModel, ShopDepartModel } from '../../../../core/models/global-reference.model';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng';
 import { ShopDepartsService } from '../../../../core/services/shop-departs.service';
 import { MessageServiceFacadeService } from '../../../../core/services/message-service-facade.service';
@@ -16,27 +16,34 @@ export class ShopDepartsDialogComponent extends EntityCardModel<ShopDepartModel>
   public manufactureList: ManufacturerModel[];
 
   constructor(
-    public dialogRef: DynamicDialogRef,
-    public dialogConfig: DynamicDialogConfig,
-    private messageService: MessageServiceFacadeService,
-    public formBuilder: FormBuilder,
-    private shopDepartsService: ShopDepartsService,
+    dialogRef: DynamicDialogRef,
+    dialogConfig: DynamicDialogConfig,
+    messageService: MessageServiceFacadeService,
+    formBuilder: FormBuilder,
+    shopDepartsService: ShopDepartsService,
     private manufactureService: ManufactureService,
   ) {
-    super(formBuilder, dialogRef, dialogConfig, shopDepartsService, messageService);
+    super(
+      formBuilder,
+      dialogRef,
+      dialogConfig,
+      shopDepartsService,
+      messageService);
   }
 
   ngOnInit(): void {
-    this.manufactureService.get().subscribe(page => this.manufactureList = page.content);
+    this.manufactureService
+      .get()
+      .subscribe(page => this.manufactureList = page.content);
   }
 
   buildFormGroup() {
-    let e = this.entity;
+    const e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
-      id: e['id'],
-      name: [e['name'], Validators.required],
-      active: [e['active']],
-      manufacturer: [e['manufacturer'], Validators.required]
+      id: e.id,
+      name: [e.name, Validators.required],
+      active: [e.active],
+      manufacturer: [e.manufacturer, Validators.required]
     });
   }
 

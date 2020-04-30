@@ -1,8 +1,8 @@
-import {Component, Inject, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {DadataService} from "../../../core/services/dadata.service";
-import {AddressSuggestion} from "../../../core/models/suggestion-address.model";
-import {FormGroup} from "@angular/forms";
-import {map, tap} from "rxjs/operators";
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {DadataService} from '../../../core/services/dadata.service';
+import {AddressSuggestion} from '../../../core/models/suggestion-address.model';
+import {FormGroup} from '@angular/forms';
+import {map, tap} from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Component({
@@ -26,8 +26,6 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.results = [];
     this.selectedItem = '';
-
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -35,24 +33,30 @@ export class DadataAddressComponent implements OnInit, OnChanges {
   }
 
   select(e) {
-    this.parentForm.patchValue({address: {suggestion: _.head(this.suggestions.filter(su => su.value === e))}});
+    this.parentForm
+      .patchValue({
+        address: {
+          suggestion: _.head(this.suggestions.filter(su => su.value === e))
+        }
+      });
   }
 
   find(e) {
     this.dadata.addressSuggestion(e.query).pipe(
       tap(su => this.suggestions = su),
       map(su => su.map(s => s.value)),
-    ).subscribe(v => this.results = v)
+    ).subscribe(v => this.results = v);
   }
-
 
   onAddressClean(): void {
     this.results = [];
     this.selectedItem = '';
     this.suggestions = [];
-    this.parentForm.patchValue({address: {address: '', suggestion: <AddressSuggestion>{}}})
-
+    this.parentForm.patchValue({
+      address: {
+        address: '',
+        suggestion: {} as AddressSuggestion
+      }
+    });
   }
-
-
 }

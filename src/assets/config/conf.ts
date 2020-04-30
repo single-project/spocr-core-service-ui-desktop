@@ -11,7 +11,7 @@ export class Conf {
   private _CP_STATUSES_URL = '/api/enumerations?ident=CP-STATUS';
   private _LEGAL_TYPES_URL = '/api/enumerations?ident=LEGAL-TYPE';
 
-  //Personal requisites URLS
+  // Personal requisites URLS
   private _DOC_TYPES_URL = '/api/enumerations?ident=DOC-TYPE';
   private _CITIZENSHIP_URL = '/api/enumerations?ident=CITIZENSHIP';
   private _GENDER_URL = '/api/enumerations?ident=GENDER';

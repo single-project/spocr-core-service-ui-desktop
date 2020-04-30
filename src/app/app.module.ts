@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {Injector, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
@@ -11,13 +11,12 @@ import {FormsModule} from '@angular/forms';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthInterceptorService} from './core/services/auth-interceptor.service';
 import {MessageService, ToastModule} from 'primeng';
-import {HttpErrorHandlerService} from "./core/services/http-error-handler.service";
-import {SESSIONSTORAGE_TOKEN} from "./core/models/session-storage.token";
+import {HttpErrorHandlerService} from './core/services/http-error-handler.service';
+import {SESSIONSTORAGE_TOKEN} from './core/models/session-storage.token';
 
 @NgModule({
   declarations: [
     AppComponent
-
   ],
   imports: [
     BrowserModule,
@@ -48,7 +47,6 @@ import {SESSIONSTORAGE_TOKEN} from "./core/models/session-storage.token";
       useFactory: () => sessionStorage
     }
   ],
-
   bootstrap: [AppComponent]
 })
 export class AppModule {

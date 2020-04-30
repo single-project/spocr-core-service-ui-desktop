@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import {
   Citizenship,
   CounterpartyModel,
@@ -13,12 +13,12 @@ import { ConfigService } from '../../../../core/services/config.service';
 import { map, shareReplay } from 'rxjs/operators';
 import { PersonalRekvService } from '../../../../core/services/personal-rekv.service';
 import { forkJoin } from 'rxjs';
-import { EntityCardModel } from "../../../../core/models/entity-card.model";
-import { ManufactureService } from "../../../../core/services/manufacture.service";
-import { DynamicDialogConfig, DynamicDialogRef } from "primeng";
-import { MessageServiceFacadeService } from "../../../../core/services/message-service-facade.service";
+import { EntityCardModel } from '../../../../core/models/entity-card.model';
+import { ManufactureService } from '../../../../core/services/manufacture.service';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng';
+import { MessageServiceFacadeService } from '../../../../core/services/message-service-facade.service';
 import moment from 'moment-timezone';
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-counterparty-dialog',
@@ -42,26 +42,34 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
   public ruCalLocale = {
     firstDayOfWeek: 1,
-    dayNames: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение"],
-    dayNamesShort: ["Пнд", "Втр", "Срд", "Чтв", "Птн", "Сбт", "Вск"],
-    dayNamesMin: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
-    monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-    monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+    dayNames: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресение'],
+    dayNamesShort: ['Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт', 'Вск'],
+    dayNamesMin: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+    monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+    monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
     today: 'Сегодня',
     clear: 'Очист.',
     weekHeader: 'Нед'
   };
 
-  constructor(configService: ConfigService,
-              private personalService: PersonalRekvService,
-              private manufacturerService: ManufactureService,
-              public dialogRef: DynamicDialogRef,
-              public dialogConfig: DynamicDialogConfig,
-              public formBuilder: FormBuilder,
-              private counterpartyService: CounterpartiesService,
-              private messageService: MessageServiceFacadeService,
+  constructor(
+    configService: ConfigService,
+    private personalService: PersonalRekvService,
+    private manufacturerService: ManufactureService,
+    dialogRef: DynamicDialogRef,
+    dialogConfig: DynamicDialogConfig,
+    formBuilder: FormBuilder,
+    protected counterpartyService: CounterpartiesService,
+    messageService: MessageServiceFacadeService,
   ) {
-    super(formBuilder, dialogRef, dialogConfig, counterpartyService, messageService, configService);
+    super(
+      formBuilder,
+      dialogRef,
+      dialogConfig,
+      counterpartyService,
+      messageService,
+      configService);
+
     this.paymentReqs = !!this.entity.paymentDetails;
     this.personReq = !!this.entity.personRekv;
     this.legalReq = !!this.entity.legalRekv;
@@ -80,7 +88,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
 
   }
 
-
   ngOnChanges(changes: SimpleChanges): void {
 
   }
@@ -89,7 +96,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.counterpartyService.fetchLegalTypes().pipe(
       shareReplay()
     ).subscribe(c => {
-      this.generalLegalTypes = c['content'];
+      this.generalLegalTypes = c.content;
     });
   }
 
@@ -99,13 +106,13 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       this.personalService.fetchDocTypes(),
       this.personalService.fetchGender()])
       .subscribe(data => {
-        this.citizenship = data[0]['content'];
+        this.citizenship = data[0].content;
 
-        this.docTypes = data[1]['content'];
+        this.docTypes = data[1].content;
 
-        this.genders = data[2]['content'];
+        this.genders = data[2].content;
 
-      })
+      });
 
   }
 
@@ -113,16 +120,16 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.counterpartyService.get().pipe(
       map(p => p.content),
     ).subscribe(party => {
-      this.parentsList = party
+      this.parentsList = party;
     });
   }
 
   loadStatusesList(): void {
     this.counterpartyService.fetchCounterpartiesStatuses()
-      .pipe(map(s => s['content']))
+      .pipe(map(s => s.content))
       .subscribe(s => {
         this.statusesList = s;
-      })
+      });
   }
 
   addLegalRekv(): void {
@@ -130,7 +137,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (!this.entity.legalRekv) {
       this.entity.legalRekv = {} as LegalRekv;
     }
-    let legalRekv = this.entity.legalRekv;
+    const legalRekv = this.entity.legalRekv;
     this.addNestedObjectIfNotContains('legalRekv', {
       id: legalRekv.id,
       version: legalRekv.version,
@@ -177,7 +184,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
       this.entity.personRekv.docType = {};
     }
     this.removeLegalRekv();
-    let personRekv = this.entity.personRekv;
+    const personRekv = this.entity.personRekv;
     this.addNestedObjectIfNotContains('personRekv', {
       id: personRekv.id,
       version: personRekv.version,
@@ -208,7 +215,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
         properties: personRekv.gender.properties
       },
       email: [personRekv.email, Validators.email],
-      phones: [personRekv.phones,],
+      phones: [personRekv.phones],
     });
     this.personReq = true;
   }
@@ -240,7 +247,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (values) {
       paymentArray.push(this.formBuilder.group({
         ...values
-      }))
+      }));
     } else if (!values) {
       paymentArray.push(this.formBuilder.group({
         id: null,
@@ -248,7 +255,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
         correspondingAccount: '',
         bic: '',
         bank: '',
-      }))
+      }));
     }
 
   }
@@ -258,12 +265,12 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   }
 
   getBankName(detail: any): string {
-    return detail.get('bank').value
+    return detail.get('bank').value;
   }
 
   buildFormGroup() {
 
-    let e = this.entity;
+    const e = this.entity;
     this.entityDialogForm = this.formBuilder.group({
       id: e.id,
       version: e.version,
@@ -286,7 +293,6 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
   }
 
   instantiate(): CounterpartyModel {
-
     return {} as CounterpartyModel;
   }
 
@@ -298,7 +304,7 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     if (this.selectedLegalType.id === 5) {
       this.addPersonRekv();
     } else if (this.selectedLegalType.id === 6) {
-      this.addLegalRekv()
+      this.addLegalRekv();
     }
     this.dropDownShow = false;
   }
@@ -308,17 +314,17 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.removePersonRekv();
   }
 
-  //TODO вынести в конфиг формат даты, UTC
+  // TODO вынести в конфиг формат даты, UTC
   formTransform(obj?: any): any {
     const deepClone = cloneDeep(obj);
-    if (obj['personRekv']) {
-      deepClone['personRekv']['birthDate'] = moment(deepClone['personRekv']['birthDate'], 'YYYY-MM-DD')
+    if (obj.personRekv) {
+      deepClone.personRekv.birthDate = moment(deepClone.personRekv.birthDate, 'YYYY-MM-DD')
         .utc()
         .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
     }
-    deepClone['contacts'].map(cp => {
+    deepClone.contacts.map(cp => {
       console.dir(cp);
-      cp['person']['birthDate'] = moment(cp['person']['birthDate'], 'YYYY-MM-DD')
+      cp.person.birthDate = moment(cp.person.birthDate, 'YYYY-MM-DD')
         .utc()
         .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
     });
@@ -329,6 +335,4 @@ export class CounterpartyDialogComponent extends EntityCardModel<CounterpartyMod
     this.entityDialogForm.removeControl('innSug');
     super.save();
   }
-
-
 }

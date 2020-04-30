@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {Subject} from 'rxjs';
 
-enum BtnState{
+enum BtnState {
   Add,
   Remove
 }
@@ -43,32 +43,31 @@ export class AddRequisiteButtonComponent implements OnInit, AfterViewInit {
 
   addReqBtnToggleReqs(): void {
       console.log(this.currentState);
-      if(this.currentState === BtnState.Add){
+      if (this.currentState === BtnState.Add) {
         this.currentState = BtnState.Remove;
         this.initialize(this.currentState);
-        if(this.dropDownOptions){
+        if (this.dropDownOptions) {
           this.dropdownShow = true;
         }
-      }else if(this.currentState === BtnState.Remove){
+      } else if (this.currentState === BtnState.Remove) {
         this.currentState = BtnState.Add;
         this.initialize(this.currentState);
       }
-
   }
 
-  selectDropdownOption(e: any){
+  selectDropdownOption(e: any) {
     this.dropdownShow = false;
     console.log(e.value.id);
     this.selectedType$.next(e.value.id);
   }
 
-  initialize(state: BtnState): void{
-    if(state === BtnState.Add){
+  initialize(state: BtnState): void {
+    if (state === BtnState.Add) {
       this.currentIcon = this.existingIconsList[BtnState.Add];
       this.currentClass = this.existingBtnClassesList[BtnState.Add];
       this.currentLabel = this.existingLabelsList[BtnState.Add];
       this.externalRequisiteVisible$.next(false);
-    }else if(state === BtnState.Remove){
+    } else if (state === BtnState.Remove) {
       this.currentIcon = this.existingIconsList[BtnState.Remove];
       this.currentClass = this.existingBtnClassesList[BtnState.Remove];
       this.currentLabel = this.existingLabelsList[BtnState.Remove];

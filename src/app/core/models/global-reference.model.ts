@@ -1,4 +1,4 @@
-import {IdentifiedEntity} from "./identified.entity";
+import {IdentifiedEntity} from './identified.entity';
 
 export interface ServiceConfig {
   url: string;
@@ -136,7 +136,7 @@ export interface LegalRekv extends IdentifiedEntity {
   ogrnAuthority?: any;
   okpo?: any;
   okonh?: any;
-  suggestion?: any
+  suggestion?: any;
 }
 
 export interface PaymentDetails {
@@ -148,19 +148,15 @@ export interface PaymentDetails {
 }
 
 export interface CounterpartyStatus extends EnumerationEntity {
-
 }
 
 export interface DocType extends EnumerationEntity {
-
 }
 
 export interface Citizenship extends EnumerationEntity {
-
 }
 
 export interface Gender extends EnumerationEntity {
-
 }
 
 export interface PersonRekv extends IdentifiedEntity {
@@ -234,21 +230,16 @@ export interface ContractModel extends BaseIdentifiedEntity {
 }
 
 export interface ShopSpecializationModel extends ShopClassifierModel {
-
 }
 
 export interface ShopTypeModel extends ShopClassifierModel {
-
 }
 
 export interface SalesChannelModel extends ShopClassifierModel {
-
 }
 
 export interface ShopDepartModel extends ShopClassifierModel {
-
 }
-
 
 export interface ShopModel extends BaseIdentifiedEntity {
   name: string;
@@ -258,7 +249,7 @@ export interface ShopModel extends BaseIdentifiedEntity {
   salesChannels?: SalesChannelModel[];
   shopDeparts?: ShopDepartModel[];
   shopSpecializations?: ShopSpecializationModel[];
-  manufacturers?: []
+  manufacturers?: [];
 }
 
 

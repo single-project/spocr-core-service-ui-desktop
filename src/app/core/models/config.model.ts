@@ -5,9 +5,9 @@
  * locale: 'ru'
  */
 export interface DateTimeConfig {
-  tz: string,
-  format: string,
-  locale: string
+  tz: string;
+  format: string;
+  locale: string;
 }
 
 export interface CalendarConfig {

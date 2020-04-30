@@ -30,7 +30,7 @@ export class DadataFioComponent implements OnInit {
 
 
   select(e: string) {
-    let sug = this.suggestions[0];
+    const sug = this.suggestions[0];
     this.parentForm.patchValue({
       [this.keyName]: {
         name: e,
@@ -44,8 +44,8 @@ export class DadataFioComponent implements OnInit {
   find(e) {
     this.dadata.fioSuggest(e.query).pipe(
       tap(su => this.suggestions = su),
-      map(s => s.map(s => s.value))
-    ).subscribe(v => this.results = v)
+      map(s => s.map(o => o.value))
+    ).subscribe(v => this.results = v);
   }
 
 
@@ -58,7 +58,7 @@ export class DadataFioComponent implements OnInit {
         firstName: '',
         patronymic: '',
       }
-    })
+    });
 
   }
 

@@ -15,12 +15,18 @@ import moment from 'moment-timezone';
 })
 export class OwnerDialogComponent extends EntityCardModel<OwnerModel> implements OnInit {
 
-  constructor(public dialogRef: DynamicDialogRef,
-              public dialogConfig: DynamicDialogConfig,
-              public formBuilder: FormBuilder,
-              private ownerService: OwnerService,
-              private messageService: MessageServiceFacadeService,) {
-    super(formBuilder, dialogRef, dialogConfig, ownerService, messageService);
+  constructor(
+    dialogRef: DynamicDialogRef,
+    dialogConfig: DynamicDialogConfig,
+    formBuilder: FormBuilder,
+    ownerService: OwnerService,
+    messageService: MessageServiceFacadeService) {
+    super(
+      formBuilder,
+      dialogRef,
+      dialogConfig,
+      ownerService,
+      messageService);
   }
 
   ngOnInit(): void {
@@ -44,19 +50,17 @@ export class OwnerDialogComponent extends EntityCardModel<OwnerModel> implements
   populateFormGroup() {
   }
 
-  //TODO вынести в конфиг формат даты, UTC
+  // TODO вынести в конфиг формат даты, UTC
   formTransform(obj?: any): any {
-    if (obj['contacts']) {
+    if (obj.contacts) {
       const clonedObject = _.cloneDeep(obj);
-      clonedObject['contacts'].map(cp => {
-        console.dir(cp);
-        cp['person']['birthDate'] = moment(cp['person']['birthDate'], 'YYYY-MM-DD')
+      clonedObject.contacts.map(cp => {
+        cp.person.birthDate = moment(cp.person.birthDate, 'YYYY-MM-DD')
           .utc()
           .format('YYYY-MM-DDTHH:mm:ss') + ' UTC';
       });
       return clonedObject;
     }
-
   }
 }
 
