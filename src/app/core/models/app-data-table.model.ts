@@ -13,7 +13,7 @@ import {ManufactureService} from '../services/manufacture.service';
 import moment from 'moment-timezone';
 
 
-export abstract class  AppDataTableModel<T> {
+export abstract class AppDataTableModel<T> {
 
   loading: boolean;
   calendarConf: any;
@@ -65,7 +65,7 @@ export abstract class  AppDataTableModel<T> {
     this.filterDataServices.set(
       'counterparty2', MainPageInjector.get(CounterpartiesService));
     this.filterDataServices.set(
-      'manufacturer',  MainPageInjector.get(ManufactureService));
+      'manufacturer', MainPageInjector.get(ManufactureService));
     this.filterDataServices.set(
       'default', this.tableDataService);
   }
@@ -117,18 +117,34 @@ export abstract class  AppDataTableModel<T> {
       return;
     }
 
-    const header = item ?  `Диалог - ${item.name}` : 'Диалог'; // TODO нужно в классе базового диалога создать статическое свойство title
-    const ref = this.dialogService.open(this.dialogComponentType, {
-      data: {entity: item, entityKey: this.entityKey},
-      header,
-      width: '70%',
-    });
+    const ref = this.dialogService.open(
+      this.dialogComponentType,
+      this.generateDialogConfig(
+        item ? `Диалог - ${item.name}` : 'Диалог',
+        item)
+    );
 
     ref.onClose.subscribe((e: boolean) => {
       if (e) {
         dt.filter(null, 'dialog', null);
       }
     });
+  }
+
+  generateDialogConfig(header: string, item: object, extraConfig?: object): object {
+    const defaultDialogConf = {
+      data: {
+        entity: item,
+        entityKey: this.entityKey
+      },
+      header,
+      width: '70%',
+    };
+
+    return {
+      ...defaultDialogConf,
+      ...extraConfig
+    };
   }
 
   /**
@@ -166,14 +182,14 @@ export abstract class  AppDataTableModel<T> {
   loadTableData(options = {}, updatePageInfo = true) {
     return this.tableDataService.get(options)
       .subscribe((data: ReferenceResponseModel<T>) => {
-        this.dataItems = data.content;
+          this.dataItems = data.content;
 
-        if (updatePageInfo) {
-          this.totalElements = data.totalElements;
-          this.numberOfElements = data.numberOfElements;
-        }
-        this.loading = false;
-      },
+          if (updatePageInfo) {
+            this.totalElements = data.totalElements;
+            this.numberOfElements = data.numberOfElements;
+          }
+          this.loading = false;
+        },
         (err) => {
           this.dataItems = [];
 
@@ -190,7 +206,7 @@ export abstract class  AppDataTableModel<T> {
             severity: 'error',
             summary: err.error.message
           });
-      });
+        });
   }
 
   /**
@@ -280,7 +296,7 @@ export abstract class  AppDataTableModel<T> {
    *
    */
   // TODO: вынести в конфиг формат даты, UTC
-  dateFormat(date: string): string{
+  dateFormat(date: string): string {
     const datePart = moment(date, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ss');
     const tzPart = ' UTC';
     return `${datePart}${tzPart}`;
