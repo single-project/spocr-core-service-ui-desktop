@@ -31,4 +31,13 @@ export class ContractsDataTableComponent extends AppDataTableModel<ContractModel
     this.onInit(
       AppTableTypes.CONTRACTS_TABLE_TYPE);
   }
+
+  generateDialogConfig(header: string, item: object, extraConfig?: object): object {
+    return super.generateDialogConfig(
+      header,
+      item,
+      {
+        width: '70%',
+      });
+  }
 }
