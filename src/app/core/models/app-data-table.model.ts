@@ -12,7 +12,6 @@ import {MainPageInjector} from '../../pages/main-page/main-page-routing.module';
 import {ManufactureService} from '../services/manufacture.service';
 import moment from 'moment-timezone';
 
-
 export abstract class AppDataTableModel<T> {
 
   loading: boolean;
@@ -131,6 +130,15 @@ export abstract class AppDataTableModel<T> {
     });
   }
 
+  /**
+   * Эта функция может быть переопределена в одном из наследующих классов для переоптеделения
+   * конфигурационных настроек диалогового окна. Смотри документацию по диалогам
+   * [dynamicdialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
+   *
+   * @param header заголовок диалога
+   * @param item JSON элемент показуваемый и редактируемый диалогом
+   * @param extraConfig дополнителная конфигурация диалогового окна которая может переоптеделять значения
+   */
   generateDialogConfig(header: string, item: object, extraConfig?: object): object {
     const defaultDialogConf = {
       data: {

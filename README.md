@@ -26,6 +26,11 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
+## Ссылки на ресурсы используемые в проэкте
+
+* CSS тема используемая в проэкте [serenity-ng](https://www.primefaces.org/serenity-ng/#/)
+* Ссылка на сайт [PRIMENG](https://www.primefaces.org/primeng/showcase/#/)
+
 ## Project struct rules
 
 * app/shared - This is the module where I keep small stuff that every other module will need. I have 3 submodules there directives, components and pipes, just to keep things organized a little better. Examples: filesize.pipe, click-outside.directive, offline-status.component...
