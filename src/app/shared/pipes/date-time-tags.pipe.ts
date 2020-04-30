@@ -1,12 +1,15 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import moment from 'moment-timezone';
 import {ConfigService} from '../../core/services/config.service';
+import {DateTimeConfig} from '../../core/models/config.model';
 
 @Pipe({
   name: 'dateTimeTags'
 })
 export class DateTimeTagsPipe implements PipeTransform {
+  dateTimeConfig: DateTimeConfig;
   constructor(private configService: ConfigService) {
+    this.dateTimeConfig = this.configService.getDateTimeConfig();
   }
 
   /**
@@ -17,18 +20,18 @@ export class DateTimeTagsPipe implements PipeTransform {
    * moment('10/02/2020', 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ssZZ')
    * Пример:
    * - moment.tz("2013-12-01","US/Pacific").locale('ru').format('DD.MM.YYYY')
-   * @param {string} value - ISO8601 date string [moment ISO8601](https://momentjs.com/docs/#/parsing/string/)
-   * @param args
+   * @param value - ISO8601 date string [moment ISO8601](https://momentjs.com/docs/#/parsing/string/)
+   * @param args дополнительные параметры фильтра
    */
   transform(value: any, ...args: any[]): string {
-    let dateTimeConfig = this.configService.getDateTimeConfig();
-    if(moment(value, moment.ISO_8601).isValid()) {
+
+    if (moment(value, moment.ISO_8601).isValid()) {
       return moment
-        .tz(value,dateTimeConfig.tz)
-        .locale(value,dateTimeConfig.locale)
-        .format(value,dateTimeConfig.format);
+        .tz(value, this.dateTimeConfig.tz)
+        .locale(this.dateTimeConfig.locale)
+        .format(this.dateTimeConfig.format);
     } else {
-      return value
+      return value;
     }
   }
 }

@@ -11,7 +11,7 @@ import {CalendarConfig, DateTimeConfig} from '../models/config.model';
 export class ConfigService {
   private configSettings = new Conf();
   private shopUrl: string = this.configSettings.BASE_URL + this.configSettings.APP_SETTINGS_URL;
-  private appConfigs: Observable<Object>;
+  private appConfigs: Observable<object>;
   private dateTimeConfig: DateTimeConfig;
   private calendarConfig: CalendarConfig;
 
@@ -19,11 +19,11 @@ export class ConfigService {
   }
 
   getDateTimeConfig(): DateTimeConfig {
-    return this.dateTimeConfig
+    return this.dateTimeConfig;
   }
 
   getCalendarConfig(): CalendarConfig {
-    return this.calendarConfig
+    return this.calendarConfig;
   }
 
   fetchAppSettings() {
@@ -36,13 +36,13 @@ export class ConfigService {
       this.fetchDateTimeConfig()
         .subscribe((dateTimeConfig) => {
           this.dateTimeConfig = dateTimeConfig;
-        })
+        });
 
       this.fetchCalendarConfig()
         .subscribe((calendarConfig: CalendarConfig) => {
           this.calendarConfig = calendarConfig;
 
-        })
+        });
     }
 
     return this.appConfigs;
@@ -50,12 +50,12 @@ export class ConfigService {
 
   /**
    *
-   * @param {number} dataType тип таблицы может быть (1,2,3,4,5,6,7) одно из значений {@link AppTableTypes}
+   * @param dataType тип таблицы может быть (1,2,3,4,5,6,7) одно из значений {@link AppTableTypes}
    */
   fetchAppSettingsByType(dataType: number) {
     return this.fetchAppSettings().pipe(
       map((data: any) => {
-        let resObj = data.availableTables.find(o => o.id === dataType);
+        const resObj = data.availableTables.find(o => o.id === dataType);
         return {
           dataType: resObj.id,
           tableTitle: resObj.name,
@@ -70,12 +70,12 @@ export class ConfigService {
    * затем вытаскивает конфигурацию заголовков таблицы по заданному
    * параметру
    *
-   * @param {number} dataType тип таблицы может быть (1,2,3,4,5,6,7) одно из значений {@link AppTableTypes}
+   * @param dataType тип таблицы может быть (1,2,3,4,5,6,7) одно из значений {@link AppTableTypes}
    */
   fetchTableHeader(dataType: number) {
     return this.fetchAppSettings().pipe(
       map((data: any) => {
-        let resObj = data.availableTables.find(o => o.id === dataType);
+        const resObj = data.availableTables.find(o => o.id === dataType);
         return {
           key: resObj.key,
           columns: [...resObj.columns],
@@ -93,7 +93,7 @@ export class ConfigService {
   fetchDataTypeEndpointURL(dataType: number) {
     return this.fetchAppSettings().pipe(
       map((data: any) => {
-        let resObj = data.availableTables.find(o => o.id === dataType);
+        const resObj = data.availableTables.find(o => o.id === dataType);
         return {
           url: `${this.configSettings.BASE_URL}/api${resObj.url}`,
         };

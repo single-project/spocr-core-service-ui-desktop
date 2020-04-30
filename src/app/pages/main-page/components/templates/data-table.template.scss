@@ -1,3 +1,21 @@
+.cell-active {
+  background: green;
+  color: white;
+  padding: 0 8px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+}
+
+.cell-passive {
+  background: red;
+  color: white;
+  padding: 0 8px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+}
+
 .clean-filter-button {
   margin-top: 7px;
   color: darkred !important;
