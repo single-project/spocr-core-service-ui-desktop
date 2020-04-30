@@ -10,14 +10,14 @@ import {AppTableTypes} from '../models/app-tabe-types.enum';
 })
 export class ExtRegSystemService extends IdentifiedEntityService<ExtRegSystemModel> {
 
-  constructor(private configService: ConfigService, private http: HttpClient) {
+  constructor(configService: ConfigService, http: HttpClient) {
     super(configService, http);
   }
 
   getConfig(configService: ConfigService) {
     configService.fetchDataTypeEndpointURL(
       AppTableTypes.EXT_REG_SYSTEM_TABLE_TYPE)
-      .subscribe(d => this.config.url = d.url)
+      .subscribe(d => this.config.url = d.url);
   }
 
 }

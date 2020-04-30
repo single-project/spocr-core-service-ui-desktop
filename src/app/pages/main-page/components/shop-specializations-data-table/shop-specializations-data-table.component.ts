@@ -18,7 +18,7 @@ export class ShopSpecializationsDataTableComponent extends AppDataTableModel<Sho
     messageService: MessageService,
     configService: ConfigService,
     shopspecializationsService: ShopSpecializationsService,
-    dialogService: DialogService,) {
+    dialogService: DialogService) {
     super(messageService,
       configService,
       shopspecializationsService,
@@ -27,7 +27,7 @@ export class ShopSpecializationsDataTableComponent extends AppDataTableModel<Sho
   }
 
   ngOnInit(): void {
-    this.entityKey = "shop-specialization";
+    this.entityKey = 'shop-specialization';
     this.onInit(
       AppTableTypes.SHOP_SPECIALIZATIONS_TABLE_TYPE);
   }

@@ -10,13 +10,13 @@ import {AppTableTypes} from '../models/app-tabe-types.enum';
 })
 export class OwnerService extends IdentifiedEntityService<OwnerModel> {
 
-  constructor(private configService: ConfigService, private http: HttpClient) {
+  constructor(configService: ConfigService, http: HttpClient) {
     super(configService, http);
   }
 
   getConfig(configService: ConfigService) {
     configService.fetchDataTypeEndpointURL(
       AppTableTypes.OWNER_TABLE_TYPE)
-      .subscribe(d => this.config.url = d.url)
+      .subscribe(d => this.config.url = d.url);
   }
 }

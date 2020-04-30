@@ -18,7 +18,7 @@ export class ExtRegSystemDataTableComponent extends AppDataTableModel<ExtRegSyst
     messageService: MessageService,
     configService: ConfigService,
     extRegSystemService: ExtRegSystemService,
-    dialogService: DialogService,) {
+    dialogService: DialogService, ) {
     super(messageService,
       configService,
       extRegSystemService,
@@ -27,7 +27,7 @@ export class ExtRegSystemDataTableComponent extends AppDataTableModel<ExtRegSyst
   }
 
   ngOnInit(): void {
-    this.entityKey = "ext-system";
+    this.entityKey = 'ext-system';
     this.onInit(
       AppTableTypes.EXT_REG_SYSTEM_TABLE_TYPE);
   }

@@ -5,7 +5,7 @@ import {AppTableTypes} from '../../../../core/models/app-tabe-types.enum';
 import {SalesChannelService} from '../../../../core/services/sales-channel.service';
 import {AppDataTableModel} from '../../../../core/models/app-data-table.model';
 import {SalesChannelModel} from '../../../../core/models/global-reference.model';
-import {SalesChannelsDialogComponent} from "../sales-channels-dialog/sales-channels-dialog.component";
+import {SalesChannelsDialogComponent} from '../sales-channels-dialog/sales-channels-dialog.component';
 
 @Component({
   selector: 'app-sales-chanels-data-table',
@@ -27,7 +27,7 @@ export class SalesChannelsDataTableComponent extends AppDataTableModel<SalesChan
   }
 
   ngOnInit(): void {
-    this.entityKey = "sales-channel";
+    this.entityKey = 'sales-channel';
     this.onInit(
       AppTableTypes.SALES_CHANELS_TABLE_TYPE);
   }

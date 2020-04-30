@@ -25,11 +25,11 @@ export abstract class  AppDataTableModel<T> {
   totalElements: number;
   numberOfElements: number;
 
-  cols: Object[];
-  selectedCols: Object[];
+  cols: any[];
+  selectedCols: any[];
   isFilterShown: boolean;
 
-  dataItems: Object[];
+  dataItems: any[];
   selectedItem: any;
 
   private columnFilters$: Observable<any>;
@@ -45,11 +45,11 @@ export abstract class  AppDataTableModel<T> {
 
   /**
    *
-   * @param messageService
-   * @param configService
-   * @param tableDataService
-   * @param dialogService
-   * @param dialogComponentType
+   * @param messageService позволяет создавать всплывающие сообщения [toast](https://www.primefaces.org/primeng/showcase/#/messages)
+   * @param configService внутренний конфигурационный сервис
+   * @param tableDataService приносит данные с сервера для различных типов таблиц
+   * @param dialogService сервис создания диалогового окна
+   * @param dialogComponentType ссылка на класс диалогового окна
    */
   protected constructor(
     protected messageService: MessageService,
@@ -80,7 +80,7 @@ export abstract class  AppDataTableModel<T> {
       appTableTypes);
 
     this.initColumnFilter(() => {
-      return []
+      return [];
     });
   }
 
@@ -98,7 +98,7 @@ export abstract class  AppDataTableModel<T> {
   }
 
   onRowSelect(dt: Table) {
-    if(this.dialogService) {
+    if (this.dialogService) {
       this.onItemCreate(dt, this.selectedItem);
     } else {
       this.notImplementedMessage();
@@ -108,8 +108,8 @@ export abstract class  AppDataTableModel<T> {
   /**
    * Открывает динамическое диалоговое окно
    * [Dynamic Dialog](https://www.primefaces.org/primeng/showcase/#/dynamicdialog)
-   * @param dt - код таблицы
-   * @param item
+   * @param dt ссылка на DOM элемент представляющий таблиу
+   * @param item выбранный элемент из таблицы
    */
   onItemCreate(dt: Table, item?): void {
     if (!this.dialogService) {
@@ -117,10 +117,10 @@ export abstract class  AppDataTableModel<T> {
       return;
     }
 
-    let header = item ?  `Диалог- ${item.name}` : 'Диалог'; //TODO нужно в классе базового диалога создать статическое свойство title
+    const header = item ?  `Диалог - ${item.name}` : 'Диалог'; // TODO нужно в классе базового диалога создать статическое свойство title
     const ref = this.dialogService.open(this.dialogComponentType, {
       data: {entity: item, entityKey: this.entityKey},
-      header: header,
+      header,
       width: '70%',
     });
 
@@ -135,7 +135,7 @@ export abstract class  AppDataTableModel<T> {
    *
    * Загружает заголовки таблиц с сервера согласно типа таблицы.
    *
-   * @param headerType
+   * @param headerType описывает тип таблицы для которой нужно принести заголовки
    */
   loadTableHeaders(headerType: AppTableTypes) {
     this.configService
@@ -157,7 +157,7 @@ export abstract class  AppDataTableModel<T> {
    *
    * Пример использования функции смотри в {@link MainPageComponent.onSearched}
    *
-   * @param searchString
+   * @param searchString строка поиска
    */
   dataSearch(searchString: string) {
     this.loadTableData({q: searchString});
@@ -196,10 +196,10 @@ export abstract class  AppDataTableModel<T> {
   /**
    *
    *
-   * @param dataTransformer
+   * @param dataTransformer ссылка фукцию преобразователь
    */
   initColumnFilter(
-    dataTransformer: (data: any) => Object[]): void {
+    dataTransformer: (data: any) => any[]): void {
     this.columnFilters$ = this.columnFilterSubj$.pipe(
       debounceTime(1000),
       switchMap(({params, fieldName, action$}) =>
@@ -218,12 +218,12 @@ export abstract class  AppDataTableModel<T> {
    *
    * Очищает значение поля фильтра в заголобке таблицы
    *
-   * @param {Table} dt ссылка на таблицу определена в HTML темплейте
-   * @param {number} index
-   * @param fieldId
-   * @param matchMode
+   * @param dt ссылка на таблицу определена в HTML темплейте
+   * @param index индех
+   * @param fieldId идентификатор поля
+   * @param matchMode режим сопоставления
    * @param field - ссылка на элемент
-   * @returns {void} no return value
+   * @returns нет возвращяемого значения
    */
   cleanFilter(dt: Table, index: number, fieldId: string, matchMode: string, field?: any) {
     const filterObj: AutoComplete = this.tableFilters.toArray()[index];
@@ -245,21 +245,21 @@ export abstract class  AppDataTableModel<T> {
     if (event.sortField) {
       params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
     }
-  };
+  }
 
-  addCustomParamAtr(params: Object, event: LazyLoadEvent) {
+  addCustomParamAtr(params: object, event: LazyLoadEvent) {
     Object.entries(event.filters).forEach(
       ([key, filterObj]) => {
         Object.assign(params, {
           ...this.tableReqParamBuilder
             .buildParam(key, filterObj.value.id, filterObj.value.name)
-        })
+        });
       });
   }
 
   loadTableDataLazy(event: LazyLoadEvent) {
     this.loading = true;
-    let params = {};
+    const params = {};
 
     this.addPageParamAtr(params, event);
     this.addCustomParamAtr(params, event);
@@ -275,19 +275,19 @@ export abstract class  AppDataTableModel<T> {
    * moment('10/02/2020', 'DD/MM/YYYY').format('YYYY-MM-DDTHH:mm:ssZZ')
    * moment('10/02/2020', 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ssZZ')
    *
-   * @param {string} date
-   * @returns {string} - ISO8601 date string [moment ISO8601](https://momentjs.com/docs/#/parsing/string/)
+   * @param date принимает строку в ISO формате 'YYYY-MM-DDTHH:mm:ssZZ'
+   * @returns ISO8601 date string [moment ISO8601](https://momentjs.com/docs/#/parsing/string/)
    *
    */
-  //TODO: вынести в конфиг формат даты, UTC
+  // TODO: вынести в конфиг формат даты, UTC
   dateFormat(date: string): string{
-    let datePart = moment(date, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ss');
-    let tzPart = ' UTC';
+    const datePart = moment(date, 'DD/MM/YYYY').utc().format('YYYY-MM-DDTHH:mm:ss');
+    const tzPart = ' UTC';
     return `${datePart}${tzPart}`;
   }
 
   filterSearch(event, fieldName: string): void {
-    let colFilterFormatter = this.colFilterFormatter
+    const colFilterFormatter = this.colFilterFormatter
       .getFilterCelFormatter(fieldName);
 
     /**
@@ -302,7 +302,7 @@ export abstract class  AppDataTableModel<T> {
     });
   }
 
-  fetchFilterData(params: Object, fieldName: string): Observable<any> {
+  fetchFilterData(params: object, fieldName: string): Observable<any> {
     const service = this.filterDataServices.get(fieldName) || this.filterDataServices.get('default');
     return service.get(params);
   }
@@ -337,7 +337,7 @@ class TableColFilterFormatterBuilder {
             id: dataObj.id,
             name: dataObj.name
           }
-        ))
+        ));
       },
     },
     id: {
@@ -348,12 +348,12 @@ class TableColFilterFormatterBuilder {
             id: dataObj.id,
             name: dataObj.id
           }
-        ))
+        ));
       },
     },
     active: {
       reqParamBuilder: (propValue: string) => {
-        let param = {active: false};
+        const param = {active: false};
 
         if (propValue.toLowerCase() === 'да') {
           param.active = true;
@@ -368,7 +368,7 @@ class TableColFilterFormatterBuilder {
           .map((val) => ({
             id: -1,
             name: val ? 'Да' : 'Нет'
-          }))
+          }));
       },
     }
   };
@@ -405,17 +405,17 @@ class TableRequestParamBuilder {
   private paramBuilderMaps = {
 
     active: (id: number, name: string) => {
-      let param = {active: false};
+      const param = {active: false};
       if (name.toLowerCase() === 'да') {
-        param['active'] = true;
+        param.active = true;
       } else if (name.toLowerCase() === 'нет') {
-        param['active'] = false;
+        param.active = false;
       }
 
       return param;
     },
     counterparty: (id: number, name: string) => {
-      let param = {};
+      const param = {};
       if (id === -1) {
         param['counterparty.name'] = name;
       } else {
@@ -425,7 +425,7 @@ class TableRequestParamBuilder {
       return param;
     },
     counterparty1: (id: number, name: string) => {
-      let param = {};
+      const param = {};
       if (id === -1) {
         param['counterparty1.name'] = name;
       } else {
@@ -435,7 +435,7 @@ class TableRequestParamBuilder {
       return param;
     },
     counterparty2: (id: number, name: string) => {
-      let param = {};
+      const param = {};
       if (id === -1) {
         param['counterparty2.name'] = name;
       } else {
@@ -445,7 +445,7 @@ class TableRequestParamBuilder {
       return param;
     },
     manufacturer: (id: number, name: string) => {
-      let param = {};
+      const param = {};
       if (id === -1) {
         param['manufacturer.name'] = name;
       } else {

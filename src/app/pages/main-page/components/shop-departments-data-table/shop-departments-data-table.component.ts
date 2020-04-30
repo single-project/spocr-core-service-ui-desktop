@@ -18,17 +18,17 @@ export class ShopDepartmentsDataTableComponent extends AppDataTableModel<Identif
     messageService: MessageService,
     configService: ConfigService,
     shopDepartsService: ShopDepartsService,
-    dialogService: DialogService,) {
+    dialogService: DialogService) {
     super(messageService,
       configService,
       shopDepartsService,
       dialogService,
       ShopDepartsDialogComponent
-    )
+    );
   }
 
   ngOnInit(): void {
-    this.entityKey = "shop-depart";
+    this.entityKey = 'shop-depart';
     this.onInit(
       AppTableTypes.SHOP_DEPARTMENTS_TABLE_TYPE);
   }
