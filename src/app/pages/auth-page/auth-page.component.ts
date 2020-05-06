@@ -10,8 +10,6 @@ import {SESSIONSTORAGE_TOKEN} from '../../core/models/session-storage.token';
 
 const jwtHelper = new JwtHelperService();
 
-
-
 @Component({
   selector: 'app-auth-page',
   templateUrl: './auth-page.component.html',
@@ -19,26 +17,9 @@ const jwtHelper = new JwtHelperService();
 })
 export class AuthPageComponent implements OnInit {
 
-  private _username: string;
-  private _password: string;
+  username: string;
+  password: string;
   private authorized: boolean;
-
-
-  get password(): string {
-    return this._password;
-  }
-
-  set password(value: string) {
-    this._password = value;
-  }
-
-  get username(): string {
-    return this._username;
-  }
-
-  set username(value: string) {
-    this._username = value;
-  }
 
   constructor(
     private auth: AuthService,
@@ -46,6 +27,13 @@ export class AuthPageComponent implements OnInit {
     private router: Router,
     private messageService: MessageServiceFacadeService,
     @Inject(SESSIONSTORAGE_TOKEN) private sessionStorage) {
+  }
+
+  static parseToken(token: string): JwtModel {
+    const decoded = jwtHelper.decodeToken(token);
+    const dt = new Date(0);
+    dt.setUTCSeconds(decoded.exp);
+    return {user: decoded.sub, expAt: dt, roles: decoded.roles};
   }
 
   ngOnInit() {
@@ -66,13 +54,6 @@ export class AuthPageComponent implements OnInit {
 
       });
     }
-  }
-
-  static parseToken(token: string): JwtModel {
-    const decoded = jwtHelper.decodeToken(token);
-    const dt = new Date(0);
-    dt.setUTCSeconds(decoded.exp);
-    return {user: decoded.sub, expAt: dt, roles: decoded.roles};
   }
 
   onError(key: string) {

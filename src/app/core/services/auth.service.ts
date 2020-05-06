@@ -12,16 +12,7 @@ import {SESSIONSTORAGE_TOKEN} from '../models/session-storage.token';
 export class AuthService {
 
   private config = new Conf();
-  private _authorized: boolean;
-
-
-  get authorized(): boolean {
-    return this._authorized;
-  }
-
-  set authorized(value: boolean) {
-    this._authorized = value;
-  }
+  authorized: boolean;
 
   constructor(
     private cookies: CookieService,

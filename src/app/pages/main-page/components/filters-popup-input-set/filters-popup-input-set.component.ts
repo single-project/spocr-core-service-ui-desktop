@@ -6,10 +6,14 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   styleUrls: ['./filters-popup-input-set.component.scss']
 })
 export class FiltersPopupInputSetComponent implements OnInit {
-  @Input() checkedNonActive: boolean;
-  @Input() checkedActive: boolean;
-  @Output() onCheckActive = new EventEmitter<boolean>();
-  @Output() onCheckedNonActive = new EventEmitter<boolean>();
+  @Input()
+  checkedNonActive: boolean;
+  @Input()
+  checkedActive: boolean;
+  @Output()
+  checkActive = new EventEmitter<boolean>();
+  @Output()
+  checkedNonActiveEm = new EventEmitter<boolean>();
   constructor() { }
 
   ngOnInit() {
@@ -17,12 +21,10 @@ export class FiltersPopupInputSetComponent implements OnInit {
   }
 
   activeCheck(): void {
-    this.onCheckActive.emit(!this.checkedActive);
-
+    this.checkedNonActiveEm.emit(!this.checkedActive);
   }
 
   nonActiveCheck(): void {
-    this.onCheckedNonActive.emit(!this.checkedNonActive);
+    this.checkedNonActiveEm.emit(!this.checkedNonActive);
   }
-
 }

@@ -26,7 +26,7 @@ export class HttpErrorHandlerService implements HttpInterceptor {
         if (this.authService.authorized) {
           this.messageService.showErrMsg('authorization-timed-out');
           this.authService.logout();
-          location.reload(true);
+          location.reload();
         } else {
           this.messageService.showErrMsg('401');
         }

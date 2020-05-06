@@ -38,7 +38,6 @@ export abstract class AppDataTableModel<T> {
   protected tableReqParamBuilder = new TableRequestParamBuilder();
   private filterDataServices: Map<string, any> = new Map();
 
-
   @ViewChildren(AutoComplete)
   private tableFilters: QueryList<AutoComplete>;
 
@@ -261,13 +260,13 @@ export abstract class AppDataTableModel<T> {
     dt.filter(null, fieldId, matchMode);
   }
 
-  addPageParamAtr(params = {}, event: LazyLoadEvent): void {
+  addPageParamAtr(params: any = {}, event: LazyLoadEvent): void {
     if (typeof event.first === 'number' && event.rows) {
-      params['page'] = event.first / event.rows;
+      params.page = event.first / event.rows;
     }
 
     if (event.sortField) {
-      params['sort'] = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
+      params.sort = `${event.sortField},${event.sortOrder === 1 ? 'asc' : 'desc'}`;
     }
   }
 

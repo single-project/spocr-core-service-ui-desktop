@@ -79,7 +79,7 @@ export class ShopDialogComponent extends EntityCardModel<ShopModel> implements O
         if (this.getUpdatedFields().find(dv => dv === 'manufacturers')) {
           const chosenManufacturers = this.entityDialogForm.get('manufacturers').value;
           chosenManufacturers.forEach(cm => {
-            this.shopDepartsList = [...this.shopDepartsList.filter(sd => sd['mId'] === cm.id)];
+            this.shopDepartsList = [...this.shopDepartsList.filter(sd => sd.mId === cm.id)];
           });
         }
       }

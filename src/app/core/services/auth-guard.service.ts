@@ -14,7 +14,7 @@ export class AuthGuardService  implements CanActivate {
   canActivate() {
     if (!this.authService.authorized) {
       this.authService.logout();
-      location.reload(true);
+      location.reload();
       return false;
     }
     return true;

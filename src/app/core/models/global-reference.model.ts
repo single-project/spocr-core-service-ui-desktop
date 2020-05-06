@@ -147,15 +147,19 @@ export interface PaymentDetails {
   bank: string;
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface CounterpartyStatus extends EnumerationEntity {
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface DocType extends EnumerationEntity {
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface Citizenship extends EnumerationEntity {
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface Gender extends EnumerationEntity {
 }
 
@@ -229,16 +233,21 @@ export interface ContractModel extends BaseIdentifiedEntity {
   subContracts: any[];
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface ShopSpecializationModel extends ShopClassifierModel {
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface ShopTypeModel extends ShopClassifierModel {
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface SalesChannelModel extends ShopClassifierModel {
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface ShopDepartModel extends ShopClassifierModel {
+  mId?: number;
 }
 
 export interface ShopModel extends BaseIdentifiedEntity {

@@ -14,17 +14,9 @@ export class NavbarComponent implements OnInit {
   @Input()
   userId;
   @Output()
-  onSwitchTable = new EventEmitter<any>();
+  switchTableEm = new EventEmitter<any>();
 
-  private _menuItems: MenuItem[];
-
-  get menuItems(): MenuItem[] {
-    return this._menuItems;
-  }
-
-  set menuItems(value: MenuItem[]) {
-    this._menuItems = value;
-  }
+  menuItems: MenuItem[];
 
   constructor(
     private auth: AuthService,
@@ -105,6 +97,6 @@ export class NavbarComponent implements OnInit {
   }
 
   switchTable(tableType: AppTableTypes): void {
-    this.onSwitchTable.emit(tableType);
+    this.switchTableEm.emit(tableType);
   }
 }
