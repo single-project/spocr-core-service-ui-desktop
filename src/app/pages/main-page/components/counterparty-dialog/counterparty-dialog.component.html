@@ -1,0 +1,322 @@
+<p-tabView>
+  <p-tabPanel header="Основное" leftIcon="fas fa-file-alt">
+    <div
+      [formGroup]="entityDialogForm"
+      class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label for="name">ИМЯ</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText id="name" formControlName="name" autofocus/>
+        </div>
+      </div>
+
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>АКТИВНЫЙ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-checkbox [binary]="true" formControlName="active"></p-checkbox>
+        </div>
+        <div class="ui-g-4">
+          <label>ГОЛОВНАЯ ОРГ.</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown
+            appendTo="body"
+            formControlName="parent"
+            optionLabel="name"
+            dataKey="id"
+            [options]="parentsList"
+            placeholder="Выберите головную организацию"
+          ></p-dropdown>
+        </div>
+        <div class="ui-g-4">
+          <label>СТАТУС</label>
+        </div>
+        <div class="ui-g-8">
+          <p-multiSelect
+            appendTo="body"
+            formControlName="statuses"
+            optionLabel="name"
+            dataKey="id"
+            [options]="statusesList"
+            defaultLabel="Выберите статус"
+          ></p-multiSelect>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Реквизиты" leftIcon="fas fa-file-signature">
+    <div *ngIf="legalReq"
+         [formGroup]="entityDialogForm"
+         class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <label>Поиск по ИНН</label>
+        </div>
+        <div class="ui-g-8">
+          <app-dadata-party
+            [parentForm]="entityDialogForm"
+          >
+          </app-dadata-party>
+        </div>
+      </div>
+      <ng-container formGroupName="legalRekv">
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>НАИМ.</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="shortName">
+          </div>
+          <div class="ui-g-4">
+            <label>НАИМ.(ПОЛНОЕ)</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="fullName">
+          </div>
+          <div class="ui-g-4">
+            <label>ИНН</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="inn">
+          </div>
+          <div class="ui-g-4">
+            <label>ОГРН/ОГРНИП</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="ogrn">
+          </div>
+          <div class="ui-g-4">
+            <label>КПП</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="kpp">
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div *ngIf="personReq"
+         [formGroup]="entityDialogForm"
+         class="ui-g ui-fluid">
+      <ng-container formGroupName="personRekv">
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>ФИО контрагента</label>
+          </div>
+          <div class="ui-g-8">
+            <app-dadata-fio
+              [parentForm]="entityDialogForm"
+              [keyName]="'personRekv'"
+            >
+            </app-dadata-fio>
+          </div>
+        </div>
+        <div class="ui-g-12">
+          <div class="ui-g-4">
+            <label>ДАТА РОЖД.</label>
+          </div>
+          <div class="ui-g-8">
+            <p-calendar
+              appendTo="body"
+              formControlName="birthDate"
+              [monthNavigator]="true"
+              [yearNavigator]="true"
+              yearRange="1914:2114"
+              dateFormat="dd/mm/yy"
+              [locale]="ruCalLocale"></p-calendar>
+          </div>
+          <div class="ui-g-4">
+            <label>ТИП ДОКУМЕНТА</label>
+          </div>
+          <div class="ui-g-8">
+            <p-dropdown
+              appendTo="body"
+              formControlName="docType"
+              optionLabel="name"
+              dataKey="id"
+              [options]="docTypes"
+              placeholder="Выберите тип документа"
+            ></p-dropdown>
+          </div>
+          <div class="ui-g-4">
+            <label>СЕРИЯ И НОМЕР</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="docSeriesNumber">
+          </div>
+          <div class="ui-g-4">
+            <label>Гражданство</label>
+          </div>
+          <div class="ui-g-8">
+            <p-dropdown
+              appendTo="body"
+              formControlName="citizenship"
+              optionLabel="name"
+              dataKey="id"
+              [options]="citizenship"
+              placeholder="Выберите гражданство"
+            ></p-dropdown>
+          </div>
+          <div class="ui-g-4">
+            <label>ПОЛ</label>
+          </div>
+          <div class="ui-g-8">
+            <p-dropdown
+              appendTo="body"
+              formControlName="gender"
+              optionLabel="name"
+              dataKey="id"
+              [options]="genders"
+              placeholder="Выберите пол"
+            ></p-dropdown>
+          </div>
+          <div class="ui-g-4">
+            <label>ИНН</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="inn">
+          </div>
+          <div class="ui-g-4">
+            <label>ТЕЛЕФОН:</label>
+          </div>
+          <div class="ui-g-8">
+            <p-inputMask mask="+7(999) 999-9999" placeholder="+7(999) 999-9999"
+                         formControlName="phones"></p-inputMask>
+          </div>
+          <div class="ui-g-4">
+            <label>E-MAIL:</label>
+          </div>
+          <div class="ui-g-8">
+            <input pInputText formControlName="email">
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-g-4"></div>
+        <div class="ui-g-4">
+          <button *ngIf="!personReq && !legalReq"
+                  pButton
+                  type="button"
+                  label="Добавить реквизит"
+                  class="ui-button-success"
+                  icon="pi pi-plus"
+                  (click)="onAddReqClicked()">
+          </button>
+          <button *ngIf="legalReq || personReq"
+                  pButton
+                  type="button"
+                  label="Убрать реквизит"
+                  class="ui-button-danger"
+                  icon="pi pi-minus"
+                  (click)="removeReq()">
+          </button>
+        </div>
+        <div class="ui-g-4"></div>
+      </div>
+      <div *ngIf="dropDownShow" class="ui-g-12">
+        <div class="ui-g-3"></div>
+        <div class="ui-g-6">
+          <p-dropdown
+            [options]="generalLegalTypes"
+            [(ngModel)]="selectedLegalType"
+            optionLabel="name"
+            dataKey="id"
+            placeholder="Выберите тип:"
+            (onChange)="switchPartyReq()"
+          >
+          </p-dropdown>
+        </div>
+        <div class="ui-g-3"></div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel *ngIf="entity" header="Банковские реквизиты" leftIcon="fas fa-university">
+    <div
+      [formGroup]="entityDialogForm">
+
+      <p-accordion formArrayName="paymentDetails">
+        <div class="ui-g">
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <button
+                pButton
+                type="button"
+                label="Добавить реквизит"
+                class="ui-button-success"
+                icon="pi pi-plus"
+                (click)="insertPaymentDetail()">
+              </button>
+            </div>
+          </div>
+        </div>
+        <p-accordionTab *ngFor="let detail of paymentDetails.controls; let i = index"
+                        [header]="getBankName(detail)" [formGroupName]="i">
+          <div class="ui-g">
+            <div class="ui-g-4">
+              <label>Банк</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="bank">
+            </div>
+            <div class="ui-g-4">
+              <label>Р/С</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="paymentAccount">
+            </div>
+            <div class="ui-g-4">
+              <label>КОРР./С</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="correspondingAccount">
+            </div>
+            <div class="ui-g-4">
+              <label>БИК</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="bic">
+            </div>
+            <div class="ui-g-3">
+              <button
+                pButton
+                type="button"
+                label="Удалить реквизит"
+                class="ui-button-danger"
+                icon="pi pi-minus"
+                (click)="deletePaymentDetail(i)">
+              </button>
+            </div>
+          </div>
+
+        </p-accordionTab>
+      </p-accordion>
+
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Конт. лица" leftIcon="fas fa-file-alt">
+
+
+    <app-contact-persons [formBuilder]="formBuilder" [parentForm]="entityDialogForm" [parentEntity]="entity"></app-contact-persons>
+
+  </p-tabPanel>
+
+</p-tabView>
+
+
+<div class="ui-dialog-footer" [ngStyle]="{border: 'none'}">
+  <button type="button" class="ui-button-success" pButton
+          icon="fa fa-check"
+          (click)="save()"
+          label="Сохранить"></button>
+  <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+          (click)="close(false)"
+          label="Отмена"></button>
+
+</div>
+
+

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChildren, QueryList} from '@angular/core';
+import {ConfigService} from '../../core/services/config.service';
+import {AppTableTypes} from '../../core/models/app-tabe-types.enum';
 
 @Component({
   selector: 'app-main-page',
@@ -7,16 +9,46 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainPageComponent implements OnInit {
   searchString: string;
-
   tableTitle: string;
+  dataType: AppTableTypes;
 
-  constructor() { }
+  @ViewChildren('appDataTable') appDataTable: QueryList<any>;
 
-  ngOnInit() {
-    this.tableTitle = 'Торговые точки'
+  constructor(
+    private configService: ConfigService,
+  ) {
   }
 
-  clearSearch(): void{
+  ngOnInit() {
+    this.setConfiguration(AppTableTypes.SHOP_TABLE_TYPE);
+  }
+
+  clearSearch(): void {
     this.searchString = '';
+    this.appDataTable
+      .toArray()
+      .forEach((tableComp) => tableComp.loadTableData());
+  }
+
+  onSearched(tableSearch: HTMLInputElement): void {
+    this.appDataTable
+      .toArray()
+      .forEach((tableComp) => tableComp.dataSearch(tableSearch.value));
+  }
+
+  setConfiguration(dataType: number): void {
+    this.configService
+      .fetchAppSettingsByType(dataType)
+      .subscribe((data) => {
+        Object.assign(this, data);
+      });
+  }
+
+  switchTable(tableType: AppTableTypes) {
+    this.configService
+      .fetchAppSettingsByType(tableType)
+      .subscribe((data) => {
+        Object.assign(this, data);
+      });
   }
 }

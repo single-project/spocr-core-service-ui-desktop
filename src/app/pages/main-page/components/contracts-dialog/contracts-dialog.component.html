@@ -1,0 +1,364 @@
+<div [formGroup]="entityDialogForm">
+  <p-tabView>
+    <p-tabPanel
+      header="Основные"
+      leftIcon="fas fa-file-alt">
+      <p-scrollPanel [style]="{width: '100%', height: '400px'}">
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['name'].validator}">
+            <div class="ui-g-4">
+              <label for="name">ИМЯ</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="name"
+                     formControlName="name"
+                     autofocus/>
+            </div>
+            <div class="ui-g-4">
+            </div>
+            <div class="ui-grid-col-8">
+              <p-message severity="error"
+                         text="Имя должно быть заполнено"
+                         *ngIf="!entityDialogForm.controls['name'].valid && entityDialogForm.controls['name'].dirty">
+              </p-message>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['link'].validator}">
+            <div class="ui-g-4">
+              <label for="link">ССЫЛКА</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="link"
+                     formControlName="link"
+                     autofocus/>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['startDate'].validator}">
+            <div class="ui-g-4">
+              <label>ДАТА НАЧАЛА</label>
+            </div>
+            <div class="ui-g-8">
+              <p-calendar
+                appendTo="body"
+                formControlName="startDate"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1914:2114"
+                dateFormat="dd/mm/yy"
+                [locale]="calendarConf"></p-calendar>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['endDate'].validator}">
+            <div class="ui-g-4">
+              <label>ДАТА ОКОНЧАНИЯ</label>
+            </div>
+            <div class="ui-g-8">
+              <p-calendar
+                appendTo="body"
+                formControlName="endDate"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1914:2114"
+                dateFormat="dd/mm/yy"
+                [locale]="calendarConf"></p-calendar>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['comment'].validator}">
+            <div class="ui-g-4">
+              <label for="comment">КОММЕНТАРИЙ</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="comment"
+                     formControlName="comment"
+                     autofocus/>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['contractNumber'].validator}">
+            <div class="ui-g-4">
+              <label for="comment">НОМЕР</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText id="contractNumber"
+                     formControlName="contractNumber"
+                     autofocus/>
+            </div>
+            <div class="ui-g-4">
+            </div>
+            <div class="ui-grid-col-8">
+              <p-message severity="error"
+                         text="Номер должен быть заполнен"
+                         *ngIf="!entityDialogForm.controls['contractNumber'].valid && entityDialogForm.controls['contractNumber'].dirty">
+              </p-message>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['type'].validator}">
+            <div class="ui-g-4">
+              <label for="type">ТИП</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="type"
+                          [options]="contractTypes"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите тип (обязательно)"
+                          formControlName="type"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['status'].validator}">
+            <div class="ui-g-4">
+              <label for="status">СТАТУС</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="status"
+                          [options]="contractStatuses"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите статус (обязательно)"
+                          formControlName="status"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['commodityCredit'].validator}">
+            <div class="ui-g-4">
+              <label for="commodityCredit">РАССРОЧКА</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText
+                     id="commodityCredit"
+                     formControlName="commodityCredit"
+                     autofocus/>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['autoprolongation'].validator}">
+            <div class="ui-g-4">
+              <label for="autoprolongation">АВТОПРОЛОНГАЦИЯ</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText
+                     id="autoprolongation"
+                     formControlName="autoprolongation"
+                     autofocus/>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['counterparty1'].validator}">
+            <div class="ui-g-4">
+              <label for="counterparty1">КОНТРАГЕНТ1</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="counterparty1"
+                          [options]="counterParties"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите контрагента (обязательно)"
+                          formControlName="counterparty1"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['counterparty2'].validator}">
+            <div class="ui-g-4">
+              <label for="counterparty2">КОНТРАГЕНТ2</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown appendTo="body"
+                          id="counterparty2"
+                          [options]="counterParties"
+                          optionLabel="name"
+                          dataKey="id"
+                          placeholder="Выберите контрагента (обязательно)"
+                          formControlName="counterparty2"
+                          [filter]="true">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="ui-g-12"
+               [ngClass]="{'required': entityDialogForm.controls['active'].validator}">
+            <div class="ui-g-4">
+              <label for="active">АКТИВНЫЙ</label>
+            </div>
+            <div class="ui-g-8">
+              <p-checkbox
+                id="active"
+                binary="true"
+                formControlName="active">
+              </p-checkbox>
+            </div>
+          </div>
+        </div>
+      </p-scrollPanel>
+    </p-tabPanel>
+    <p-tabPanel
+      header="Доп.соглашения"
+      leftIcon="fas fa-file-alt">
+      <p-scrollPanel [style]="{width: '100%', height: '400px'}">
+        <div class="ui-g">
+          <div class="ui-g-4">
+            <button pButton
+                    type="button"
+                    label="Добавить Доп.соглашение"
+                    class="ui-button-success"
+                    icon="pi pi-plus"
+                    (click)="addSubContract()">
+            </button>
+          </div>
+        </div>
+        <p-accordion formArrayName="subContracts">
+          <p-accordionTab *ngFor="let item of subContracts.controls; let i = index;">
+            <p-header>
+              <span>{{getSubContractName(item, i)}}</span>
+              <i class="pi pi-trash"
+                 style="float: right"
+                 (click)="removeSubContract($event, i)">
+              </i>
+            </p-header>
+            <div class="ui-g ui-fluid" [formGroup]="subContracts.controls[i]">
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('name').validator}">
+                <div class="ui-g-4">
+                  <label for="subContractName{{i}}">ИМЯ
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractName{{i}}"
+                         formControlName="name"
+                         autofocus/>
+                </div>
+              </div>
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('status').validator}">
+                <div class="ui-g-4">
+                  <label for="subContractStatus{{i}}">СТАТУС
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <p-dropdown appendTo="body"
+                              id="subContractStatus{{i}}"
+                              [options]="contractStatuses"
+                              optionLabel="name"
+                              dataKey="id"
+                              placeholder="Выберите статус (обязательно)"
+                              formControlName="status"
+                              [filter]="true">
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('comment').validator}">
+                <div class="ui-g-4">
+                  <label for="subContractComment{{i}}">КОММЕНТАРИЙ
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractComment{{i}}"
+                         formControlName="comment"
+                         autofocus/>
+                </div>
+              </div>
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('link').validator}">
+                <div class="ui-g-4">
+                  <label for="subContractLink{{i}}">ССЫЛКА
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractLink{{i}}"
+                         formControlName="link"
+                         autofocus/>
+                </div>
+              </div>
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('active').validator}">
+                <div class="ui-g-4">
+                  <label for="subContractActive{{i}}">АКТИВНЫЙ
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <p-checkbox
+                    id="subContractActive{{i}}"
+                    binary="true"
+                    formControlName="active">
+                  </p-checkbox>
+                </div>
+              </div>
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('subContractDate').validator}">
+                <div class="ui-g-4">
+                  <label
+                    for="subContractDate{{i}}">ДАТА</label>
+                </div>
+                <div class="ui-g-8">
+                  <p-calendar id="subContractDate{{i}}"
+                              appendTo="body"
+                              formControlName="subContractDate"
+                              [monthNavigator]="true"
+                              [yearNavigator]="true"
+                              yearRange="1914:2114"
+                              dateFormat="dd/mm/yy"
+                              [locale]="calendarConf">
+                  </p-calendar>
+                </div>
+              </div>
+              <div class="ui-g-12"
+                   [ngClass]="{'required': item.get('subContractNumber').validator}">
+                <div class="ui-g-4">
+                  <label for="subContractNumber{{i}}">НОМЕР
+                  </label>
+                </div>
+                <div class="ui-g-8">
+                  <input pInputText
+                         id="subContractNumber{{i}}"
+                         formControlName="subContractNumber"
+                         autofocus/>
+                </div>
+              </div>
+              <div class="ui-g-12">
+                <div class="ui-g-3">
+                  <button
+                    pButton
+                    type="button"
+                    label="Удалить Доп. соглашение"
+                    class="ui-button-danger"
+                    icon="pi pi-minus"
+                    (click)="removeSubContract($event, i)">
+                  </button>
+                </div>
+              </div>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </p-scrollPanel>
+    </p-tabPanel>
+  </p-tabView>
+  <div class="ui-dialog-footer" [ngStyle]="{border: 'none'}">
+    <button type="button" class="ui-button-success" pButton
+            icon="fa fa-check"
+            (click)="save()"
+            label="Сохранить"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="pi pi-times"
+            (click)="close(false)"
+            label="Отмена"></button>
+
+  </div>
+  <p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [baseZIndex]="10000"></p-confirmDialog>
+</div>

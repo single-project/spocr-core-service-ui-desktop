@@ -1,0 +1,18 @@
+<div [formGroup]="parentForm" >
+
+  <div class="ui-inputgroup" formGroupName="legalRekv">
+
+    <p-autoComplete formControlName="innSug" appendTo="body" (onSelect)="select($event)"
+                    [suggestions]="results" (completeMethod)="find($event)" delay="500" field="data.inn">
+      <ng-template let-party pTemplate="item">
+
+        <div>{{party['data']['inn']}}</div>
+        <div [ngStyle]="{fontSize: '0.7rem', maxWidth:'15em'}">{{party['value']}}</div>
+
+      </ng-template>
+
+    </p-autoComplete>
+
+    <button pButton (click)="onPartyClean()" type="button" icon="pi pi-times" class="ui-button-danger"></button>
+  </div>
+</div>

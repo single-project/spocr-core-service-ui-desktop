@@ -1,0 +1,14 @@
+.required label:before {
+  font-weight: bold;
+  color: #e32;
+  content: '*';
+  display:inline;
+  margin-right: 5px;
+}
+
+label:before {
+  font-weight: bold;
+  content: '';
+  display:inline;
+  margin-right: 12.64px;
+}

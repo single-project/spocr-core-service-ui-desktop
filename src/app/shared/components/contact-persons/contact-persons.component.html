@@ -1,0 +1,147 @@
+<div [formGroup]="parentForm">
+  <p-accordion formArrayName="contacts">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <div class="ui-g-4">
+          <button
+            pButton
+            type="button"
+            label="Добавить реквизит"
+            class="ui-button-success"
+            icon="pi pi-plus"
+            (click)="insertContactDetail()">
+          </button>
+        </div>
+      </div>
+    </div>
+    <p-accordionTab *ngFor="let contact of contacts.controls; let i = index"
+                    [header]="getContactName(contact)" [formGroupName]="i">
+      <div class="ui-g">
+        <ng-container formGroupName="person">
+
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label>ФИО контрагента</label>
+            </div>
+            <div class="ui-g-8">
+              <app-dadata-fio
+                [parentForm]="contact"
+                [keyName]="'person'"
+              >
+              </app-dadata-fio>
+            </div>
+          </div>
+          <div class="ui-g-12">
+            <div class="ui-g-4">
+              <label>ДАТА РОЖД.</label>
+            </div>
+            <div class="ui-g-8">
+              <p-calendar
+                appendTo="body"
+                formControlName="birthDate"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1914:2114"
+                dateFormat="dd/mm/yy"
+                [locale]="ruCalLocale"></p-calendar>
+            </div>
+            <div class="ui-g-4">
+              <label>ТИП ДОКУМЕНТА</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown
+                appendTo="body"
+                formControlName="docType"
+                optionLabel="name"
+                dataKey="id"
+                [options]="docTypes"
+                placeholder="Выберите тип документа"
+              ></p-dropdown>
+            </div>
+            <div class="ui-g-4">
+              <label>СЕРИЯ И НОМЕР</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="docSeriesNumber">
+            </div>
+            <div class="ui-g-4">
+              <label>Гражданство</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown
+                appendTo="body"
+                formControlName="citizenship"
+                optionLabel="name"
+                dataKey="id"
+                [options]="citizenship"
+                placeholder="Выберите гражданство"
+              ></p-dropdown>
+            </div>
+            <div class="ui-g-4">
+              <label>ПОЛ</label>
+            </div>
+            <div class="ui-g-8">
+              <p-dropdown
+                appendTo="body"
+                formControlName="gender"
+                optionLabel="name"
+                dataKey="id"
+                [options]="genders"
+                placeholder="Выберите пол"
+              ></p-dropdown>
+            </div>
+            <div class="ui-g-4">
+              <label>ИНН</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="inn">
+            </div>
+            <div class="ui-g-4">
+              <label>ТЕЛЕФОН:</label>
+            </div>
+            <div class="ui-g-8">
+              <p-inputMask mask="+7(999) 999-9999" placeholder="+7(999) 999-9999"
+                           formControlName="phones"></p-inputMask>
+            </div>
+            <div class="ui-g-4">
+              <label>E-MAIL:</label>
+            </div>
+            <div class="ui-g-8">
+              <input pInputText formControlName="email">
+            </div>
+
+          </div>
+        </ng-container>
+        <div class="ui-g-4">
+          <label>РОЛЬ</label>
+        </div>
+        <div class="ui-g-8">
+          <p-dropdown
+            appendTo="body"
+            formControlName="role"
+            optionLabel="name"
+            dataKey="id"
+            [options]="roles"
+            placeholder="Выберите роль"
+          ></p-dropdown>
+        </div>
+        <div class="ui-g-4">
+          <label>Комментарий:</label>
+        </div>
+        <div class="ui-g-8">
+          <input pInputText formControlName="comment">
+        </div>
+        <div class="ui-g-3">
+          <button
+            pButton
+            type="button"
+            label="Удалить реквизит"
+            class="ui-button-danger"
+            icon="pi pi-minus"
+            (click)="deleteContact(i)">
+          </button>
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+</div>

@@ -1,9 +1,0 @@
-{
-  "coreURLS": {
-    "BASE_URL": "",
-    "AUTH_URL": "/auth/signin",
-    "SHOP_URL": "/api/shops",
-    "COUNTERPARTIES_URL": "/api/counterparties",
-    "MANUFACTURES_URL": "/api/manufactures"
-  }
-}
