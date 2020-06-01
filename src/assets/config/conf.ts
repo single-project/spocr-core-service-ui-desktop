@@ -1,7 +1,8 @@
+import {environment} from "../../environments/environment";
+
 export class Conf {
 
   // General urls
-  private _BASE_URL = 'http://84.201.159.119:8112/spocr';
   private _AUTH_URL = '/auth/signin';
 
   // App settings urls
@@ -47,7 +48,7 @@ export class Conf {
   }
 
   get BASE_URL(): string {
-    return this._BASE_URL;
+    return environment.baseUrl;
   }
 
   get AUTH_URL(): string {
