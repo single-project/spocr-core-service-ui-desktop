@@ -4,7 +4,7 @@ import {ErrorModel} from './error.model';
 import {IdentifiedEntityService} from '../services/identified-entity.service';
 import {MessageServiceFacadeService} from '../services/message-service-facade.service';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng';
-import {OnInit} from '@angular/core';
+import {HostListener, OnInit} from '@angular/core';
 import {ConfigService} from "../services/config.service";
 
 export abstract class EntityCardModel<T extends IdentifiedEntity> implements EntityCardModelI {
@@ -51,6 +51,13 @@ export abstract class EntityCardModel<T extends IdentifiedEntity> implements Ent
       console.log("patch success");
       this._messageService.showScsMsg(`${this.dialogConfig.data.entityKey}.dialog.save.success`);
     }, e => this.error(e));
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyUp(ev: KeyboardEvent) {
+    if (ev.key === 'Escape') {
+      this.close(false);
+    }
   }
 
   getUpdatedFields() {
